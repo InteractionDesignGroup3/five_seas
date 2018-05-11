@@ -13,21 +13,6 @@ import uk.ac.cam.cl.data.APIConnector;
 
 public class App extends Application {
     public static void main(String args[]) {
-        (new Thread(() -> {
-            APIConnector test = new APIConnector(Paths.get("config.json"));
-            while (true) {
-                System.out.println("Getting data");
-                JSONObject response = test.getData(0.121817, 52.205337);
-                System.out.println(response.toJSONString());
-
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                    return; 
-                }
-            }
-        })).start();
-
         launch(args);
     }
 

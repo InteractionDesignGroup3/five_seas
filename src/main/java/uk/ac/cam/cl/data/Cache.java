@@ -55,7 +55,13 @@ public class Cache {
             while ((line = reader.readLine()) != null)
                 json += line;
             JSONParser parser = new JSONParser();
-            data = (JSONObject) parser.parse(json);
+            JSONObject temp = (JSONObject) parser.parse(json);
+
+            if (!temp.containsKey("marine") 
+                    || !temp.containsKey("local") 
+                    || !temp.containsKey("cache_timestamp"))
+                throw new IOException("Malformed cache");
+            else data = temp;
         } catch (IOException e) {
             //Load failed so create new cache file
             cache.toFile().createNewFile();  
@@ -63,9 +69,7 @@ public class Cache {
             //Parse failed (i.e. corrupt cache so delete cache and reform)
             cache.toFile().delete();
             cache.toFile().createNewFile();  
-        } finally {
-            reader.close();
-        }
+        } finally { reader.close(); }
         
         return data;
     }
