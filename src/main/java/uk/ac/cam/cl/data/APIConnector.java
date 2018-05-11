@@ -18,7 +18,7 @@ import com.github.kevinsawicki.http.HttpRequest;
  * @author Nathan Corbyn
  */
 public class APIConnector {
-    private final String location, token;
+    private final String api, token, marine, local;
     private Cache cache;
 
     /**
@@ -29,7 +29,9 @@ public class APIConnector {
     public APIConnector(Path path) {
         try {
             Config config = new Config(path);
-            location = (String) config.get("api_location");
+            api = (String) config.get("api_url");
+            marine = (String) config.get("marine_api");
+            local = (String) config.get("local_api");
             token = (String) config.get("api_token");
             cache = new Cache(Clock.systemUTC(), 
                     Paths.get((String) config.get("cache")));
@@ -49,8 +51,10 @@ public class APIConnector {
      * @param token API token
      * @param cache path to the cache file
      */
-    public APIConnector(String location, String token, Path cache) {
-        this.location = location;
+    public APIConnector(String api, String marine, String local, String token, Path cache) {
+        this.api = api;
+        this.marine = marine;
+        this.local = local;
         this.token = token;
         try { this.cache = new Cache(Clock.systemUTC(), cache); }
         catch (IOException e) {
@@ -67,29 +71,57 @@ public class APIConnector {
      * @param latitude target latitude
      * @return parsed JSON object from API or cache
      */
+    @SuppressWarnings("unchecked")
     public JSONObject getData(double longitude, double latitude) {
-        HttpRequest request = HttpRequest.get(location, true, 
-                'q', longitude + "," + latitude, //Set query location 
+        JSONObject temp = new JSONObject();
+
+        //Local request
+        HttpRequest localRequest = HttpRequest.get(api + local, true,
+                'q', latitude + "," + longitude, //Set query location 
+                "num_of_days", 7, //Whole weeks forecast
+                "date", "today",  //From today
+                "fx", "yes",      //Specify whether to include weather forecast
+                "format", "json", //Specify format (default is XML)
+                "key", token,     //Pass API token
+                "tp", 1,          //Sets the time period for requests (hours)
+                "includelocation", "yes"); //Show location 
+        
+        if (localRequest.ok()) { 
+            String response = localRequest.body();
+            System.out.println(response);
+            try {
+                JSONParser parser = new JSONParser();
+                JSONObject data = (JSONObject) parser.parse(response);
+                temp.put("local", data);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        //Marine request
+        HttpRequest marineRequest = HttpRequest.get(api + marine, true, 
+                'q', latitude + "," + longitude, //Set query location 
                 "fx", "yes",      //Specify whether to include weather forecast
                 "format", "json", //Specify format (default is XML)
                 "key", token,     //Pass API token
                 "tp", 24,         //Sets the time period for request (hours)
                 "tide", "yes");   //Include tide data (default is no)
 
-        if (request.ok()) { 
-            String response = request.body();
+        if (marineRequest.ok()) { 
+            String response = marineRequest.body();
             System.out.println(response);
-
             try {
                 JSONParser parser = new JSONParser();
                 JSONObject data = (JSONObject) parser.parse(response);
-                cache.update(data);
+                temp.put("marine", data);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-           
-            return cache.getData(); //Always return from cache for timestamp
-        } else return cache.getData();
+        }
+
+        if (temp.containsKey("marine") && temp.containsKey("local"))
+            cache.update(temp);
+        return cache.getData(); //Always return from cache for timestamp
     }
 }
 
