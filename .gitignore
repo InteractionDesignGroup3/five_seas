@@ -105,3 +105,6 @@ local.properties
 .scala_dependencies
 .worksheet
 
+config.json
+cache.json
+
