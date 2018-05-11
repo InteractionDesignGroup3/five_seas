@@ -6,6 +6,7 @@ import org.json.simple.JSONObject;
 import org.junit.*;
 import static com.google.common.truth.Truth.*;
 import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * API connector unit tests
@@ -59,6 +60,24 @@ public class APIConnectorTest {
         target.getData(Double.MAX_VALUE, Double.MAX_VALUE);
 
         verify(mockCache, times(4)).update(any(JSONObject.class));
+    }
+    
+    @Test
+    public void apiConnector_throwsException_noConfig() {
+        assertThrows(APIFailure.class, 
+                () -> new APIConnector(Paths.get("nonconfig.json")),
+                "Could not load configuration nonconfig.json"); 
+    }
+
+    @Test
+    public void apiConnector_throwsException_cannotConstructCache() 
+            throws ConfigurationException {
+        Config mockConfig = mock(Config.class);
+        when(mockConfig.get("cache")).thenReturn("");
+        
+        assertThrows(APIFailure.class, 
+                () -> new APIConnector(mockConfig),
+                "Could not load configuration nonconfig.json"); 
     }
 }
 
