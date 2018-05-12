@@ -2,6 +2,7 @@ package uk.ac.cam.cl.data;
 
 /**
  * Thrown in the event of a non-recoverable API failure mode
+ * DO NOT CATCH - FIX!!
  * @author Nathan Corbyn
  */
 public class APIFailure extends RuntimeException {

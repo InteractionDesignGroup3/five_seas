@@ -23,7 +23,7 @@ public class Cache {
     private Path cache;
     private JSONObject data;
 
-    private boolean lock = false;
+    private boolean lock = false, created = false;
     private int threadCount = 0; 
 
     /**
@@ -59,17 +59,25 @@ public class Cache {
 
             if (!temp.containsKey("marine") 
                     || !temp.containsKey("local") 
-                    || !temp.containsKey("cache_timestamp"))
+                    || !temp.containsKey("cache_timestamp")
+                    || !temp.containsKey("longitude")
+                    || !temp.containsKey("latitude"))
                 throw new IOException("Malformed cache");
             else data = temp;
+            reader.close();
         } catch (IOException e) {
             //Load failed so create new cache file
-            cache.toFile().createNewFile();  
+            cache.toFile().delete();
+            cache.toFile().createNewFile();
+            created = true; 
         } catch (ParseException e) {
             //Parse failed (i.e. corrupt cache so delete cache and reform)
             cache.toFile().delete();
             cache.toFile().createNewFile();  
-        } finally { reader.close(); }
+            created = true; 
+        } finally {
+            reader.close();
+        }
         
         return data;
     }
@@ -94,6 +102,7 @@ public class Cache {
     public void update(JSONObject data) {
         this.data = new JSONObject(data);
         this.data.put("cache_timestamp", new Long(clock.millis()));
+        created = false;
         dump(); 
     }
 
@@ -130,6 +139,13 @@ public class Cache {
      */
     public JSONObject getData() {
         return data;
+    }
+
+    /**
+     * Was the cache just created
+     */
+    public boolean isNew() {
+        return created;
     }
 }
 

@@ -1,6 +1,12 @@
 package uk.ac.cam.cl.data;
 
+/**
+ * Class used by the data manager to represent data sequences
+ * (also contains any unit conversions for such data)
+ * @author Nathan Corbyn
+ */
 public class DataPoint implements Comparable<DataPoint> {
+    //Unit conversion scale factors and offsets
     public static final double CELCIUS_OFFSET = 32.0,
            CELCIUS_SCALE = 1.8,
            KNOTS_SCALE = 0.539957,
@@ -9,6 +15,7 @@ public class DataPoint implements Comparable<DataPoint> {
            INCH_SCALE = 0.0393701,
            FEET_SCALE = 3.28084;
 
+    //Actual data
     private final long time;
     private final double temperature, //Actual temperature in degrees C
            feelsLikeTemperature,      //Feels like temperature in degrees C
@@ -18,9 +25,23 @@ public class DataPoint implements Comparable<DataPoint> {
            precipitationMM,           //Precipitation in millimetres
            swellHeight,               //Swell height in metres
            swellPeriod,               //Swell period in seconds
-           visibility;                //Visibility in KM
+           visibility;                //Visibility in kilometres
     private final int weatherCode;    //Used for weather overview
 
+    /**
+     * Instantiates a new data point with all of the necessary information
+     * @param time time corresponding to data (unix)
+     * @param temperature actual temperature in degrees C
+     * @param feelsLikeTemperature feels like temperature in degrees C
+     * @param gustSpeedKmPH gust speed in kilometres per hour
+     * @param windSpeedKmPH wind speed in kilometres per hour
+     * @param chanceOfRain chance of rain %
+     * @param precipitationMM precipiration in millimetres
+     * @param swellHeight swell height in metres
+     * @param swellPeriod swell period in seconds
+     * @param visibility visibility in kilometres
+     * @param weatherCode a code used to represent the weather overview
+     */
     public DataPoint(long time, 
             double temperature, 
             double feelsLikeTemperature, 
@@ -45,11 +66,18 @@ public class DataPoint implements Comparable<DataPoint> {
         this.weatherCode = weatherCode;
     }
 
+    /**
+     * Orders data points by their time stamp
+     * @param other the data point to compare to
+     * @return an integer representing the computed ordering
+     */
     @Override
     public int compareTo(DataPoint other) {
         return (new Long(time)).compareTo(new Long(other.time));
     }
 
+    //These are all basic unit conversion methods implemented using
+    //the constants at the top of the class
     private static double celciusToFarenheit(double celcius) {
         return CELCIUS_OFFSET + CELCIUS_SCALE * celcius; 
     }
