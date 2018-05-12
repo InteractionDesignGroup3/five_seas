@@ -39,10 +39,10 @@ public class DataManager {
         api = new APIConnector(Paths.get(CONFIG));
         
         try { 
-            JSONObject data = api.getData();
-            longitude = (Double) data.get("longitude");
-            latitude = (Double) data.get("latitude");
-            lastUpdated = (Long) data.get("cache_timestamp");
+            JSONObject apiData = api.getData();
+            longitude = (Double) apiData.get("longitude");
+            latitude = (Double) apiData.get("latitude");
+            lastUpdated = (Long) apiData.get("cache_timestamp");
         } catch (NoDataException e) {
             //TODO cache is fresh so generate current location (either
             //lock this to Cambridge in the config or fake it with IP)
@@ -83,38 +83,38 @@ public class DataManager {
         
         JSONObject local = (JSONObject) apiData.get("local");
         JSONObject data = (JSONObject) local.get("data");
-        JSONObject weather = 
-            (JSONObject) ((JSONArray) (data.get("weather"))).get(0);
-        JSONArray hourly = (JSONArray) weather.get("hourly");
+        JSONArray weather = (JSONArray) data.get("weather");
+        for (int i = 0; i < weather.size(); i++) {
+            JSONObject current = (JSONObject) weather.get(i);
+            JSONArray hourly = (JSONArray) current.get("hourly");
+            try {
+                DateFormat format = new SimpleDateFormat("YYYY-MM-DD");
+                Date date = format.parse((String) current.get("date"));
 
-        try {
-            DateFormat format = new SimpleDateFormat("YYYY-MM-DD");
-            Date date = format.parse((String) weather.get("date"));
-
-            for (int i = 0; i < hourly.size(); i++) {
-                JSONObject hour = (JSONObject) hourly.get(i);
-                long time = date.getTime() + 3600000 * i;
-                DataPoint point = new DataPoint(time, 
-                        Double.parseDouble((String) hour.get("tempC")),
-                        Double.parseDouble((String) hour.get("FeelsLikeC")),
-                        Double.parseDouble((String) hour.get("windspeedKmph")),
-                        Double.parseDouble((String) hour.get("WindGustKmph")),
-                        Double.parseDouble((String) hour.get("chanceofrain")),
-                        Double.parseDouble((String) hour.get("precipMM")),
-                        0.0, //TODO get real swell height
-                        0.0, //TODO get real swell period
-                        Double.parseDouble((String) hour.get("visibility")),
-                        Integer.parseInt((String) hour.get("weatherCode")));
-                freshDataSequence.add(point);
+                for (int j = 0; j < hourly.size(); j++) {
+                    JSONObject hour = (JSONObject) hourly.get(i);
+                    long time = date.getTime() + 3600000 * j;
+                    DataPoint point = new DataPoint(time, 
+                            Double.parseDouble((String) hour.get("tempC")),
+                            Double.parseDouble((String) hour.get("FeelsLikeC")),
+                            Double.parseDouble((String) hour.get("windspeedKmph")),
+                            Double.parseDouble((String) hour.get("WindGustKmph")),
+                            Double.parseDouble((String) hour.get("chanceofrain")),
+                            Double.parseDouble((String) hour.get("precipMM")),
+                            0.0, //TODO get real swell height
+                            0.0, //TODO get real swell period
+                            Double.parseDouble((String) hour.get("visibility")),
+                            Integer.parseInt((String) hour.get("weatherCode")));
+                    freshDataSequence.add(point);
+                    lastUpdated = (Long) apiData.get("cache_timestamp");
+                }
+           
+                dataSequence = new ArrayList<>(freshDataSequence);
+                listeners.forEach(listener -> listener.accept(dataSequence));
+            } catch (ParseException e) {
+                //Keep displaying exactly what we're displaying 
+                e.printStackTrace();
             }
-       
-            dataSequence = new ArrayList<>(freshDataSequence);
-            //Trigger listeners
-            listeners.forEach(listener -> listener.accept(dataSequence));
-        } catch (ParseException e) {
-            //Malformatted API response so need to handle this
-            //Where does no data land us????
-            e.printStackTrace();
         }
     }
     
