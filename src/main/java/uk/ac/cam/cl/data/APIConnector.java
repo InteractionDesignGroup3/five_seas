@@ -15,7 +15,7 @@ import com.github.kevinsawicki.http.HttpRequest;
 /**
  * Provides all JSON data requried by the data manager (this
  * may either be from the API directly or from a cache)
- * @author Nathan Corbyn
+ * @author Nathan Corbyn, Max Campman
  */
 public class APIConnector {
     private final String api, token, marine, local;
@@ -142,13 +142,14 @@ public class APIConnector {
         try {
             HttpRequest localRequest = HttpRequest.get(api + local, true,
                     'q', latitude + "," + longitude, //Set query location 
-                    "num_of_days", 7, //Whole weeks forecast
+                    "num_of_days", 2, //Whole weeks forecast
                     "date", "today",  //From today
                     "fx", "yes",      //Specify whether to include weather forecast
                     "format", "json", //Specify format (default is XML)
                     "key", token,     //Pass API token
                     "tp", 1,          //Sets the time period for requests (hours)
                     "includelocation", "yes"); //Show location 
+            System.out.println(localRequest.toString());
             
             if (localRequest.ok()) { 
                 String response = localRequest.body();

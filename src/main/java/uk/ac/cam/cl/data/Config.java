@@ -14,7 +14,7 @@ import org.json.simple.parser.ParseException;
 
 /**
  * Class for reading from simple JSON configuration files.
- * @author Nathan Corbyn
+ * @author Nathan Corbyn, Max Campman
  */
 public class Config {
     private JSONObject configuration;
