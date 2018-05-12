@@ -19,6 +19,7 @@ import com.github.kevinsawicki.http.HttpRequest;
  */
 public class APIConnector {
     private final String api, token, marine, local;
+    private final boolean disableRequests;
     private Cache cache;
 
     /**
@@ -33,6 +34,7 @@ public class APIConnector {
             marine = (String) config.get("marine_api");
             local = (String) config.get("local_api");
             token = (String) config.get("api_token");
+            disableRequests = (Boolean) config.get("disable_requests");
             cache = new Cache(Clock.systemUTC(), 
                     Paths.get((String) config.get("cache")));
         } catch (ConfigurationException e) {
@@ -56,6 +58,7 @@ public class APIConnector {
             marine = (String) config.get("marine_api");
             local = (String) config.get("local_api");
             token = (String) config.get("api_token");
+            disableRequests = (Boolean) config.get("disable_requests");
             cache = new Cache(Clock.systemUTC(), 
                     Paths.get((String) config.get("cache")));
         } catch (ConfigurationException e) {
@@ -80,17 +83,40 @@ public class APIConnector {
     }
 
     /**
-     * Initialise connector from an API location, token and cache
-     * @param location the API URL
+     * Initialise connector from an API url, marine API name, local API name 
+     * token and cache instance
+     * @param api the API URL
+     * @param marine the marine API name
+     * @param local the local API name
      * @param token API token
      * @param cache the cache instance 
      */
-    public APIConnector(String api, String marine, String local, String token, Cache cache) {
+    public APIConnector(String api, 
+            String marine, 
+            String local, 
+            String token, 
+            Cache cache) {
         this.api = api;
         this.marine = marine;
         this.local = local;
         this.token = token;
         this.cache = cache;
+        this.disableRequests = false;
+    }
+
+    /**
+     * Makes a request to the API for fresh data based on the longitude and
+     * latitude previously stored in the cache
+     * @return parsed JSON object from API or cache
+     * @throws NoDataException if the cache is newly formed
+     */
+    public JSONObject getData() throws NoDataException {
+        if (cache.isNew()) throw new NoDataException();  
+        else {
+            double longitude = (Double) cache.getData().get("longitude");
+            double latitude = (Double) cache.getData().get("latitude");
+            return getData(longitude, latitude);
+        }
     }
 
     /**
@@ -103,9 +129,13 @@ public class APIConnector {
      */
     @SuppressWarnings("unchecked")
     public JSONObject getData(double longitude, double latitude) {
+        if (disableRequests)
+            return cache.getData();
         if (latitude > 180 || latitude < 0 || longitude > 180 || latitude < -180)
             return cache.getData();
         JSONObject temp = new JSONObject();
+        temp.put("longitude", longitude);
+        temp.put("latitude", latitude);
 
         //Local request
         try {

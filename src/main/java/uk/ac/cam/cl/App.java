@@ -9,10 +9,14 @@ import javafx.stage.Stage;
 
 import org.json.simple.JSONObject;
 
-import uk.ac.cam.cl.data.APIConnector;
+import uk.ac.cam.cl.data.DataManager;
 
 public class App extends Application {
     public static void main(String args[]) {
+        DataManager.getInstance().addListener(sequence -> {
+            System.out.println("Updating data");
+            System.out.println(sequence); 
+        });
         launch(args);
     }
 
