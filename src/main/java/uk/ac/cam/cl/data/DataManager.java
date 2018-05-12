@@ -1,6 +1,9 @@
 package uk.ac.cam.cl.data;
 
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 
 import org.json.simple.JSONObject;
 
@@ -19,7 +22,14 @@ public class DataManager {
 
     private long lastUpdated = 0;
     private double longitude, latitude;
-    
+
+    private List<DataPoint> dataSequence = new ArrayList<>();
+    private List<Consumer<List<DataPoint>>> listeners = new ArrayList<>();
+
+    /**
+     * Singleton constructor initialises daemon thread (could
+     * throw an APIFailure but please do not catch this)
+     */
     private DataManager() {
         api = new APIConnector(Paths.get(CONFIG));
         daemon = new Thread(() -> {
@@ -42,6 +52,7 @@ public class DataManager {
     /**
      * Get the data manager instance
      * @return the data manager singleton
+     * @throws APIFailure in the event the API connector could not be started
      */
     public static DataManager getInstance() {
         if (instance == null)
@@ -49,6 +60,9 @@ public class DataManager {
         return instance;
     }
 
+    /**
+     * Updates the available data and triggers all listeners
+     */
     private void update() {
         JSONObject data = null;
         try { 
@@ -64,13 +78,51 @@ public class DataManager {
         }
 
         //TODO process data
+       
+        //Trigger listeners
+        listeners.forEach(listener -> listener.accept(dataSequence));
+    }
+    
+    /**
+     * Get the longitude coordinate the data currently regards
+     * @return current longitude
+     */
+    public double getLongitude() {
+        return longitude;
     }
 
     /**
-     * Force the data manager to update data immediately
+     * Get the latitude coordinate the data currently regards
+     * @return current latitude
      */
-    public void forceUpdate() {
-        daemon.interrupt();
+    public double getLatitude() {
+        return latitude;
+    }
+
+    /**
+     * Get the timestamp of the last update
+     * @return when the available data was fetched from the API
+     */
+    public long getLastUpdated() {
+        return lastUpdated;
+    }
+
+    /**
+     * Update the coordinates currently pointed to (this will 
+     * automatically trigger the daemon to update its data)
+     */
+    public void setCoordinates(double longitude, double latitude) {
+        this.longitude = longitude;
+        this.latitude = latitude;
+        daemon.interrupt(); //Force update
+    }
+
+    /**
+     * Add a listener (called when data is updated)
+     * @param listener consumer executed on data change
+     */
+    public void addListener(Consumer<List<DataPoint>> listener) {
+        listeners.add(listener);
     }
 }
 
