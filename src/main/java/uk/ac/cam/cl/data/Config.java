@@ -14,7 +14,7 @@ import org.json.simple.parser.ParseException;
 
 /**
  * Class for reading from simple JSON configuration files.
- * @author Nathan Corbyn
+ * @author Nathan Corbyn, Max Campman
  */
 public class Config {
     private JSONObject configuration;
@@ -28,11 +28,12 @@ public class Config {
         try {
             Charset charset = Charset.forName("UTF-8");
             BufferedReader reader = Files.newBufferedReader(path, charset);
-            String json = "", line;
+            StringBuilder json = new StringBuilder();
+            String line;
             while ((line = reader.readLine()) != null)
-                json += line;
+                json.append(line);
             JSONParser parser = new JSONParser();
-            configuration = (JSONObject) parser.parse(json);
+            configuration = (JSONObject) parser.parse(json.toString());
         } catch (IOException e) {
             throw new ConfigurationException("Configuration file " + path.getFileName() + " could not be read");        
         } catch (ParseException e) {

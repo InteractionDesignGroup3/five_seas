@@ -15,7 +15,7 @@ import com.github.kevinsawicki.http.HttpRequest;
 /**
  * Provides all JSON data requried by the data manager (this
  * may either be from the API directly or from a cache)
- * @author Nathan Corbyn
+ * @author Nathan Corbyn, Max Campman
  */
 public class APIConnector {
     private final String api, token, marine, local;
@@ -35,7 +35,7 @@ public class APIConnector {
             local = (String) config.get("local_api");
             token = (String) config.get("api_token");
             disableRequests = (Boolean) config.get("disable_requests");
-            cache = new Cache(Clock.systemUTC(), 
+            cache = new Cache(Clock.systemUTC(),
                     Paths.get((String) config.get("cache")));
         } catch (ConfigurationException e) {
             //Non-recoverable failure mode
@@ -50,7 +50,7 @@ public class APIConnector {
     /**
      * Initialise connector from a given configuration instance
      * @param config the configuration instance
-     * @throws APIFalure in the event of a non-recoverable failure mode
+     * @throws APIFailure in the event of a non-recoverable failure mode
      */
     public APIConnector(Config config) {
         try {
@@ -74,7 +74,8 @@ public class APIConnector {
     /**
      * Initialise connector from a give configuration file ignoring any
      * cache settings and using the given cache instance
-     * @param path path to the configuration file
+     * @param config configuration object
+     * @param cache cache object
      * @throws APIFailure in the event of a non-recoverable failure mode
      */
     public APIConnector(Config config, Cache cache) {

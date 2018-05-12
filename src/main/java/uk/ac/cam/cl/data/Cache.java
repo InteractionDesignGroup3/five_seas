@@ -1,5 +1,8 @@
 package uk.ac.cam.cl.data;
 
+import java.util.Set;
+import java.util.HashSet;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -15,7 +18,7 @@ import org.json.simple.parser.ParseException;
 /**
  * Enables JSON to be read and written to cache; also manages
  * threading of caching write backs
- * @author Nathan Corbyn
+ * @author Nathan Corbyn, Max Campman
  */
 public class Cache {
     private Clock clock;
@@ -24,7 +27,9 @@ public class Cache {
     private JSONObject data;
 
     private boolean lock = false, created = false;
-    private int threadCount = 0; 
+    private int threadCount = 0;
+
+    private static Set<Path> usedFiles = new HashSet<>();
 
     /**
      * Initialise the cache using a given clock and cache file (note
@@ -35,6 +40,9 @@ public class Cache {
      * @throws IOException when read fails and a cache could not be created
      */
     public Cache(Clock clock, Path cache) throws IOException {
+        if (usedFiles.contains(cache)) {
+            throw new APIFailure("Cannot have multiple cache instances writing to the same file: " + cache);
+        }
         this.clock = clock;
         this.cache = cache;
         data = read(); 
@@ -51,12 +59,14 @@ public class Cache {
         try {
             Charset charset = Charset.forName("UTF-8");
             reader = Files.newBufferedReader(cache, charset);
-            String json = "", line;
+            StringBuilder json = new StringBuilder();
+            String line;
             while ((line = reader.readLine()) != null)
-                json += line;
+                json.append(line);
             reader.close();
+            
             JSONParser parser = new JSONParser();
-            JSONObject temp = (JSONObject) parser.parse(json);
+            JSONObject temp = (JSONObject) parser.parse(json.toString());
 
             if (!temp.containsKey("marine") 
                     || !temp.containsKey("local") 
@@ -86,7 +96,7 @@ public class Cache {
      * @throws IOException if write cache failed
      */
     private void write() throws IOException {
-        String out = data.toJSONString();
+        String out = this.data.toJSONString();
         BufferedWriter writer = null;
         writer = Files.newBufferedWriter(cache);
         writer.write(out);
@@ -101,7 +111,7 @@ public class Cache {
     public void update(JSONObject data) {
         this.data = new JSONObject(data);
         this.data.put("cache_timestamp", new Long(clock.millis()));
-        created = false;
+        this.created = false;
         dump(); 
     }
 
@@ -109,25 +119,25 @@ public class Cache {
      * Attempts to dump the cache to disk (asynchronous)
      */
     public void dump() {
-        if (threadCount < 2) {
-            threadCount++;
+        if (this.threadCount < 2) {
+            this.threadCount++;
             (new Thread(() -> {
                 //Spin lock (prevents concurrent file access) 
-                while (lock) {
+                while (this.lock) {
                     try { Thread.sleep(100); } 
                     catch (InterruptedException e) { 
-                        threadCount--; 
+                        this.threadCount--;
                         return; 
                     }
                 }
 
-                lock = true;      //Grab lock
+                this.lock = true;      //Grab lock
                 try { write(); }  //Attempt write back
                 catch (IOException e) {
                     e.printStackTrace();    
                 } finally {
-                    lock = false; //Release lock
-                    threadCount--;
+                    this.lock = false; //Release lock
+                    this.threadCount--;
                 }
             })).start();
         }
@@ -137,14 +147,23 @@ public class Cache {
      * Get currently cached data
      */
     public JSONObject getData() {
-        return data;
+        return this.data;
     }
 
     /**
      * Was the cache just created
      */
     public boolean isNew() {
-        return created;
+        return this.created;
+    }
+
+    /**
+     * Remove the cache from the set of files used
+     * */
+    public void closeCache() {
+        Path tmp = cache;
+        cache = null;
+        usedFiles.remove(tmp);
     }
 }
 
