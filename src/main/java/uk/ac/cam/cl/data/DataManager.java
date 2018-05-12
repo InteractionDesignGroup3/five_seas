@@ -82,48 +82,10 @@ public class DataManager {
         JSONObject apiData = api.getData(longitude, latitude);
         List<DataPoint> freshDataSequence = new ArrayList<>();
        
-        try {
-            JSONObject local = (JSONObject) apiData.get("local");
-            JSONObject data = (JSONObject) local.get("data");
-            JSONArray weather = (JSONArray) data.get("weather");
-            for (int i = 0; i < weather.size(); i++) {
-                JSONObject current = (JSONObject) weather.get(i);
-                JSONArray hourly = (JSONArray) current.get("hourly");
-                
-                DateFormat format = new SimpleDateFormat("YYYY-MM-DD");
-                Date date = format.parse((String) current.get("date"));
-
-                for (int j = 0; j < hourly.size(); j++) {
-                    JSONObject hour = (JSONObject) hourly.get(i);
-                    long time = date.getTime() + 3600000 * j;
-                    DataPoint point = new DataPoint(time, 
-                            Double.parseDouble((String) hour.get("tempC")),
-                            Double.parseDouble((String) hour.get("FeelsLikeC")),
-                            Double.parseDouble((String) hour.get("windspeedKmph")),
-                            Double.parseDouble((String) hour.get("WindGustKmph")),
-                            Double.parseDouble((String) hour.get("chanceofrain")),
-                            Double.parseDouble((String) hour.get("precipMM")),
-                            0.0, //TODO get real swell height
-                            0.0, //TODO get real swell period
-                            0.0, //TODO get real tide height
-                            Double.parseDouble((String) hour.get("visibility")),
-                            Integer.parseInt((String) hour.get("weatherCode")));
-                    freshDataSequence.add(point);
-                    lastUpdated = (Long) apiData.get("cache_timestamp");
-                }
-           
-                dataSequence = new ArrayList<>(freshDataSequence);
-                listeners.forEach(listener -> listener.accept(dataSequence));
-            }
-        } catch (NullPointerException e) {
-            //Occurs when not weather data is present (not good)
-            //For now, ignore
-            e.printStackTrace();
-        } catch (ParseException e) {
-            //Occurs when date is malformed (not good)
-            //For now, ignore
-            e.printStackTrace();
-        }
+        //TODO process data (waiting for API token)
+        
+        dataSequence = new ArrayList<>(freshDataSequence);
+        listeners.forEach(listener -> listener.accept(dataSequence));
     }
     
     /**

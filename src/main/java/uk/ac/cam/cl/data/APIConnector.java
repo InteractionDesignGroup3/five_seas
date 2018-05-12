@@ -1,16 +1,19 @@
 package uk.ac.cam.cl.data;
 
+import com.github.kevinsawicki.http.HttpRequest;
+
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.Clock;
+import java.util.Date;
 
-
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
-import com.github.kevinsawicki.http.HttpRequest;
 
 /**
  * Provides all JSON data requried by the data manager (this
@@ -18,7 +21,7 @@ import com.github.kevinsawicki.http.HttpRequest;
  * @author Nathan Corbyn, Max Campman
  */
 public class APIConnector {
-    private final String api, token, marine, local;
+    private final String apiURL, requestBody, user, password;
     private final boolean disableRequests;
     private Cache cache;
 
@@ -30,10 +33,26 @@ public class APIConnector {
     public APIConnector(Path path) {
         try {
             Config config = new Config(path);
-            api = (String) config.get("api_url");
-            marine = (String) config.get("marine_api");
-            local = (String) config.get("local_api");
-            token = (String) config.get("api_token");
+            apiURL = (String) config.get("api_url");
+
+            StringBuilder requestBuilder = new StringBuilder();
+            requestBuilder.append("ZP");
+            requestBuilder.append((String) config.get("api_period"));
+            requestBuilder.append(":PT");
+            requestBuilder.append((String) config.get("api_interval"));
+            requestBuilder.append("/");
+
+            JSONArray parameters = (JSONArray) config.get("api_parameters");
+            for (int i = 0; i < parameters.size(); i++) {
+                requestBuilder.append((String) parameters.get(i));
+                if (i < parameters.size() - 1)
+                    requestBuilder.append(",");
+                else requestBuilder.append("/");
+            }
+
+            requestBody = requestBuilder.toString();
+            user = (String) config.get("api_user");
+            password = (String) config.get("api_password");
             disableRequests = (Boolean) config.get("disable_requests");
             cache = new Cache(Clock.systemUTC(),
                     Paths.get((String) config.get("cache")));
@@ -54,13 +73,30 @@ public class APIConnector {
      */
     public APIConnector(Config config) {
         try {
-            api = (String) config.get("api_url");
-            marine = (String) config.get("marine_api");
-            local = (String) config.get("local_api");
-            token = (String) config.get("api_token");
+            apiURL = (String) config.get("api_url");
+
+            StringBuilder requestBuilder = new StringBuilder();
+            requestBuilder.append("P");
+            requestBuilder.append((String) config.get("api_interval"));
+            requestBuilder.append(":PT");
+            requestBuilder.append((String) config.get("api_period"));
+            requestBuilder.append("/");
+
+            JSONArray parameters = (JSONArray) config.get("api_parameters");
+            for (int i = 0; i < parameters.size(); i++) {
+                requestBuilder.append((String) parameters.get(i));
+                if (i < parameters.size() - 1)
+                    requestBuilder.append(",");
+                else requestBuilder.append("/");
+            }
+
+            requestBody = requestBuilder.toString();
+            user = (String) config.get("api_user");
+            password = (String) config.get("api_password");
             disableRequests = (Boolean) config.get("disable_requests");
-            cache = new Cache(Clock.systemUTC(), 
+            cache = new Cache(Clock.systemUTC(),
                     Paths.get((String) config.get("cache")));
+
         } catch (ConfigurationException e) {
             //Non-recoverable failure mode
             e.printStackTrace();
@@ -92,15 +128,15 @@ public class APIConnector {
      * @param token API token
      * @param cache the cache instance 
      */
-    public APIConnector(String api, 
-            String marine, 
-            String local, 
-            String token, 
+    public APIConnector(String apiURL, 
+            String requestBody, 
+            String user, 
+            String password, 
             Cache cache) {
-        this.api = api;
-        this.marine = marine;
-        this.local = local;
-        this.token = token;
+        this.apiURL = apiURL;
+        this.requestBody = requestBody;
+        this.user = user;
+        this.password = password;
         this.cache = cache;
         this.disableRequests = false;
     }
@@ -138,48 +174,30 @@ public class APIConnector {
         temp.put("longitude", longitude);
         temp.put("latitude", latitude);
 
-        //Local request
         try {
-            HttpRequest localRequest = HttpRequest.get(api + local, true,
-                    'q', latitude + "," + longitude, //Set query location 
-                    "num_of_days", 2, //Whole weeks forecast
-                    "date", "today",  //From today
-                    "fx", "yes",      //Specify whether to include weather forecast
-                    "format", "json", //Specify format (default is XML)
-                    "key", token,     //Pass API token
-                    "tp", 1,          //Sets the time period for requests (hours)
-                    "includelocation", "yes"); //Show location 
-            System.out.println(localRequest.toString());
+            DateFormat format = new SimpleDateFormat("YYYY-MM-DD");
+            String time = format.format(new Date()) + "T00:00:00Z/"; 
+            HttpRequest request = HttpRequest.get("https://" +
+                    user + ":" +
+                    password + "@" +
+                    apiURL + 
+                    time + 
+                    requestBody +
+                    latitude + "," + longitude +
+                    "/json?model=mix", true); 
+            System.out.println(request.toString());
             
-            if (localRequest.ok()) { 
-                String response = localRequest.body();
+            if (request.ok()) { 
+                String response = request.body();
                 try {
                     JSONParser parser = new JSONParser();
                     JSONObject data = (JSONObject) parser.parse(response);
-                    temp.put("local", data);
-                } catch (ParseException e) { e.printStackTrace(); }
-            }
-
-            //Marine request
-            HttpRequest marineRequest = HttpRequest.get(api + marine, true, 
-                    'q', latitude + "," + longitude, //Set query location 
-                    "fx", "yes",      //Specify whether to include weather forecast
-                    "format", "json", //Specify format (default is XML)
-                    "key", token,     //Pass API token
-                    "tp", 24,         //Sets the time period for request (hours)
-                    "tide", "yes");   //Include tide data (default is no)
-
-            if (marineRequest.ok()) { 
-                String response = marineRequest.body();
-                try {
-                    JSONParser parser = new JSONParser();
-                    JSONObject data = (JSONObject) parser.parse(response);
-                    temp.put("marine", data);
+                    temp.put("dump", data);
                 } catch (ParseException e) { e.printStackTrace(); }
             }
         } catch (HttpRequest.HttpRequestException e) { e.printStackTrace(); }
 
-        if (temp.containsKey("marine") && temp.containsKey("local"))
+        if (temp.containsKey("dump"))
             cache.update(temp);
         return cache.getData(); //Always return from cache for timestamp
     }
