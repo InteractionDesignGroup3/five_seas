@@ -19,6 +19,7 @@ import com.github.kevinsawicki.http.HttpRequest;
  */
 public class APIConnector {
     private final String api, token, marine, local;
+    private final boolean disableRequests;
     private Cache cache;
 
     /**
@@ -33,6 +34,7 @@ public class APIConnector {
             marine = (String) config.get("marine_api");
             local = (String) config.get("local_api");
             token = (String) config.get("api_token");
+            disableRequests = (Boolean) config.get("disable_requests");
             cache = new Cache(Clock.systemUTC(), 
                     Paths.get((String) config.get("cache")));
         } catch (ConfigurationException e) {
@@ -56,6 +58,7 @@ public class APIConnector {
             marine = (String) config.get("marine_api");
             local = (String) config.get("local_api");
             token = (String) config.get("api_token");
+            disableRequests = (Boolean) config.get("disable_requests");
             cache = new Cache(Clock.systemUTC(), 
                     Paths.get((String) config.get("cache")));
         } catch (ConfigurationException e) {
@@ -98,6 +101,7 @@ public class APIConnector {
         this.local = local;
         this.token = token;
         this.cache = cache;
+        this.disableRequests = false;
     }
 
     /**
@@ -125,6 +129,8 @@ public class APIConnector {
      */
     @SuppressWarnings("unchecked")
     public JSONObject getData(double longitude, double latitude) {
+        if (disableRequests)
+            return cache.getData();
         if (latitude > 180 || latitude < 0 || longitude > 180 || latitude < -180)
             return cache.getData();
         JSONObject temp = new JSONObject();

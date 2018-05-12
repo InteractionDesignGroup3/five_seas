@@ -189,5 +189,24 @@ public class DataPoint implements Comparable<DataPoint> {
     public int getWeatherCode() {
         return weatherCode;
     }
+
+    /**
+     * Formatted string containing all values in their default units
+     * @return formatted data point string
+     */
+    @Override
+    public String toString() {
+        return "{ " + time + ", " + 
+                temperature + "degC, " + 
+                feelsLikeTemperature + "degC, " +
+                gustSpeedKmPH + "kmph, " +
+                windSpeedKmPH + "kmph, " +
+                chanceOfRain + "%, " +
+                precipitationMM + "mm, " +
+                swellHeight + "m, " +
+                swellPeriod + "m, " +
+                visibility + "km, " +
+                weatherCode + " }";
+    }
 }
 
