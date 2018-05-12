@@ -97,7 +97,7 @@ public class APIConnector {
             cache = new Cache(Clock.systemUTC(),
                     Paths.get((String) config.get("cache")));
 
-        } catch (ConfigurationException e) {
+        } catch (ConfigurationException | NullPointerException e) {
             //Non-recoverable failure mode
             e.printStackTrace();
             throw new APIFailure("Could not load config");
