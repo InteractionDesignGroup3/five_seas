@@ -54,6 +54,7 @@ public class Cache {
             String json = "", line;
             while ((line = reader.readLine()) != null)
                 json += line;
+            reader.close();
             JSONParser parser = new JSONParser();
             JSONObject temp = (JSONObject) parser.parse(json);
 
@@ -75,8 +76,6 @@ public class Cache {
             cache.toFile().delete();
             cache.toFile().createNewFile();  
             created = true; 
-        } finally {
-            reader.close();
         }
         
         return data;

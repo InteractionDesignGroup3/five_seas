@@ -45,9 +45,10 @@ public class DataManager {
             lastUpdated = (Long) apiData.get("cache_timestamp");
         } catch (NoDataException e) {
             //TODO cache is fresh so generate current location (either
-            //lock this to Cambridge in the config or fake it with IP)
-            longitude = 0;
-            latitude = 0;
+            //lock this to Cambridge in the config or fake it with IP -
+            //currently locked to Cambridge)
+            longitude = 0.1218;
+            latitude = 52.2053;
         }
 
         daemon = new Thread(() -> {
@@ -80,14 +81,15 @@ public class DataManager {
     private void update() {
         JSONObject apiData = api.getData(longitude, latitude);
         List<DataPoint> freshDataSequence = new ArrayList<>();
-        
-        JSONObject local = (JSONObject) apiData.get("local");
-        JSONObject data = (JSONObject) local.get("data");
-        JSONArray weather = (JSONArray) data.get("weather");
-        for (int i = 0; i < weather.size(); i++) {
-            JSONObject current = (JSONObject) weather.get(i);
-            JSONArray hourly = (JSONArray) current.get("hourly");
-            try {
+       
+        try {
+            JSONObject local = (JSONObject) apiData.get("local");
+            JSONObject data = (JSONObject) local.get("data");
+            JSONArray weather = (JSONArray) data.get("weather");
+            for (int i = 0; i < weather.size(); i++) {
+                JSONObject current = (JSONObject) weather.get(i);
+                JSONArray hourly = (JSONArray) current.get("hourly");
+                
                 DateFormat format = new SimpleDateFormat("YYYY-MM-DD");
                 Date date = format.parse((String) current.get("date"));
 
@@ -103,6 +105,7 @@ public class DataManager {
                             Double.parseDouble((String) hour.get("precipMM")),
                             0.0, //TODO get real swell height
                             0.0, //TODO get real swell period
+                            0.0, //TODO get real tide height
                             Double.parseDouble((String) hour.get("visibility")),
                             Integer.parseInt((String) hour.get("weatherCode")));
                     freshDataSequence.add(point);
@@ -111,10 +114,15 @@ public class DataManager {
            
                 dataSequence = new ArrayList<>(freshDataSequence);
                 listeners.forEach(listener -> listener.accept(dataSequence));
-            } catch (ParseException e) {
-                //Keep displaying exactly what we're displaying 
-                e.printStackTrace();
             }
+        } catch (NullPointerException e) {
+            //Occurs when not weather data is present (not good)
+            //For now, ignore
+            e.printStackTrace();
+        } catch (ParseException e) {
+            //Occurs when date is malformed (not good)
+            //For now, ignore
+            e.printStackTrace();
         }
     }
     
