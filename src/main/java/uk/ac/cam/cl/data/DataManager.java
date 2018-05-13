@@ -94,7 +94,8 @@ public class DataManager {
             e.printStackTrace();
         } catch(NullPointerException e) {
             //API response is empty so may as well try again
-            update(); 
+            e.printStackTrace();
+            update();
         }
     }
     

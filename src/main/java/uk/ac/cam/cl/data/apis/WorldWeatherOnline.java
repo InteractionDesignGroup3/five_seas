@@ -49,17 +49,17 @@ public class WorldWeatherOnline implements API {
                 Date date = format.parse((String) current.get("date"));
 
                 for (int j = 0; j < hourly.size(); j++) {
-                    JSONObject hour = (JSONObject) hourly.get(i);
+                    JSONObject hour = (JSONObject) hourly.get(j);
                     long time = date.getTime() + 3600000 * j;
                     DataPoint point = new DataPoint(time,
                             Double.parseDouble((String) hour.get("tempC")),
                             Double.parseDouble((String) hour.get("FeelsLikeC")),
                             Double.parseDouble((String) hour.get("windspeedKmph")),
                             Double.parseDouble((String) hour.get("WindGustKmph")),
-                            Double.parseDouble((String) hour.get("chanceofrain")),
+                            0.0, //TODO get real chance of rain
                             Double.parseDouble((String) hour.get("precipMM")),
-                            0.0, //TODO get real swell height
-                            0.0, //TODO get real swell period
+                            Double.parseDouble((String) hour.get("swellHeight_m")),
+                            Double.parseDouble((String) hour.get("swellPeriod_secs")),
                             0.0, //TODO get real tide height
                             Double.parseDouble((String) hour.get("visibility")),
                             Integer.parseInt((String) hour.get("weatherCode")));
@@ -77,9 +77,8 @@ public class WorldWeatherOnline implements API {
     public JSONObject getData(double longitude, double latitude) 
             throws APIRequestException {
         try {
-            HttpRequest request = HttpRequest.get(api + local, true,
+            HttpRequest request = HttpRequest.get(api + marine, true,
                     'q', latitude + "," + longitude, //Set query location
-                    "num_of_days", 7, //Whole weeks forecast
                     "date", "today",  //From today
                     "fx", "yes",      //Specify whether to include weather forecast
                     "format", "json", //Specify format (default is XML)
