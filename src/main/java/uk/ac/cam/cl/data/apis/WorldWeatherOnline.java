@@ -16,6 +16,7 @@ import org.json.simple.parser.ParseException;
 import uk.ac.cam.cl.data.Config;
 import uk.ac.cam.cl.data.ConfigurationException;
 import uk.ac.cam.cl.data.DataPoint;
+import uk.ac.cam.cl.data.DataSequence;
 
 /**
  * Implementation of the World Weather Online API
@@ -33,14 +34,15 @@ public class WorldWeatherOnline implements API {
     }
 
     @Override
-    public List<DataPoint> getProcessedData(JSONObject data) 
+    public List<DataSequence> getProcessedData(JSONObject data) 
             throws APIRequestException {
-        List<DataPoint> sequence = new ArrayList<>();
+        List<DataSequence> sequences = new ArrayList<>();
 
         JSONObject dump = (JSONObject) data.get("dump");
         JSONObject dumpData = (JSONObject) dump.get("data");
         JSONArray weather = (JSONArray) dumpData.get("weather");
         for (int i = 0; i < weather.size(); i++) {
+            List<DataPoint> points = new ArrayList<>();
             JSONObject current = (JSONObject) weather.get(i);
             JSONArray hourly = (JSONArray) current.get("hourly");
 
@@ -63,14 +65,19 @@ public class WorldWeatherOnline implements API {
                             0.0, //TODO get real tide height
                             Double.parseDouble((String) hour.get("visibility")),
                             Integer.parseInt((String) hour.get("weatherCode")));
-                    sequence.add(point);
+                    points.add(point);
                 }
+
+                sequences.add(new DataSequence(date.getTime(), 
+                            0.0, //TODO actual max temperature
+                            0.0, //TODO actual min temperature
+                            points));
             } catch (java.text.ParseException e) {
                 throw new APIRequestException(); 
             }
         }
             
-        return sequence;
+        return sequences;
     }
 
     @Override

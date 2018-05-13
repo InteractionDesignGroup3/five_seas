@@ -78,5 +78,10 @@ public class DataSequence implements Comparable<DataSequence> {
     public DataPoint get(int n) {
         return sequence.get(n);
     }
+
+    @Override
+    public String toString() {
+        return sequence.toString();
+    }
 }
 
