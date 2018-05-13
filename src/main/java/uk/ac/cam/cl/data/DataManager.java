@@ -12,6 +12,10 @@ import java.util.function.Consumer;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import uk.ac.cam.cl.data.apis.APIRequestException;
+import uk.ac.cam.cl.data.apis.Meteomatics;
+import uk.ac.cam.cl.data.apis.WorldWeatherOnline;
+
 /**
  * Manages all data presented to the application (this includes 
  * extracting data points from API responses)
@@ -19,7 +23,7 @@ import org.json.simple.JSONObject;
  */
 public class DataManager {
     public static final long UPDATE_INTERVAL = 900000; 
-    public static final String CONFIG = "config.json";
+    public static final String CONFIG = "wwo.json";
 
     private static DataManager instance;
     private Thread daemon;
@@ -36,7 +40,8 @@ public class DataManager {
      * throw an APIFailure but please do not catch this)
      */
     private DataManager() {
-        api = new APIConnector(Paths.get(CONFIG));
+        //TODO switch to Meteomatics
+        api = new APIConnector(new WorldWeatherOnline(), Paths.get(CONFIG));
         
         try { 
             JSONObject apiData = api.getData();
@@ -80,12 +85,17 @@ public class DataManager {
      */
     private void update() {
         JSONObject apiData = api.getData(longitude, latitude);
-        List<DataPoint> freshDataSequence = new ArrayList<>();
-       
-        //TODO process data (waiting for API token)
-        
-        dataSequence = new ArrayList<>(freshDataSequence);
-        listeners.forEach(listener -> listener.accept(dataSequence));
+        //TODO check cache long and lat match actual long and lat
+        try {
+            dataSequence = new ArrayList<>(api.getProcessedData(apiData));
+            listeners.forEach(listener -> listener.accept(dataSequence));
+        } catch (APIRequestException e) {
+            //TODO improve failure pathway
+            e.printStackTrace();
+        } catch(NullPointerException e) {
+            //API response is empty so may as well try again
+            update(); 
+        }
     }
     
     /**

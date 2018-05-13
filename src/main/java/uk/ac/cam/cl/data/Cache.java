@@ -158,7 +158,7 @@ public class Cache {
 
     /**
      * Remove the cache from the set of files used
-     * */
+     */
     public void closeCache() {
         Path tmp = cache;
         cache = null;

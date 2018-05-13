@@ -9,11 +9,16 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Clock;
 import java.util.Date;
+import java.util.List;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+
+import uk.ac.cam.cl.data.DataPoint;
+import uk.ac.cam.cl.data.apis.API;
+import uk.ac.cam.cl.data.apis.APIRequestException;
 
 /**
  * Provides all JSON data requried by the data manager (this
@@ -21,124 +26,60 @@ import org.json.simple.parser.ParseException;
  * @author Nathan Corbyn, Max Campman
  */
 public class APIConnector {
-    private final String apiURL, requestBody, user, password;
-    private final boolean disableRequests;
+    private API api;
+    private boolean disableRequests;
     private Cache cache;
 
     /**
-     * Initialise connector from a given configuration file
+     * Initialise connector for a given API from a given configuration file
+     * @param api the API to use
      * @param path path to the configuration file
      * @throws APIFailure in the event of a non-recoverable failure mode
      */
-    public APIConnector(Path path) {
+    public APIConnector(API api, Path path) {
+        this.api = api;
         try {
             Config config = new Config(path);
-            apiURL = (String) config.get("api_url");
-
-            StringBuilder requestBuilder = new StringBuilder();
-            requestBuilder.append("ZP");
-            requestBuilder.append((String) config.get("api_period"));
-            requestBuilder.append(":PT");
-            requestBuilder.append((String) config.get("api_interval"));
-            requestBuilder.append("/");
-
-            JSONArray parameters = (JSONArray) config.get("api_parameters");
-            for (int i = 0; i < parameters.size(); i++) {
-                requestBuilder.append((String) parameters.get(i));
-                if (i < parameters.size() - 1)
-                    requestBuilder.append(",");
-                else requestBuilder.append("/");
-            }
-
-            requestBody = requestBuilder.toString();
-            user = (String) config.get("api_user");
-            password = (String) config.get("api_password");
+            api.initFromConfig(config);
             disableRequests = (Boolean) config.get("disable_requests");
             cache = new Cache(Clock.systemUTC(),
                     Paths.get((String) config.get("cache")));
-        } catch (ConfigurationException e) {
-            //Non-recoverable failure mode
-            e.printStackTrace();
-            throw new APIFailure("Could not load config");
-        } catch (IOException e) {
+        } catch (ConfigurationException | IOException e) {
             e.printStackTrace();
             throw new APIFailure("Could not create or load cache");
         }
     }
 
     /**
-     * Initialise connector from a given configuration instance
+     * Initialise connector for a given API from a given configuration instance
+     * @param api the API to use
      * @param config the configuration instance
      * @throws APIFailure in the event of a non-recoverable failure mode
      */
-    public APIConnector(Config config) {
+    public APIConnector(API api, Config config) {
+        this.api = api;
         try {
-            apiURL = (String) config.get("api_url");
-
-            StringBuilder requestBuilder = new StringBuilder();
-            requestBuilder.append("P");
-            requestBuilder.append((String) config.get("api_interval"));
-            requestBuilder.append(":PT");
-            requestBuilder.append((String) config.get("api_period"));
-            requestBuilder.append("/");
-
-            JSONArray parameters = (JSONArray) config.get("api_parameters");
-            for (int i = 0; i < parameters.size(); i++) {
-                requestBuilder.append((String) parameters.get(i));
-                if (i < parameters.size() - 1)
-                    requestBuilder.append(",");
-                else requestBuilder.append("/");
-            }
-
-            requestBody = requestBuilder.toString();
-            user = (String) config.get("api_user");
-            password = (String) config.get("api_password");
+            api.initFromConfig(config);
             disableRequests = (Boolean) config.get("disable_requests");
             cache = new Cache(Clock.systemUTC(),
                     Paths.get((String) config.get("cache")));
-
-        } catch (ConfigurationException | NullPointerException e) {
-            //Non-recoverable failure mode
-            e.printStackTrace();
-            throw new APIFailure("Could not load config");
-        } catch (IOException e) {
+        } catch (ConfigurationException | NullPointerException | IOException e) {
             e.printStackTrace();
             throw new APIFailure("Could not create or load cache");
         }
     }
 
     /**
-     * Initialise connector from a give configuration file ignoring any
-     * cache settings and using the given cache instance
+     * Initialise connector for a given API from a give configuration file 
+     * ignoring any cache settings and using the given cache instance
+     * @param api the API to use
      * @param config configuration object
      * @param cache cache object
      * @throws APIFailure in the event of a non-recoverable failure mode
      */
-    public APIConnector(Config config, Cache cache) {
-        this(config);
+    public APIConnector(API api, Config config, Cache cache) {
+        this(api, config);
         this.cache = cache;
-    }
-
-    /**
-     * Initialise connector from an API url, marine API name, local API name 
-     * token and cache instance
-     * @param api the API URL
-     * @param marine the marine API name
-     * @param local the local API name
-     * @param token API token
-     * @param cache the cache instance 
-     */
-    public APIConnector(String apiURL, 
-            String requestBody, 
-            String user, 
-            String password, 
-            Cache cache) {
-        this.apiURL = apiURL;
-        this.requestBody = requestBody;
-        this.user = user;
-        this.password = password;
-        this.cache = cache;
-        this.disableRequests = false;
     }
 
     /**
@@ -158,7 +99,7 @@ public class APIConnector {
 
     /**
      * Makes a request to the API for fresh data for the given longitude 
-     * and latitude(if this can't be found or is somehow malformed, 
+     * and latitude (if this can't be found or is somehow malformed, 
      * previously cached data is returned)
      * @param longitude target longitude
      * @param latitude target latitude
@@ -175,31 +116,38 @@ public class APIConnector {
         temp.put("latitude", latitude);
 
         try {
-            DateFormat format = new SimpleDateFormat("YYYY-MM-DD");
-            String time = format.format(new Date()) + "T00:00:00Z/"; 
-            HttpRequest request = HttpRequest.get("https://" +
-                    user + ":" +
-                    password + "@" +
-                    apiURL + 
-                    time + 
-                    requestBody +
-                    latitude + "," + longitude +
-                    "/json?model=mix", true); 
-            System.out.println(request.toString());
-            
-            if (request.ok()) { 
-                String response = request.body();
-                try {
-                    JSONParser parser = new JSONParser();
-                    JSONObject data = (JSONObject) parser.parse(response);
-                    temp.put("dump", data);
-                } catch (ParseException e) { e.printStackTrace(); }
-            }
-        } catch (HttpRequest.HttpRequestException e) { e.printStackTrace(); }
-
-        if (temp.containsKey("dump"))
+            JSONObject apiResponse = api.getData(longitude, latitude);
+            temp.put("dump", apiResponse);
             cache.update(temp);
-        return cache.getData(); //Always return from cache for timestamp
+            return cache.getData();
+        } catch (APIRequestException e) {
+            return cache.getData(); 
+        }
+    }
+
+    /**
+     * Uses API implementation to produce data sequence
+     * @param data data to convert to data sequence
+     * @return processed data sequence
+     * @throws APIRequestException if the API data could not be processed
+     */
+    public List<DataPoint> getProcessedData(JSONObject data) 
+            throws APIRequestException {
+        return api.getProcessedData(data);
+    }
+
+    /**
+     * Disables API requests
+     */
+    public void disableRequests() {
+        disableRequests = true;
+    }
+
+    /**
+     * Enables API requests
+     */
+    public void enableRequests() {
+        disableRequests = false;
     }
 }
 
