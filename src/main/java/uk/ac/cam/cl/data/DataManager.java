@@ -12,6 +12,10 @@ import java.util.function.Consumer;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import uk.ac.cam.cl.data.apis.APIRequestException;
+import uk.ac.cam.cl.data.apis.Meteomatics;
+import uk.ac.cam.cl.data.apis.WorldWeatherOnline;
+
 /**
  * Manages all data presented to the application (this includes 
  * extracting data points from API responses)
@@ -19,7 +23,7 @@ import org.json.simple.JSONObject;
  */
 public class DataManager {
     public static final long UPDATE_INTERVAL = 900000; 
-    public static final String CONFIG = "config.json";
+    public static final String CONFIG = "wwo.json";
 
     private static DataManager instance;
     private Thread daemon;
@@ -36,7 +40,8 @@ public class DataManager {
      * throw an APIFailure but please do not catch this)
      */
     private DataManager() {
-        api = new APIConnector(Paths.get(CONFIG));
+        //TODO switch to Meteomatics
+        api = new APIConnector(new WorldWeatherOnline(), Paths.get(CONFIG));
         
         try { 
             JSONObject apiData = api.getData();
@@ -45,9 +50,10 @@ public class DataManager {
             lastUpdated = (Long) apiData.get("cache_timestamp");
         } catch (NoDataException e) {
             //TODO cache is fresh so generate current location (either
-            //lock this to Cambridge in the config or fake it with IP)
-            longitude = 0;
-            latitude = 0;
+            //lock this to Cambridge in the config or fake it with IP -
+            //currently locked to Cambridge)
+            longitude = 0.1218;
+            latitude = 52.2053;
         }
 
         daemon = new Thread(() -> {
@@ -79,42 +85,16 @@ public class DataManager {
      */
     private void update() {
         JSONObject apiData = api.getData(longitude, latitude);
-        List<DataPoint> freshDataSequence = new ArrayList<>();
-        
-        JSONObject local = (JSONObject) apiData.get("local");
-        JSONObject data = (JSONObject) local.get("data");
-        JSONArray weather = (JSONArray) data.get("weather");
-        for (int i = 0; i < weather.size(); i++) {
-            JSONObject current = (JSONObject) weather.get(i);
-            JSONArray hourly = (JSONArray) current.get("hourly");
-            try {
-                DateFormat format = new SimpleDateFormat("YYYY-MM-DD");
-                Date date = format.parse((String) current.get("date"));
-
-                for (int j = 0; j < hourly.size(); j++) {
-                    JSONObject hour = (JSONObject) hourly.get(i);
-                    long time = date.getTime() + 3600000 * j;
-                    DataPoint point = new DataPoint(time, 
-                            Double.parseDouble((String) hour.get("tempC")),
-                            Double.parseDouble((String) hour.get("FeelsLikeC")),
-                            Double.parseDouble((String) hour.get("windspeedKmph")),
-                            Double.parseDouble((String) hour.get("WindGustKmph")),
-                            Double.parseDouble((String) hour.get("chanceofrain")),
-                            Double.parseDouble((String) hour.get("precipMM")),
-                            0.0, //TODO get real swell height
-                            0.0, //TODO get real swell period
-                            Double.parseDouble((String) hour.get("visibility")),
-                            Integer.parseInt((String) hour.get("weatherCode")));
-                    freshDataSequence.add(point);
-                    lastUpdated = (Long) apiData.get("cache_timestamp");
-                }
-           
-                dataSequence = new ArrayList<>(freshDataSequence);
-                listeners.forEach(listener -> listener.accept(dataSequence));
-            } catch (ParseException e) {
-                //Keep displaying exactly what we're displaying 
-                e.printStackTrace();
-            }
+        //TODO check cache long and lat match actual long and lat
+        try {
+            dataSequence = new ArrayList<>(api.getProcessedData(apiData));
+            listeners.forEach(listener -> listener.accept(dataSequence));
+        } catch (APIRequestException e) {
+            //TODO improve failure pathway
+            e.printStackTrace();
+        } catch(NullPointerException e) {
+            //API response is empty so may as well try again
+            update(); 
         }
     }
     

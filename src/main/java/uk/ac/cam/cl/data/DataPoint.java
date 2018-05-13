@@ -25,6 +25,7 @@ public class DataPoint implements Comparable<DataPoint> {
            precipitationMM,           //Precipitation in millimetres
            swellHeight,               //Swell height in metres
            swellPeriod,               //Swell period in seconds
+           tideHeight,                //Tide height in metres
            visibility;                //Visibility in kilometres
     private final int weatherCode;    //Used for weather overview
 
@@ -39,6 +40,7 @@ public class DataPoint implements Comparable<DataPoint> {
      * @param precipitationMM precipiration in millimetres
      * @param swellHeight swell height in metres
      * @param swellPeriod swell period in seconds
+     * @param tideHeight tide height in metres
      * @param visibility visibility in kilometres
      * @param weatherCode a code used to represent the weather overview
      */
@@ -50,7 +52,8 @@ public class DataPoint implements Comparable<DataPoint> {
             double chanceOfRain, 
             double precipitationMM, 
             double swellHeight, 
-            double swellPeriod, 
+            double swellPeriod,
+            double tideHeight,
             double visibility, 
             int weatherCode) {
         this.time = time;
@@ -62,6 +65,7 @@ public class DataPoint implements Comparable<DataPoint> {
         this.precipitationMM = precipitationMM;
         this.swellHeight = swellHeight;
         this.swellPeriod = swellPeriod;
+        this.tideHeight = tideHeight;
         this.visibility = visibility;
         this.weatherCode = weatherCode;
     }
@@ -177,6 +181,14 @@ public class DataPoint implements Comparable<DataPoint> {
     public double getSwellPeriod() {
         return swellPeriod;
     }
+    
+    public double getTideHeightM() {
+        return tideHeight;
+    }
+
+    public double getTideHeightFeet() {
+        return mToFeet(tideHeight);
+    }
 
     public double getVisibilityKM() {
         return visibility;
@@ -205,6 +217,7 @@ public class DataPoint implements Comparable<DataPoint> {
                 precipitationMM + "mm, " +
                 swellHeight + "m, " +
                 swellPeriod + "m, " +
+                tideHeight + "m, " + 
                 visibility + "km, " +
                 weatherCode + " }";
     }

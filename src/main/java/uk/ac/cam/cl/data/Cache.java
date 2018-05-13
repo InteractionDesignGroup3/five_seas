@@ -18,7 +18,7 @@ import org.json.simple.parser.ParseException;
 /**
  * Enables JSON to be read and written to cache; also manages
  * threading of caching write backs
- * @author Nathan Corbyn
+ * @author Nathan Corbyn, Max Campman
  */
 public class Cache {
     private Clock clock;
@@ -63,11 +63,12 @@ public class Cache {
             String line;
             while ((line = reader.readLine()) != null)
                 json.append(line);
+            reader.close();
+            
             JSONParser parser = new JSONParser();
             JSONObject temp = (JSONObject) parser.parse(json.toString());
 
-            if (!temp.containsKey("marine") 
-                    || !temp.containsKey("local") 
+            if (!temp.containsKey("dump") 
                     || !temp.containsKey("cache_timestamp")
                     || !temp.containsKey("longitude")
                     || !temp.containsKey("latitude"))
@@ -84,8 +85,6 @@ public class Cache {
             cache.toFile().delete();
             cache.toFile().createNewFile();  
             created = true; 
-        } finally {
-            reader.close();
         }
         
         return data;
@@ -158,8 +157,8 @@ public class Cache {
     }
 
     /**
-     * Remove the cache from the set of files used.
-     * */
+     * Remove the cache from the set of files used
+     */
     public void closeCache() {
         Path tmp = cache;
         cache = null;
