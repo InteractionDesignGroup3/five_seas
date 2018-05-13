@@ -68,8 +68,7 @@ public class Cache {
             JSONParser parser = new JSONParser();
             JSONObject temp = (JSONObject) parser.parse(json.toString());
 
-            if (!temp.containsKey("marine") 
-                    || !temp.containsKey("local") 
+            if (!temp.containsKey("dump") 
                     || !temp.containsKey("cache_timestamp")
                     || !temp.containsKey("longitude")
                     || !temp.containsKey("latitude"))
@@ -159,7 +158,7 @@ public class Cache {
 
     /**
      * Remove the cache from the set of files used
-     * */
+     */
     public void closeCache() {
         Path tmp = cache;
         cache = null;
