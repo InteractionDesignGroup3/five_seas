@@ -15,6 +15,7 @@ import org.json.simple.parser.ParseException;
 import uk.ac.cam.cl.data.Config;
 import uk.ac.cam.cl.data.ConfigurationException;
 import uk.ac.cam.cl.data.DataPoint;
+import uk.ac.cam.cl.data.DataSequence;
 import uk.ac.cam.cl.data.apis.API;
 
 /**
@@ -49,7 +50,7 @@ public class Meteomatics implements API {
     }
 
     @Override
-    public List<DataPoint> getProcessedData(JSONObject data) {
+    public List<DataSequence> getProcessedData(JSONObject data) {
         //TODO process data
         return null;
     }

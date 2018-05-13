@@ -126,12 +126,12 @@ public class APIConnector {
     }
 
     /**
-     * Uses API implementation to produce data sequence
+     * Uses API implementation to produce data sequences
      * @param data data to convert to data sequence
-     * @return processed data sequence
+     * @return processed data sequences
      * @throws APIRequestException if the API data could not be processed
      */
-    public List<DataPoint> getProcessedData(JSONObject data) 
+    public List<DataSequence> getProcessedData(JSONObject data) 
             throws APIRequestException {
         return api.getProcessedData(data);
     }

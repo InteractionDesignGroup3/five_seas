@@ -6,7 +6,7 @@ import org.json.simple.JSONObject;
 
 import uk.ac.cam.cl.data.Config;
 import uk.ac.cam.cl.data.ConfigurationException;
-import uk.ac.cam.cl.data.DataPoint;
+import uk.ac.cam.cl.data.DataSequence;
 
 /**
  * Standard interface implemented by all APIs 
@@ -26,7 +26,7 @@ public interface API {
      * @return the processed API response
      * @throws APIRequestException if the API data could not be processed
      */
-    public List<DataPoint> getProcessedData(JSONObject data)
+    public List<DataSequence> getProcessedData(JSONObject data)
             throws APIRequestException;
 
     /**

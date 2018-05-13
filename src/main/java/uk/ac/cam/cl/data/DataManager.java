@@ -5,6 +5,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.function.Consumer;
@@ -32,8 +33,8 @@ public class DataManager {
     private long lastUpdated = 0;
     private double longitude, latitude;
 
-    private List<DataPoint> dataSequence = new ArrayList<>();
-    private List<Consumer<List<DataPoint>>> listeners = new ArrayList<>();
+    private List<DataSequence> data = new ArrayList<>();
+    private List<Consumer<List<DataSequence>>> listeners = new ArrayList<>();
 
     /**
      * Singleton constructor initialises daemon thread (could
@@ -87,8 +88,10 @@ public class DataManager {
         JSONObject apiData = api.getData(longitude, latitude);
         //TODO check cache long and lat match actual long and lat
         try {
-            dataSequence = new ArrayList<>(api.getProcessedData(apiData));
-            listeners.forEach(listener -> listener.accept(dataSequence));
+            data = new ArrayList<>(api.getProcessedData(apiData));
+            Collections.sort(data);
+            listeners.forEach(listener -> 
+                    listener.accept(new ArrayList<>(data)));
         } catch (APIRequestException e) {
             //TODO improve failure pathway
             e.printStackTrace();
@@ -137,9 +140,9 @@ public class DataManager {
      * Add a listener (called when data is updated)
      * @param listener consumer executed on data change
      */
-    public void addListener(Consumer<List<DataPoint>> listener) {
+    public void addListener(Consumer<List<DataSequence>> listener) {
         listeners.add(listener);
-        listener.accept(dataSequence);
+        listener.accept(data);
     }
 }
 
