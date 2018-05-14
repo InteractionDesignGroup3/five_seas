@@ -85,20 +85,24 @@ public class DataManager {
      * Updates the available data and triggers all listeners
      */
     private void update() {
-        JSONObject apiData = api.getData(longitude, latitude);
-        //TODO check cache long and lat match actual long and lat
-        try {
-            data = new ArrayList<>(api.getProcessedData(apiData));
-            Collections.sort(data);
-            listeners.forEach(listener -> 
-                    listener.accept(new ArrayList<>(data)));
-        } catch (APIRequestException e) {
-            //TODO improve failure pathway
-            e.printStackTrace();
-        } catch(NullPointerException e) {
-            //API response is empty so may as well try again
-            e.printStackTrace();
-            update();
+        while (true) {
+            JSONObject apiData = api.getData(longitude, latitude);
+            //TODO check cache long and lat match actual long and lat
+            try {
+                data = new ArrayList<>(api.getProcessedData(apiData));
+                Collections.sort(data);
+                listeners.forEach(listener -> 
+                        listener.accept(new ArrayList<>(data)));
+                break;
+            } catch (APIRequestException | NullPointerException e) {
+                e.printStackTrace();
+                try {
+                    Thread.sleep(100);
+                    continue;
+                } catch (InterruptedException e2) {
+                    continue;
+                }
+            }
         }
     }
     
