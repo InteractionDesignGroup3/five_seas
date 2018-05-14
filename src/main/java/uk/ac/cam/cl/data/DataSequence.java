@@ -45,6 +45,10 @@ public class DataSequence implements Comparable<DataSequence> {
         return (new Long(time)).compareTo(new Long(other.time));
     }
 
+    public long getTime() {
+        return time;
+    }
+
     public double getMaxTemperatureC() {
         return maxTemperature;
     }

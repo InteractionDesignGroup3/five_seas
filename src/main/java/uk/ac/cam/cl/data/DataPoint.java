@@ -18,7 +18,7 @@ public class DataPoint implements Comparable<DataPoint> {
            swellPeriod,               //Swell period in seconds
            tideHeight,                //Tide height in metres
            visibility;                //Visibility in kilometres
-    private final int weatherCode;    //Used for weather overview
+    private final long weatherCode;   //Used for weather overview
 
     /**
      * Instantiates a new data point with all of the necessary information
@@ -46,7 +46,7 @@ public class DataPoint implements Comparable<DataPoint> {
             double swellPeriod,
             double tideHeight,
             double visibility, 
-            int weatherCode) {
+            long weatherCode) {
         this.time = time;
         this.temperature = temperature;
         this.feelsLikeTemperature = feelsLikeTemperature;
@@ -69,6 +69,10 @@ public class DataPoint implements Comparable<DataPoint> {
     @Override
     public int compareTo(DataPoint other) {
         return (new Long(time)).compareTo(new Long(other.time));
+    }
+
+    public long getTime() {
+        return time;
     }
 
     public double getTemperatureCelcius() {
@@ -159,7 +163,7 @@ public class DataPoint implements Comparable<DataPoint> {
         return Conversions.kmToMiles(visibility);
     }
 
-    public int getWeatherCode() {
+    public long getWeatherCode() {
         return weatherCode;
     }
 

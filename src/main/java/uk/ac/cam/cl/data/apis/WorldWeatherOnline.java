@@ -47,7 +47,7 @@ public class WorldWeatherOnline implements API {
             JSONArray hourly = (JSONArray) current.get("hourly");
 
             try {
-                DateFormat format = new SimpleDateFormat("YYYY-MM-DD");
+                DateFormat format = new SimpleDateFormat("YYYY-MM-dd");
                 Date date = format.parse((String) current.get("date"));
 
                 for (int j = 0; j < hourly.size(); j++) {
