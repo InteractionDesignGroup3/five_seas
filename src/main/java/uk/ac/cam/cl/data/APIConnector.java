@@ -25,8 +25,8 @@ import uk.ac.cam.cl.data.apis.APIRequestException;
  * may either be from the API directly or from a cache)
  * @author Nathan Corbyn, Max Campman
  */
-public class APIConnector {
-    private API api;
+public class APIConnector<T> {
+    private API<T> api;
     private boolean disableRequests;
     private Cache cache;
 
@@ -36,7 +36,7 @@ public class APIConnector {
      * @param path path to the configuration file
      * @throws APIFailure in the event of a non-recoverable failure mode
      */
-    public APIConnector(API api, Path path) {
+    public APIConnector(API<T> api, Path path) {
         this.api = api;
         try {
             Config config = new Config(path);
@@ -56,7 +56,7 @@ public class APIConnector {
      * @param config the configuration instance
      * @throws APIFailure in the event of a non-recoverable failure mode
      */
-    public APIConnector(API api, Config config) {
+    public APIConnector(API<T> api, Config config) {
         this.api = api;
         try {
             api.initFromConfig(config);
@@ -77,7 +77,7 @@ public class APIConnector {
      * @param cache cache object
      * @throws APIFailure in the event of a non-recoverable failure mode
      */
-    public APIConnector(API api, Config config, Cache cache) {
+    public APIConnector(API<T> api, Config config, Cache cache) {
         this(api, config);
         this.cache = cache;
     }
@@ -124,6 +124,35 @@ public class APIConnector {
             return cache.getData(); 
         }
     }
+    
+    /**
+     * Makes a request to the API for fresh data for the given coordinates 
+     * and target (if this can't be found or is somehow malformed, 
+     * previously cached data is returned)
+     * @param longitude target longitude
+     * @param latitude target latitude
+     * @param target the name of the target location
+     * @return parsed JSON object from API or cache
+     */
+    @SuppressWarnings("unchecked")
+    public JSONObject getData(double longitude, double latitude, String target) {
+        if (disableRequests)
+            return cache.getData();
+        if (latitude > 180 || latitude < 0 || longitude > 180 || latitude < -180)
+            return cache.getData();
+        JSONObject temp = new JSONObject();
+        temp.put("longitude", longitude);
+        temp.put("latitude", latitude);
+
+        try {
+            JSONObject apiResponse = api.getData(longitude, latitude);
+            temp.put("dump", apiResponse);
+            cache.update(temp);
+            return cache.getData();
+        } catch (APIRequestException e) {
+            return cache.getData(); 
+        }
+    }
 
     /**
      * Uses API implementation to produce data sequences
@@ -131,7 +160,7 @@ public class APIConnector {
      * @return processed data sequences
      * @throws APIRequestException if the API data could not be processed
      */
-    public List<DataSequence> getProcessedData(JSONObject data) 
+    public List<T> getProcessedData(JSONObject data) 
             throws APIRequestException {
         return api.getProcessedData(data);
     }
