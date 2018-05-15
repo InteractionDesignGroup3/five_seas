@@ -36,6 +36,8 @@ public class DataManager {
     private List<DataSequence> data = new ArrayList<>();
     private List<Consumer<List<DataSequence>>> listeners = new ArrayList<>();
 
+    private static final double COORD_ERROR = 9.0e-5;
+
     /**
      * Singleton constructor initialises daemon thread (could
      * throw an APIFailure but please do not catch this)
@@ -86,7 +88,15 @@ public class DataManager {
     private void update() {
         while (true) {
             JSONObject apiData = api.getData(longitude, latitude);
-            //TODO check cache long and lat match actual long and lat
+            double apiLongitude = (Double) apiData.get("longitude");
+            double apiLatitude = (Double) apiData.get("latitude");
+
+            //If API does not return data for target use cache coordinates
+            if (Math.abs(apiLongitude - longitude) < COORD_ERROR)
+                longitude = apiLongitude;
+            if (Math.abs(apiLatitude - latitude) < COORD_ERROR)
+                latitude = apiLatitude;
+
             try {
                 data = new ArrayList<>(api.getProcessedData(apiData));
                 Collections.sort(data);
