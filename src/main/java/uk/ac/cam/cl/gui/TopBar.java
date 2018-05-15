@@ -32,15 +32,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TopBar extends GridPane {
-
-    private Config hereAPI;
     private Main parent;
 
     private DataManager dm = DataManager.getInstance();
-
-    String hereURL;
-    String hereAppId;
-    String hereAppCode;
 
     List<String> places = new ArrayList<>();
 
@@ -59,15 +53,6 @@ public class TopBar extends GridPane {
         this.add(initLocButton(), 0, 0);
         this.add(initSearchBox(), 1, 0);
         this.add(initMenuButton(), 2, 0);
-
-        try {
-            hereAPI = new Config(Paths.get("here.json"));
-            hereURL = (String) hereAPI.get("api_url");
-            hereAppId = (String) hereAPI.get("app_id");
-            hereAppCode = (String) hereAPI.get("app_code");
-        } catch (ConfigurationException e) {
-            e.printStackTrace();
-        }
     }
 
     private Button initLocButton() {
