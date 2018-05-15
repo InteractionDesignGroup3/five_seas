@@ -47,10 +47,16 @@ public class Config {
      * @return the corresponding value 
      * @throws ConfigurationException if the key is not found
      */
-    public Object get(String key) throws ConfigurationException {
-        Object value = configuration.get(key);
-        if (value != null) return value;
-        else throw new ConfigurationException("No value for key " + key + " found");
+    @SuppressWarnings("unchecked")
+    public<T> T get(String key) throws ConfigurationException {
+        try {
+            T value = (T) configuration.get(key);
+            if (value != null) return value;
+            else 
+                throw new ConfigurationException("No value for key " + key + " found");
+        } catch (ClassCastException e) {
+            throw new ConfigurationException("Type mismatch for key " + key);
+        }
     }
 }
 

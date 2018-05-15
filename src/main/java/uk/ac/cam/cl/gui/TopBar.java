@@ -67,11 +67,7 @@ public class TopBar extends GridPane {
         searchBox.setText("Location");
         GridPane.setHalignment(searchBox, HPos.CENTER);
 
-        AutoCompletionBinding<String> stringAutoCompletionBinding = TextFields.bindAutoCompletion(searchBox, t-> {
-            HereMaps maps = HereMaps.getInstance();
-            places = maps.getPlaces(searchBox.getText());
-            return places;
-        });
+        AutoCompletionBinding<String> stringAutoCompletionBinding = TextFields.bindAutoCompletion(searchBox, t-> places);
 
         return searchBox;
     }
