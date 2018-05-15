@@ -144,6 +144,7 @@ public class Cache {
 
     /**
      * Get currently cached data
+     * @return the currently cached data
      */
     public JSONObject getData() {
         return this.data;
@@ -151,6 +152,7 @@ public class Cache {
 
     /**
      * Was the cache just created
+     * @return true if the cache was just created (false otherwise)
      */
     public boolean isNew() {
         return this.created;

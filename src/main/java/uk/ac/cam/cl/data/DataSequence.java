@@ -23,6 +23,7 @@ public class DataSequence implements Comparable<DataSequence> {
      * @param time time corresponding to data (unix)
      * @param maxTemperature the maximum temperature over the sequence
      * @param minTemperature the minimum temperature over the sequence
+     * @param sequence the list of data points to intialise from
      */
     public DataSequence(long time, 
             double maxTemperature, 
