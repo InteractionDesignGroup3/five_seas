@@ -38,7 +38,6 @@ public class TopBar extends GridPane {
 
     private DataManager dm = DataManager.getInstance();
 
-
     private List<Location> places = new ArrayList<>();
 
     public TopBar(Main parent) {
@@ -72,20 +71,17 @@ public class TopBar extends GridPane {
 
         AutoCompletionBinding<String> stringAutoCompletionBinding = TextFields.bindAutoCompletion(searchBox, t-> {
             places = dm.getLocations(searchBox.getText());
-            return places.stream().map(x -> x.getName()).collect(Collectors.toList());
+            return places.stream().map(x -> x.toString()).collect(Collectors.toList());
         });
 
         searchBox.setOnAction((event) -> {
-            double lon = 0.0;
-            double lat = 0.0;
             for (Location loc : places) {
-                if (loc.getName() == searchBox.getText()) {
-                    lat = loc.getLatitude();
-                    lon = loc.getLongitude();
+                if (loc.toString().equals(searchBox.getText())) {
+                    dm.setCoordinates(loc.getLongitude(), loc.getLatitude());
                     break;
                 }
             }
-            dm.setCoordinates(lon, lat);
+
         });
 
         return searchBox;
