@@ -14,27 +14,30 @@ import java.util.List;
 
 /**
  * A base Graph widget for displaying plots of data against time.
+ * @author Ben Cole
  */
 public abstract class GraphWidget extends Widget {
 
     private AreaChart<String, Number> mChart;
     private CategoryAxis xAxis;
     private NumberAxis yAxis;
-    private String chartTitle;
 
     public GraphWidget() {
         super();
-
         xAxis = new CategoryAxis();
         yAxis = new NumberAxis();
         mChart = new AreaChart<>(xAxis, yAxis);
         mChart.setTitle(getChartTitle());
         mChart.setLegendVisible(false);
         DataManager.getInstance().addListener(this::plot);
-
         this.add(mChart, 0, 0);
+        // TODO: Stop graphs from compacting vertically
     }
 
+    /**
+     * Returns the name of the chart, determined by the specific graph.
+     * @return the name of the chart
+     */
     protected abstract String getChartTitle();
 
     /**
@@ -55,19 +58,14 @@ public abstract class GraphWidget extends Widget {
         }
         mChart.getData().clear();
         mChart.getData().addAll(series);
-//        mChart.updateAxisRange();
     }
-
-    protected abstract double getRelevantData(DataPoint dataPoint);
 
     /**
-     * Returns the currently selected day, determined by the user's selection on the slider
-     * @return currentDay, an integer in [0, 6]
+     * Returns the needed data from a DataPoint object - this is specific to the graph being displayed. Subclasses
+     * implement this method and extract the relevant information from the passed DataPoint object.
+     * @param dataPoint a DataPoint object from which to extract data
+     * @return the data that was extracted from it
      */
-    private int getSelectedDay() {
-        // TODO: Handle passing selected day
-        return 0;
-    }
-
+    protected abstract double getRelevantData(DataPoint dataPoint);
 
 }
