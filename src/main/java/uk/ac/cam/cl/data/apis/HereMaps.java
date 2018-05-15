@@ -42,8 +42,8 @@ public class HereMaps implements API<Location> {
                 latitude = (Double) position.get(0);
                 longitude = (Double) position.get(1);
             } catch (NullPointerException e) {
-                latitude = (Double) dump.get("latitude");
-                longitude = (Double) dump.get("longitude");
+                latitude = (Double) data.get("latitude");
+                longitude = (Double) data.get("longitude");
             }
 
             String title = (String) place.get("title");
@@ -68,9 +68,7 @@ public class HereMaps implements API<Location> {
                 "tf", "plain").accept("application/json");
 
             if (request.ok()) {
-                System.out.println(request);
                 String response = request.body();
-                System.out.println(response);
                 try {
                     JSONParser parser = new JSONParser();
                     return (JSONObject) parser.parse(response);
