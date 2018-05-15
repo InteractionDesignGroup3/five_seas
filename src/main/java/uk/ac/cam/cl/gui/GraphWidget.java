@@ -45,7 +45,7 @@ public abstract class GraphWidget extends Widget {
      */
     private void plot(List<DataSequence> dataSequenceList) {
         XYChart.Series series = new XYChart.Series();
-        DataSequence toPlot = dataSequenceList.get(getSelectedDay());
+        DataSequence toPlot = dataSequenceList.get(DataManager.getInstance().getDay());
         for (int i = 0; i < toPlot.size(); i++) {
             if (i % 4 != 0) continue;  // TODO: Find a better way to plot only hourly values
             DataPoint dataPoint = toPlot.get(i);
@@ -53,6 +53,7 @@ public abstract class GraphWidget extends Widget {
             String timeFormatted = DateTimeFormatter.ofPattern("HH:mm").withZone(ZoneId.systemDefault()).format(instant);
             series.getData().add(new XYChart.Data(timeFormatted, getRelevantData(dataPoint)));
         }
+        mChart.getData().clear();
         mChart.getData().addAll(series);
 //        mChart.updateAxisRange();
     }
