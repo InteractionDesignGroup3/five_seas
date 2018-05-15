@@ -23,7 +23,7 @@ import uk.ac.cam.cl.data.apis.API;
  * Implementation of the Meteomatics API
  * @author Nathan Corbyn
  */
-public class Meteomatics implements API {
+public class Meteomatics implements API<DataSequence> {
     private String apiURL, requestBody, user, password;
     private long period, interval;
 
@@ -151,6 +151,12 @@ public class Meteomatics implements API {
             e.printStackTrace(); 
             throw new APIRequestException();  
         }
+    }
+
+    @Override
+    public JSONObject getData(double longitude, double latitude, String target) 
+            throws APIRequestException {
+        return getData(longitude, latitude);
     }
 }
 

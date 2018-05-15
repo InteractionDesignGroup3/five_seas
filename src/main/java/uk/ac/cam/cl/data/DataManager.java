@@ -14,6 +14,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import uk.ac.cam.cl.data.apis.APIRequestException;
+import uk.ac.cam.cl.data.apis.HereMaps;
 import uk.ac.cam.cl.data.apis.Meteomatics;
 import uk.ac.cam.cl.data.apis.WorldWeatherOnline;
 
@@ -24,12 +25,15 @@ import uk.ac.cam.cl.data.apis.WorldWeatherOnline;
  */
 public class DataManager {
     public static final long UPDATE_INTERVAL = 900000; 
-    public static final String CONFIG = "config.json";
+    public static final String WEATHER_CONFIG = "config.json",
+           LOCATION_CONFIG = "here.json";
 
     private static DataManager instance;
     private Thread daemon;
-    private APIConnector api; 
+    private APIConnector<DataSequence> api; 
+    private APIConnector<Location> locationService;
 
+    private int day = 0;
     private long lastUpdated = 0;
     private double longitude, latitude;
 
@@ -43,7 +47,10 @@ public class DataManager {
      * throw an APIFailure but please do not catch this)
      */
     private DataManager() {
-        api = new APIConnector(new Meteomatics(), Paths.get(CONFIG));
+        api = new APIConnector<DataSequence>(new Meteomatics(), 
+                Paths.get(WEATHER_CONFIG));
+        locationService = new APIConnector<Location>(new HereMaps(),
+                Paths.get(LOCATION_CONFIG));
         
         try { 
             JSONObject apiData = api.getData();
@@ -112,6 +119,21 @@ public class DataManager {
             }
         }
     }
+
+    /**
+     * Returns a list of suggested locations based on the target string
+     * @param target the target location around which to search
+     * @return a list of processed locations
+     */
+    public List<Location> getLocations(String target) {
+        try {
+            JSONObject locationData = 
+                locationService.getData(longitude, latitude, target);
+            return locationService.getProcessedData(locationData);
+        } catch (APIRequestException e) {
+            return new ArrayList<>(); 
+        }
+    }
     
     /**
      * Get the longitude coordinate the data currently regards
@@ -163,6 +185,26 @@ public class DataManager {
      */
     public void triggerAll() {
         listeners.forEach(listener -> listener.accept(data));
+    }
+
+    /**
+     * Sets the current day to the given value [0, 6] and calls all
+     * listeners
+     * @param day the day to update the current day to
+     */
+    public void setDay(int day) {
+        if (day < 0) this.day = 0;
+        else if (day > 6) this.day = 6;
+        else this.day = day;
+        triggerAll();
+    }
+
+    /**
+     * Returns currently selected day
+     * @return the currently selected day
+     */
+    public int getDay() {
+        return day;
     }
 }
 

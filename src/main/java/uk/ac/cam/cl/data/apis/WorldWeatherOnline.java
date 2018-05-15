@@ -22,7 +22,7 @@ import uk.ac.cam.cl.data.DataSequence;
  * Implementation of the World Weather Online API
  * @author Nathan Corbyn
  */
-public class WorldWeatherOnline implements API {
+public class WorldWeatherOnline implements API<DataSequence> {
     private String api, token, marine, local;
 
     @Override
@@ -108,6 +108,12 @@ public class WorldWeatherOnline implements API {
             e.printStackTrace(); 
             throw new APIRequestException(); 
         }
+    }
+    
+    @Override
+    public JSONObject getData(double longitude, double latitude, String target) 
+            throws APIRequestException {
+        return getData(longitude, latitude);
     }
 }
 
