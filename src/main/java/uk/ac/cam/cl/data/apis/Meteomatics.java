@@ -108,8 +108,8 @@ public class Meteomatics implements API {
                             getValue(precipitation, j), 
                             getValue(chanceOfRain, j), 
                             getValue(swellHeight, j), 
-                            getValue(swellPeriod, j), 
-                            getValue(tideHeight, j),
+                            getValue(swellPeriod, j),
+                            getValue(tideHeight, j) / 100.0,
                             getValue(visibility, j),
                             (Long) ((JSONObject) code.get(j)).get("value"))); 
                 }
