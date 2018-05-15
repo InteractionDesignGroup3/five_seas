@@ -9,4 +9,9 @@ public class TemperatureGraph extends GraphWidget {
     protected double getRelevantData(DataPoint dataPoint) {
         return dataPoint.getTemperatureCelcius();
     }
+
+    @Override
+    protected String getChartTitle() {
+        return "Temperature";
+    }
 }

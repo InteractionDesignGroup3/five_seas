@@ -18,18 +18,24 @@ import java.util.List;
 public abstract class GraphWidget extends Widget {
 
     private AreaChart<String, Number> mChart;
+    private CategoryAxis xAxis;
+    private NumberAxis yAxis;
+    private String chartTitle;
 
     public GraphWidget() {
         super();
 
-        final CategoryAxis xAxis = new CategoryAxis();
-        final NumberAxis yAxis = new NumberAxis();
+        xAxis = new CategoryAxis();
+        yAxis = new NumberAxis();
         mChart = new AreaChart<>(xAxis, yAxis);
+        mChart.setTitle(getChartTitle());
         mChart.setLegendVisible(false);
         DataManager.getInstance().addListener(this::plot);
 
         this.add(mChart, 0, 0);
     }
+
+    protected abstract String getChartTitle();
 
     /**
      * Plots the passed data. It uses getRelevantData to extract the useful data from this
@@ -48,6 +54,7 @@ public abstract class GraphWidget extends Widget {
             series.getData().add(new XYChart.Data(timeFormatted, getRelevantData(dataPoint)));
         }
         mChart.getData().addAll(series);
+//        mChart.updateAxisRange();
     }
 
     protected abstract double getRelevantData(DataPoint dataPoint);
