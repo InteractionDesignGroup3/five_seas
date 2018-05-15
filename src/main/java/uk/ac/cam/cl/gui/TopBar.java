@@ -22,6 +22,7 @@ import uk.ac.cam.cl.Main;
 import uk.ac.cam.cl.data.Config;
 import uk.ac.cam.cl.data.ConfigurationException;
 import uk.ac.cam.cl.data.DataManager;
+import uk.ac.cam.cl.data.Location;
 import uk.ac.cam.cl.data.apis.HereMaps;
 
 import java.io.File;
@@ -30,13 +31,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TopBar extends GridPane {
     private Main parent;
 
     private DataManager dm = DataManager.getInstance();
 
-    List<String> places = new ArrayList<>();
+
+    private List<Location> places = new ArrayList<>();
 
     public TopBar(Main parent) {
         super();
@@ -67,7 +70,23 @@ public class TopBar extends GridPane {
         searchBox.setText("Location");
         GridPane.setHalignment(searchBox, HPos.CENTER);
 
-        AutoCompletionBinding<String> stringAutoCompletionBinding = TextFields.bindAutoCompletion(searchBox, t-> places);
+        AutoCompletionBinding<String> stringAutoCompletionBinding = TextFields.bindAutoCompletion(searchBox, t-> {
+            places = dm.getLocations(searchBox.getText());
+            return places.stream().map(x -> x.getName()).collect(Collectors.toList());
+        });
+
+        searchBox.setOnAction((event) -> {
+            double lon = 0.0;
+            double lat = 0.0;
+            for (Location loc : places) {
+                if (loc.getName() == searchBox.getText()) {
+                    lat = loc.getLatitude();
+                    lon = loc.getLongitude();
+                    break;
+                }
+            }
+            dm.setCoordinates(lon, lat);
+        });
 
         return searchBox;
     }
