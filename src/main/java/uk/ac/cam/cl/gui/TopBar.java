@@ -47,8 +47,6 @@ public class TopBar extends GridPane {
     public TopBar(Main parent) {
         super();
 
-        places.add("meh");
-
         this.parent = parent;
 
         ColumnConstraints col0cons = new ColumnConstraints();
@@ -83,13 +81,11 @@ public class TopBar extends GridPane {
         TextField searchBox = new TextField();
         searchBox.setText("Location");
         GridPane.setHalignment(searchBox, HPos.CENTER);
-        AutoCompletionBinding<String> stringAutoCompletionBinding = TextFields.bindAutoCompletion(searchBox, t-> { return places; });
 
-
-        searchBox.setOnKeyPressed((a) -> {
+        AutoCompletionBinding<String> stringAutoCompletionBinding = TextFields.bindAutoCompletion(searchBox, t-> {
             HereMaps maps = HereMaps.getInstance();
             places = maps.getPlaces(searchBox.getText());
-            stringAutoCompletionBinding.setUserInput(searchBox.getText());
+            return places;
         });
 
         return searchBox;
