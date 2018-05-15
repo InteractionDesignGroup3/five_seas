@@ -90,6 +90,7 @@ public class Meteomatics implements API<DataSequence> {
         JSONArray code = getSequence(dumpData, 10);
 
         DateFormat format = new SimpleDateFormat("YYYY-MM-dd'T'hh:mm:ss'Z'");
+        int records = temperature.size() / interval;
 
         try {
             for (int i = 0; i < interval; i++) {
@@ -97,16 +98,15 @@ public class Meteomatics implements API<DataSequence> {
                
                 String date = (String) ((JSONObject) code.get(0)).get("date");
                 long time = format.parse(date).getTime();
-                int records = temperature.size() / interval;
-
                 int base = i * records;
                 for (int j = base; j < base + records; j++) {
-                    long pointTime = time + (i * 24 * 60 + j * period) * 60000;
+                    long pointTime = time + (i * 24 * 60 + (j - base) * period) * 60000;
                     points.add(new DataPoint(pointTime,
                             getValue(temperature, j),
+                            getValue(temperature, j), //TODO feels like
                             getValue(windSpeed, j), 
-                            getValue(windDirection, j), 
                             getValue(windGusts, j), 
+                            getValue(windDirection, j), 
                             getValue(precipitation, j), 
                             getValue(chanceOfRain, j), 
                             getValue(swellHeight, j), 

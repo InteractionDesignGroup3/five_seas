@@ -14,6 +14,7 @@ public class DataPoint implements Comparable<DataPoint> {
            feelsLikeTemperature,      //Feels like temperature in degrees C
            gustSpeedKmPH,             //Gust speed in kilometres per hour
            windSpeedKmPH,             //Wind speed in kilometres per hour
+           windDirection,             //Wind direction in degrees
            chanceOfRain,              //Chance of rain %
            precipitationMM,           //Precipitation in millimetres
            swellHeight,               //Swell height in metres
@@ -29,6 +30,7 @@ public class DataPoint implements Comparable<DataPoint> {
      * @param feelsLikeTemperature feels like temperature in degrees C
      * @param gustSpeedKmPH gust speed in kilometres per hour
      * @param windSpeedKmPH wind speed in kilometres per hour
+     * @param windDirection wind direction in degrees
      * @param chanceOfRain chance of rain %
      * @param precipitationMM precipiration in millimetres
      * @param swellHeight swell height in metres
@@ -41,7 +43,8 @@ public class DataPoint implements Comparable<DataPoint> {
             double temperature, 
             double feelsLikeTemperature, 
             double gustSpeedKmPH, 
-            double windSpeedKmPH, 
+            double windSpeedKmPH,
+            double windDirection,
             double chanceOfRain, 
             double precipitationMM, 
             double swellHeight, 
@@ -54,6 +57,7 @@ public class DataPoint implements Comparable<DataPoint> {
         this.feelsLikeTemperature = feelsLikeTemperature;
         this.windSpeedKmPH = windSpeedKmPH;
         this.gustSpeedKmPH = gustSpeedKmPH;
+        this.windDirection = windDirection;
         this.chanceOfRain = chanceOfRain;
         this.precipitationMM = precipitationMM;
         this.swellHeight = swellHeight;
@@ -127,6 +131,10 @@ public class DataPoint implements Comparable<DataPoint> {
     
     public double getGustSpeedMS() {
         return Conversions.kmPHToMS(gustSpeedKmPH);
+    }
+
+    public double getWindDirection() {
+        return windDirection;
     }
 
     public double getChanceOfRain() {
