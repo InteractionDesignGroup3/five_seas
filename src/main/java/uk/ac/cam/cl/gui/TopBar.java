@@ -1,19 +1,53 @@
 package uk.ac.cam.cl.gui;
 
+import com.github.kevinsawicki.http.HttpRequest;
+import impl.org.controlsfx.autocompletion.AutoCompletionTextFieldBinding;
+import impl.org.controlsfx.autocompletion.SuggestionProvider;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import org.controlsfx.control.textfield.AutoCompletionBinding;
+import org.controlsfx.control.textfield.TextFields;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import uk.ac.cam.cl.Main;
+import uk.ac.cam.cl.data.Config;
+import uk.ac.cam.cl.data.ConfigurationException;
+import uk.ac.cam.cl.data.DataManager;
+import uk.ac.cam.cl.data.apis.HereMaps;
+
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TopBar extends GridPane {
+
+    private Config hereAPI;
     private Main parent;
+
+    private DataManager dm = DataManager.getInstance();
+
+    String hereURL;
+    String hereAppId;
+    String hereAppCode;
+
+    List<String> places = new ArrayList<>();
 
     public TopBar(Main parent) {
         super();
+
+        places.add("meh");
 
         this.parent = parent;
 
@@ -27,6 +61,15 @@ public class TopBar extends GridPane {
         this.add(initLocButton(), 0, 0);
         this.add(initSearchBox(), 1, 0);
         this.add(initMenuButton(), 2, 0);
+
+        try {
+            hereAPI = new Config(Paths.get("here.json"));
+            hereURL = (String) hereAPI.get("api_url");
+            hereAppId = (String) hereAPI.get("app_id");
+            hereAppCode = (String) hereAPI.get("app_code");
+        } catch (ConfigurationException e) {
+            e.printStackTrace();
+        }
     }
 
     private Button initLocButton() {
@@ -40,6 +83,15 @@ public class TopBar extends GridPane {
         TextField searchBox = new TextField();
         searchBox.setText("Location");
         GridPane.setHalignment(searchBox, HPos.CENTER);
+        AutoCompletionBinding<String> stringAutoCompletionBinding = TextFields.bindAutoCompletion(searchBox, t-> { return places; });
+
+
+        searchBox.setOnKeyPressed((a) -> {
+            HereMaps maps = HereMaps.getInstance();
+            places = maps.getPlaces(searchBox.getText());
+            stringAutoCompletionBinding.setUserInput(searchBox.getText());
+        });
+
         return searchBox;
     }
 

@@ -46,6 +46,12 @@
             <version>2.18.3</version>
             <scope>test</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.controlsfx/controlsfx -->
+        <dependency>
+            <groupId>org.controlsfx</groupId>
+            <artifactId>controlsfx</artifactId>
+            <version>8.40.14</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -54,7 +60,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>8.8.3</version>
                 <configuration>
-                    <mainClass>uk.ac.cam.cl.App</mainClass>
+                    <mainClass>uk.ac.cam.cl.Main</mainClass>
                 </configuration>
             </plugin>
         </plugins>
