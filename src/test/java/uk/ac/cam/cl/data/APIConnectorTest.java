@@ -7,7 +7,7 @@ import org.junit.*;
 import static com.google.common.truth.Truth.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-import uk.ac.cam.cl.data.apis.WorldWeatherOnline;
+import uk.ac.cam.cl.data.apis.Meteomatics;
 
 /**
  * API connector unit tests
@@ -24,8 +24,8 @@ public class APIConnectorTest {
         mockData.put("nonce", nonce);
         when(mockCache.getData()).thenReturn(mockData);
         APIConnector target = 
-            new APIConnector(new WorldWeatherOnline(), 
-                    new Config(Paths.get("wwo.json")), 
+            new APIConnector(new Meteomatics(), 
+                    new Config(Paths.get("config.json")), 
                     mockCache);
 
         JSONObject response = target.getData(50, 50);
@@ -40,8 +40,8 @@ public class APIConnectorTest {
             throws ConfigurationException {
         //This is probably flaky as HTTP request might fail due to network
         Cache mockCache = mock(Cache.class);
-        Config config = new Config(Paths.get("wwo.json"));
-        APIConnector target = new APIConnector(new WorldWeatherOnline(), 
+        Config config = new Config(Paths.get("config.json"));
+        APIConnector target = new APIConnector(new Meteomatics(), 
                 config, 
                 mockCache);
 
@@ -55,7 +55,7 @@ public class APIConnectorTest {
             throws ConfigurationException {
         Cache mockCache = mock(Cache.class);
         Config config = new Config(Paths.get("config.json"));
-        APIConnector target = new APIConnector(new WorldWeatherOnline(), 
+        APIConnector target = new APIConnector(new Meteomatics(), 
                 config, 
                 mockCache);
 
@@ -73,7 +73,7 @@ public class APIConnectorTest {
     @Test
     public void apiConnector_throwsException_noConfig() {
         assertThrows(APIFailure.class, 
-                () -> new APIConnector(new WorldWeatherOnline(), 
+                () -> new APIConnector(new Meteomatics(), 
                                        Paths.get("nonconfig.json")),
                 "Could not load configuration nonconfig.json"); 
     }
@@ -85,7 +85,7 @@ public class APIConnectorTest {
         when(mockConfig.get("cache")).thenReturn("");
         
         assertThrows(APIFailure.class, 
-                () -> new APIConnector(new WorldWeatherOnline(), mockConfig)); 
+                () -> new APIConnector(new Meteomatics(), mockConfig)); 
     }
 }
 

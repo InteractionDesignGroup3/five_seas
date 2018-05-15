@@ -97,8 +97,9 @@ public class Meteomatics implements API {
                
                 String date = (String) ((JSONObject) code.get(0)).get("date");
                 long time = format.parse(date).getTime();
-                        
-                for (int j = 0; j < temperature.size(); j++) {
+                long records = temperature.size() / interval;
+
+                for (int j = 0; j < records; j++) {
                     long pointTime = time + (i * 24 * 60 + j * period) * 60;
                     points.add(new DataPoint(pointTime,
                             getValue(temperature, j),

@@ -66,14 +66,7 @@ public class Cache {
             reader.close();
             
             JSONParser parser = new JSONParser();
-            JSONObject temp = (JSONObject) parser.parse(json.toString());
-
-            if (!temp.containsKey("dump") 
-                    || !temp.containsKey("cache_timestamp")
-                    || !temp.containsKey("longitude")
-                    || !temp.containsKey("latitude"))
-                throw new IOException("Malformed cache");
-            else data = temp;
+            data = (JSONObject) parser.parse(json.toString());
             reader.close();
         } catch (IOException e) {
             //Load failed so create new cache file
