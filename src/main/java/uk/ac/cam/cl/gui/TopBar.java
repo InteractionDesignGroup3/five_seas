@@ -22,7 +22,7 @@ import uk.ac.cam.cl.Main;
 import uk.ac.cam.cl.data.Config;
 import uk.ac.cam.cl.data.ConfigurationException;
 import uk.ac.cam.cl.data.DataManager;
-import uk.ac.cam.cl.data.apis.HereMaps;
+//import uk.ac.cam.cl.data.apis.HereMaps;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -87,8 +87,8 @@ public class TopBar extends GridPane {
 
 
         searchBox.setOnKeyPressed((a) -> {
-            HereMaps maps = HereMaps.getInstance();
-            places = maps.getPlaces(searchBox.getText());
+            //HereMaps maps = HereMaps.getInstance();
+            //places = maps.getPlaces(searchBox.getText());
             stringAutoCompletionBinding.setUserInput(searchBox.getText());
         });
 

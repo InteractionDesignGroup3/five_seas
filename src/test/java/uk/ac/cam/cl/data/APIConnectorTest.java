@@ -23,8 +23,8 @@ public class APIConnectorTest {
         JSONObject mockData = new JSONObject();
         mockData.put("nonce", nonce);
         when(mockCache.getData()).thenReturn(mockData);
-        APIConnector target = 
-            new APIConnector(new Meteomatics(), 
+        APIConnector<DataSequence> target = 
+            new APIConnector<>(new Meteomatics(), 
                     new Config(Paths.get("config.json")), 
                     mockCache);
 
@@ -41,7 +41,7 @@ public class APIConnectorTest {
         //This is probably flaky as HTTP request might fail due to network
         Cache mockCache = mock(Cache.class);
         Config config = new Config(Paths.get("config.json"));
-        APIConnector target = new APIConnector(new Meteomatics(), 
+        APIConnector<DataSequence> target = new APIConnector<>(new Meteomatics(), 
                 config, 
                 mockCache);
 
@@ -55,7 +55,7 @@ public class APIConnectorTest {
             throws ConfigurationException {
         Cache mockCache = mock(Cache.class);
         Config config = new Config(Paths.get("config.json"));
-        APIConnector target = new APIConnector(new Meteomatics(), 
+        APIConnector<DataSequence> target = new APIConnector<>(new Meteomatics(), 
                 config, 
                 mockCache);
 
@@ -73,7 +73,7 @@ public class APIConnectorTest {
     @Test
     public void apiConnector_throwsException_noConfig() {
         assertThrows(APIFailure.class, 
-                () -> new APIConnector(new Meteomatics(), 
+                () -> new APIConnector<DataSequence>(new Meteomatics(), 
                                        Paths.get("nonconfig.json")),
                 "Could not load configuration nonconfig.json"); 
     }
@@ -81,11 +81,11 @@ public class APIConnectorTest {
     @Test
     public void apiConnector_throwsException_cannotConstructCache() 
             throws ConfigurationException {
-        Config mockConfig = mock(Config.class);
-        when(mockConfig.get("cache")).thenReturn("");
+        Config mock = mock(Config.class);
+        when(mock.get("cache")).thenReturn("");
         
         assertThrows(APIFailure.class, 
-                () -> new APIConnector(new Meteomatics(), mockConfig)); 
+                () -> new APIConnector<DataSequence>(new Meteomatics(), mock)); 
     }
 }
 

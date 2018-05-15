@@ -12,7 +12,7 @@ import uk.ac.cam.cl.data.DataSequence;
  * Standard interface implemented by all APIs 
  * @author Nathan Corbyn
  */
-public interface API {
+public interface API<T> {
     /**
      * Initialises the API connector from the given configuration instance
      * @param config the configuration instance to initialise from
@@ -27,7 +27,7 @@ public interface API {
      * @return the processed API response
      * @throws APIRequestException if the API data could not be processed
      */
-    public List<DataSequence> getProcessedData(JSONObject data)
+    public List<T> getProcessedData(JSONObject data)
             throws APIRequestException;
 
     /**
@@ -40,5 +40,18 @@ public interface API {
      */
     public JSONObject getData(double longitude, double latitude)
             throws APIRequestException;
+    
+    /**
+     * Makes a request to the API for fresh data for the given location name
+     * and coordinates
+     * @param longitude target longitude
+     * @param latitude target latitude
+     * @param target the target location
+     * @return parsed JSON object from API
+     * @throws APIRequestException if API data could not be fetched
+     */
+    public JSONObject getData(double longitude, double latitude, String target)
+            throws APIRequestException;
+
 }
 
