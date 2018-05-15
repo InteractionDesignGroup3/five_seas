@@ -41,11 +41,10 @@ public class Main extends Application {
         GridPane bottomBar = new BottomBar(this);
 
         root.setPadding(new Insets(5));
-
-        this.stage.setTitle("Five seas");
+        this.stage.setTitle("Five Seas");
 
         // add widgets to the panel
-        int i=0;
+        int i = 0;
         for (Widget widget : widgets.values()) {
             mainSec.add(widget, 0, i);
             i++;
