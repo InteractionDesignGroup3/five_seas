@@ -145,7 +145,7 @@ public class APIConnector<T> {
         temp.put("latitude", latitude);
 
         try {
-            JSONObject apiResponse = api.getData(longitude, latitude);
+            JSONObject apiResponse = api.getData(longitude, latitude, target);
             temp.put("dump", apiResponse);
             cache.update(temp);
             return cache.getData();
