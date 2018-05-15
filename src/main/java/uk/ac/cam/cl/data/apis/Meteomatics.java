@@ -100,7 +100,7 @@ public class Meteomatics implements API {
                 long records = temperature.size() / interval;
 
                 for (int j = 0; j < records; j++) {
-                    long pointTime = time + (i * 24 * 60 + j * period) * 60;
+                    long pointTime = time + (i * 24 * 60 + j * period) * 60000;
                     points.add(new DataPoint(pointTime,
                             getValue(temperature, j),
                             getValue(windSpeed, j), 
