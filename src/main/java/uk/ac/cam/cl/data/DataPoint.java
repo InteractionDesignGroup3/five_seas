@@ -1,5 +1,7 @@
 package uk.ac.cam.cl.data;
 
+import java.util.Date;
+
 /**
  * Class used by the data manager to represent data sequences
  * (also contains any unit conversions for such data)
@@ -73,6 +75,10 @@ public class DataPoint implements Comparable<DataPoint> {
 
     public long getTime() {
         return time;
+    }
+
+    public Date getTimeAsDate() {
+        return new Date(time);
     }
 
     public double getTemperatureCelcius() {

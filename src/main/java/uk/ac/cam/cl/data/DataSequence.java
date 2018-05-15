@@ -2,6 +2,7 @@ package uk.ac.cam.cl.data;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import uk.ac.cam.cl.data.DataPoint;
@@ -48,6 +49,10 @@ public class DataSequence implements Comparable<DataSequence> {
 
     public long getTime() {
         return time;
+    }
+    
+    public Date getTimeAsDate() {
+        return new Date(time);
     }
 
     public double getMaxTemperatureC() {
