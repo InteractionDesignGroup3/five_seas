@@ -31,6 +31,7 @@ public abstract class GraphWidget extends Widget {
         mChart.setLegendVisible(false);
         DataManager.getInstance().addListener(this::plot);
         this.add(mChart, 0, 0);
+        // TODO: Stop graphs from compacting vertically
     }
 
     /**
