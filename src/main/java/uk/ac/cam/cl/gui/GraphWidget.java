@@ -1,25 +1,31 @@
 package uk.ac.cam.cl.gui;
 
 
-import javafx.scene.chart.AreaChart;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
+import javafx.scene.chart.*;
 import uk.ac.cam.cl.data.DataManager;
 import uk.ac.cam.cl.data.DataPoint;
 import uk.ac.cam.cl.data.DataSequence;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+
+/**
+ * A base Graph widget for displaying plots of data against time.
+ */
 public abstract class GraphWidget extends Widget {
 
-    private AreaChart<Number, Number> mChart;
+    private AreaChart<String, Number> mChart;
 
     public GraphWidget() {
         super();
 
-        final NumberAxis xAxis = new NumberAxis();
+        final CategoryAxis xAxis = new CategoryAxis();
         final NumberAxis yAxis = new NumberAxis();
         mChart = new AreaChart<>(xAxis, yAxis);
+        mChart.setLegendVisible(false);
         DataManager.getInstance().addListener(this::plot);
 
         this.add(mChart, 0, 0);
@@ -32,12 +38,14 @@ public abstract class GraphWidget extends Widget {
      *                         n contains DataPoint objects for the day n days from today.
      */
     private void plot(List<DataSequence> dataSequenceList) {
-        int index = getSelectedDay();
         XYChart.Series series = new XYChart.Series();
-        DataSequence toPlot = dataSequenceList.get(index);
+        DataSequence toPlot = dataSequenceList.get(getSelectedDay());
         for (int i = 0; i < toPlot.size(); i++) {
+            if (i % 4 != 0) continue;  // TODO: Find a better way to plot only hourly values
             DataPoint dataPoint = toPlot.get(i);
-            series.getData().add(new XYChart.Data(dataPoint.getTime(), getRelevantData(dataPoint)));
+            Instant instant = dataPoint.getTimeAsDate().toInstant();
+            String timeFormatted = DateTimeFormatter.ofPattern("HH:mm").withZone(ZoneId.systemDefault()).format(instant);
+            series.getData().add(new XYChart.Data(timeFormatted, getRelevantData(dataPoint)));
         }
         mChart.getData().addAll(series);
     }
