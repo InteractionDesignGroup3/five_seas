@@ -10,6 +10,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.function.Consumer;
 
+import javafx.application.Platform;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -107,8 +109,7 @@ public class DataManager {
             try {
                 data = new ArrayList<>(api.getProcessedData(apiData));
                 Collections.sort(data);
-                listeners.forEach(listener -> 
-                        listener.accept(new ArrayList<>(data)));
+                triggerAll(); 
                 break;
             } catch (APIRequestException | NullPointerException e) {
                 e.printStackTrace();
@@ -184,7 +185,9 @@ public class DataManager {
      * Triggers all attached listeners
      */
     public void triggerAll() {
-        listeners.forEach(listener -> listener.accept(data));
+        Platform.runLater(() -> {
+            listeners.forEach(listener -> listener.accept(data));
+        });
     }
 
     /**

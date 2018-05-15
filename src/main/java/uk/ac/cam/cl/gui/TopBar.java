@@ -22,7 +22,8 @@ import uk.ac.cam.cl.Main;
 import uk.ac.cam.cl.data.Config;
 import uk.ac.cam.cl.data.ConfigurationException;
 import uk.ac.cam.cl.data.DataManager;
-//import uk.ac.cam.cl.data.apis.HereMaps;
+import uk.ac.cam.cl.data.Location;
+import uk.ac.cam.cl.data.apis.HereMaps;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -30,24 +31,18 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TopBar extends GridPane {
-
-    private Config hereAPI;
     private Main parent;
 
     private DataManager dm = DataManager.getInstance();
 
-    String hereURL;
-    String hereAppId;
-    String hereAppCode;
 
-    List<String> places = new ArrayList<>();
+    private List<Location> places = new ArrayList<>();
 
     public TopBar(Main parent) {
         super();
-
-        places.add("meh");
 
         this.parent = parent;
 
@@ -61,15 +56,6 @@ public class TopBar extends GridPane {
         this.add(initLocButton(), 0, 0);
         this.add(initSearchBox(), 1, 0);
         this.add(initMenuButton(), 2, 0);
-
-        try {
-            hereAPI = new Config(Paths.get("here.json"));
-            hereURL = (String) hereAPI.get("api_url");
-            hereAppId = (String) hereAPI.get("app_id");
-            hereAppCode = (String) hereAPI.get("app_code");
-        } catch (ConfigurationException e) {
-            e.printStackTrace();
-        }
     }
 
     private Button initLocButton() {
@@ -83,13 +69,23 @@ public class TopBar extends GridPane {
         TextField searchBox = new TextField();
         searchBox.setText("Location");
         GridPane.setHalignment(searchBox, HPos.CENTER);
-        AutoCompletionBinding<String> stringAutoCompletionBinding = TextFields.bindAutoCompletion(searchBox, t-> { return places; });
 
+        AutoCompletionBinding<String> stringAutoCompletionBinding = TextFields.bindAutoCompletion(searchBox, t-> {
+            places = dm.getLocations(searchBox.getText());
+            return places.stream().map(x -> x.getName()).collect(Collectors.toList());
+        });
 
-        searchBox.setOnKeyPressed((a) -> {
-            //HereMaps maps = HereMaps.getInstance();
-            //places = maps.getPlaces(searchBox.getText());
-            stringAutoCompletionBinding.setUserInput(searchBox.getText());
+        searchBox.setOnAction((event) -> {
+            double lon = 0.0;
+            double lat = 0.0;
+            for (Location loc : places) {
+                if (loc.getName() == searchBox.getText()) {
+                    lat = loc.getLatitude();
+                    lon = loc.getLongitude();
+                    break;
+                }
+            }
+            dm.setCoordinates(lon, lat);
         });
 
         return searchBox;

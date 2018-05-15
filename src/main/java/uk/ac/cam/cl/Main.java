@@ -71,7 +71,7 @@ public class Main extends Application {
 
         BorderPane root = new BorderPane();
         GridPane topBar = new MenuBar(this);
-        StackPane mainSec = new StackPane();
+        GridPane mainSec = new GridPane();
 
         
         //Example check box for widget settings with an example of how to 
@@ -89,7 +89,21 @@ public class Main extends Application {
                 }
             }
         });
-        mainSec.getChildren().add(windWidgCheck);
+        CheckBox tempWidgCheck = new CheckBox();
+        tempWidgCheck.setText("Temperature forecast");
+        tempWidgCheck.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable,
+                                Boolean oldValue, Boolean newValue) {
+                if (newValue) {
+                    widgets.put("temp", new TemperatureGraph());
+                } else {
+                    widgets.remove("temp");
+                }
+            }
+        });
+        mainSec.add(windWidgCheck, 0, 0);
+        mainSec.add(tempWidgCheck, 0, 1);
 
         root.setPadding(new Insets(5));
 
