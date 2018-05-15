@@ -11,16 +11,17 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import uk.ac.cam.cl.data.DataManager;
-import uk.ac.cam.cl.gui.*;
 
 import java.util.*;
+import uk.ac.cam.cl.data.DataManager;
+import uk.ac.cam.cl.gui.*;
 
 public class Main extends Application {
     private Stage stage;
     private Scene mainScene = null;
     private Scene menuScene = null;
-    private Map<String,Widget> widgets = new HashMap<>();  // widgets to be added to screen mapping name => widget
+    private Map<String,Widget> widgets = new HashMap<>();  
+    // widgets to be added to screen mapping name => widget
 
     private static int NUM_OF_WIDGETS = 10;
 
@@ -40,11 +41,10 @@ public class Main extends Application {
         GridPane bottomBar = new BottomBar(this);
 
         root.setPadding(new Insets(5));
-
-        this.stage.setTitle("Five seas");
+        this.stage.setTitle("Five Seas");
 
         // add widgets to the panel
-        int i=0;
+        int i = 0;
         for (Widget widget : widgets.values()) {
             mainSec.add(widget, 0, i);
             i++;
@@ -73,14 +73,15 @@ public class Main extends Application {
         GridPane topBar = new MenuBar(this);
         StackPane mainSec = new StackPane();
 
-        /*
-        Example check box for widget settings with an example of how to add widgets to the main screen
-        * */
+        
+        //Example check box for widget settings with an example of how to 
+        //add widgets to the main screen
         CheckBox windWidgCheck = new CheckBox();
         windWidgCheck.setText("Wind speed/direction");
         windWidgCheck.selectedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+            public void changed(ObservableValue<? extends Boolean> observable, 
+                    Boolean oldValue, Boolean newValue) {
                 if (newValue) {
                     widgets.put("wind", new WindWidget());
                 } else {
@@ -103,6 +104,10 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
+        DataManager.getInstance().addListener(sequence -> {
+            System.out.println(sequence); 
+        });
+
         launch(args);
     }
 }

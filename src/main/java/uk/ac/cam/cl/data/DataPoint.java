@@ -1,20 +1,13 @@
 package uk.ac.cam.cl.data;
 
+import java.util.Date;
+
 /**
  * Class used by the data manager to represent data sequences
  * (also contains any unit conversions for such data)
  * @author Nathan Corbyn
  */
 public class DataPoint implements Comparable<DataPoint> {
-    //Unit conversion scale factors and offsets
-    public static final double CELCIUS_OFFSET = 32.0,
-           CELCIUS_SCALE = 1.8,
-           KNOTS_SCALE = 0.539957,
-           MILE_SCALE = 0.621371,
-           MS_SCALE = 3.6,
-           INCH_SCALE = 0.0393701,
-           FEET_SCALE = 3.28084;
-
     //Actual data
     private final long time;
     private final double temperature, //Actual temperature in degrees C
@@ -27,7 +20,7 @@ public class DataPoint implements Comparable<DataPoint> {
            swellPeriod,               //Swell period in seconds
            tideHeight,                //Tide height in metres
            visibility;                //Visibility in kilometres
-    private final int weatherCode;    //Used for weather overview
+    private final long weatherCode;   //Used for weather overview
 
     /**
      * Instantiates a new data point with all of the necessary information
@@ -55,7 +48,7 @@ public class DataPoint implements Comparable<DataPoint> {
             double swellPeriod,
             double tideHeight,
             double visibility, 
-            int weatherCode) {
+            long weatherCode) {
         this.time = time;
         this.temperature = temperature;
         this.feelsLikeTemperature = feelsLikeTemperature;
@@ -80,34 +73,12 @@ public class DataPoint implements Comparable<DataPoint> {
         return (new Long(time)).compareTo(new Long(other.time));
     }
 
-    //These are all basic unit conversion methods implemented using
-    //the constants at the top of the class
-    private static double celciusToFarenheit(double celcius) {
-        return CELCIUS_OFFSET + CELCIUS_SCALE * celcius; 
+    public long getTime() {
+        return time;
     }
 
-    private static double kmPHToKnots(double kmph) {
-        return KNOTS_SCALE * kmph;
-    }
-
-    private static double kmPHToMPH(double kmph) {
-        return MILE_SCALE * kmph;
-    }
-
-    private static double kmPHToMS(double kmph) {
-        return MS_SCALE * kmph;
-    }
-
-    private static double mmToInches(double mm) {
-        return INCH_SCALE * mm;
-    }
-
-    private static double mToFeet(double m) {
-        return FEET_SCALE * m;
-    }
-
-    private static double kmToMiles(double km) {
-        return MILE_SCALE * km;
+    public Date getTimeAsDate() {
+        return new Date(time);
     }
 
     public double getTemperatureCelcius() {
@@ -115,7 +86,7 @@ public class DataPoint implements Comparable<DataPoint> {
     }
 
     public double getTemperatureFarenheit() {
-        return celciusToFarenheit(temperature);
+        return Conversions.celciusToFarenheit(temperature);
     }
 
     public double getFeelsLikeTemperatureCelcius() {
@@ -123,7 +94,7 @@ public class DataPoint implements Comparable<DataPoint> {
     }
 
     public double getFeelsLikeTemperatureFarenheit() {
-        return celciusToFarenheit(feelsLikeTemperature);
+        return Conversions.celciusToFarenheit(feelsLikeTemperature);
     }
 
     public double getWindSpeedKmPH() {
@@ -131,15 +102,15 @@ public class DataPoint implements Comparable<DataPoint> {
     }
     
     public double getWindSpeedKnots() {
-        return kmPHToKnots(windSpeedKmPH);
+        return Conversions.kmPHToKnots(windSpeedKmPH);
     }
     
     public double getWindSpeedMPH() {
-        return kmPHToMPH(windSpeedKmPH);
+        return Conversions.kmPHToMPH(windSpeedKmPH);
     }
     
     public double getWindSpeedMS() {
-        return kmPHToMS(windSpeedKmPH);
+        return Conversions.kmPHToMS(windSpeedKmPH);
     }
 
     public double getGustSpeedKmPH() {
@@ -147,15 +118,15 @@ public class DataPoint implements Comparable<DataPoint> {
     }
     
     public double getGustSpeedKnots() {
-        return kmPHToKnots(gustSpeedKmPH);
+        return Conversions.kmPHToKnots(gustSpeedKmPH);
     }
     
     public double getGustSpeedMPH() {
-        return kmPHToMPH(gustSpeedKmPH);
+        return Conversions.kmPHToMPH(gustSpeedKmPH);
     }
     
     public double getGustSpeedMS() {
-        return kmPHToMS(gustSpeedKmPH);
+        return Conversions.kmPHToMS(gustSpeedKmPH);
     }
 
     public double getChanceOfRain() {
@@ -167,7 +138,7 @@ public class DataPoint implements Comparable<DataPoint> {
     }
     
     public double getPrecipitationInches() {
-        return mmToInches(precipitationMM);
+        return Conversions.mmToInches(precipitationMM);
     }
 
     public double getSwellHeightM() {
@@ -175,7 +146,7 @@ public class DataPoint implements Comparable<DataPoint> {
     }
 
     public double getSwellHeightFeet() {
-        return mToFeet(swellHeight);
+        return Conversions.mToFeet(swellHeight);
     }
 
     public double getSwellPeriod() {
@@ -187,7 +158,7 @@ public class DataPoint implements Comparable<DataPoint> {
     }
 
     public double getTideHeightFeet() {
-        return mToFeet(tideHeight);
+        return Conversions.mToFeet(tideHeight);
     }
 
     public double getVisibilityKM() {
@@ -195,10 +166,10 @@ public class DataPoint implements Comparable<DataPoint> {
     }
 
     public double getVisibilityMiles() {
-        return kmToMiles(visibility);
+        return Conversions.kmToMiles(visibility);
     }
 
-    public int getWeatherCode() {
+    public long getWeatherCode() {
         return weatherCode;
     }
 

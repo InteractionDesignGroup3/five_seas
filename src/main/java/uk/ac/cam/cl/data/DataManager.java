@@ -5,6 +5,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.function.Consumer;
@@ -23,7 +24,7 @@ import uk.ac.cam.cl.data.apis.WorldWeatherOnline;
  */
 public class DataManager {
     public static final long UPDATE_INTERVAL = 900000; 
-    public static final String CONFIG = "wwo.json";
+    public static final String CONFIG = "config.json";
 
     private static DataManager instance;
     private Thread daemon;
@@ -32,16 +33,17 @@ public class DataManager {
     private long lastUpdated = 0;
     private double longitude, latitude;
 
-    private List<DataPoint> dataSequence = new ArrayList<>();
-    private List<Consumer<List<DataPoint>>> listeners = new ArrayList<>();
+    private List<DataSequence> data = new ArrayList<>();
+    private List<Consumer<List<DataSequence>>> listeners = new ArrayList<>();
+
+    private static final double COORD_ERROR = 9.0e-5;
 
     /**
      * Singleton constructor initialises daemon thread (could
      * throw an APIFailure but please do not catch this)
      */
     private DataManager() {
-        //TODO switch to Meteomatics
-        api = new APIConnector(new WorldWeatherOnline(), Paths.get(CONFIG));
+        api = new APIConnector(new Meteomatics(), Paths.get(CONFIG));
         
         try { 
             JSONObject apiData = api.getData();
@@ -84,17 +86,30 @@ public class DataManager {
      * Updates the available data and triggers all listeners
      */
     private void update() {
-        JSONObject apiData = api.getData(longitude, latitude);
-        //TODO check cache long and lat match actual long and lat
-        try {
-            dataSequence = new ArrayList<>(api.getProcessedData(apiData));
-            listeners.forEach(listener -> listener.accept(dataSequence));
-        } catch (APIRequestException e) {
-            //TODO improve failure pathway
-            e.printStackTrace();
-        } catch(NullPointerException e) {
-            //API response is empty so may as well try again
-            update(); 
+        while (true) {
+            JSONObject apiData = api.getData(longitude, latitude);
+            double apiLongitude = (Double) apiData.get("longitude");
+            double apiLatitude = (Double) apiData.get("latitude");
+
+            //If API does not return data for target use cache coordinates
+            if (Math.abs(apiLongitude - longitude) < COORD_ERROR)
+                longitude = apiLongitude;
+            if (Math.abs(apiLatitude - latitude) < COORD_ERROR)
+                latitude = apiLatitude;
+
+            try {
+                data = new ArrayList<>(api.getProcessedData(apiData));
+                Collections.sort(data);
+                listeners.forEach(listener -> 
+                        listener.accept(new ArrayList<>(data)));
+                break;
+            } catch (APIRequestException | NullPointerException e) {
+                e.printStackTrace();
+                try {
+                    Thread.sleep(500);
+                    continue; 
+                } catch (InterruptedException e2) { continue; }
+            }
         }
     }
     
@@ -125,6 +140,8 @@ public class DataManager {
     /**
      * Update the coordinates currently pointed to (this will 
      * automatically trigger the daemon to update its data)
+     * @param longitude the longitude coordinate
+     * @param latitude the latitude coordinate
      */
     public void setCoordinates(double longitude, double latitude) {
         this.longitude = longitude;
@@ -136,9 +153,16 @@ public class DataManager {
      * Add a listener (called when data is updated)
      * @param listener consumer executed on data change
      */
-    public void addListener(Consumer<List<DataPoint>> listener) {
+    public void addListener(Consumer<List<DataSequence>> listener) {
         listeners.add(listener);
-        listener.accept(dataSequence);
+        listener.accept(data);
+    }
+
+    /**
+     * Triggers all attached listeners
+     */
+    public void triggerAll() {
+        listeners.forEach(listener -> listener.accept(data));
     }
 }
 

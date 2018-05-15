@@ -16,6 +16,7 @@ import org.json.simple.parser.ParseException;
 import uk.ac.cam.cl.data.Config;
 import uk.ac.cam.cl.data.ConfigurationException;
 import uk.ac.cam.cl.data.DataPoint;
+import uk.ac.cam.cl.data.DataSequence;
 
 /**
  * Implementation of the World Weather Online API
@@ -33,53 +34,58 @@ public class WorldWeatherOnline implements API {
     }
 
     @Override
-    public List<DataPoint> getProcessedData(JSONObject data) 
+    public List<DataSequence> getProcessedData(JSONObject data) 
             throws APIRequestException {
-        List<DataPoint> sequence = new ArrayList<>();
+        List<DataSequence> sequences = new ArrayList<>();
 
         JSONObject dump = (JSONObject) data.get("dump");
         JSONObject dumpData = (JSONObject) dump.get("data");
         JSONArray weather = (JSONArray) dumpData.get("weather");
         for (int i = 0; i < weather.size(); i++) {
+            List<DataPoint> points = new ArrayList<>();
             JSONObject current = (JSONObject) weather.get(i);
             JSONArray hourly = (JSONArray) current.get("hourly");
 
             try {
-                DateFormat format = new SimpleDateFormat("YYYY-MM-DD");
+                DateFormat format = new SimpleDateFormat("YYYY-MM-dd");
                 Date date = format.parse((String) current.get("date"));
 
                 for (int j = 0; j < hourly.size(); j++) {
-                    JSONObject hour = (JSONObject) hourly.get(i);
+                    JSONObject hour = (JSONObject) hourly.get(j);
                     long time = date.getTime() + 3600000 * j;
                     DataPoint point = new DataPoint(time,
                             Double.parseDouble((String) hour.get("tempC")),
                             Double.parseDouble((String) hour.get("FeelsLikeC")),
                             Double.parseDouble((String) hour.get("windspeedKmph")),
                             Double.parseDouble((String) hour.get("WindGustKmph")),
-                            Double.parseDouble((String) hour.get("chanceofrain")),
+                            0.0, //TODO get real chance of rain
                             Double.parseDouble((String) hour.get("precipMM")),
-                            0.0, //TODO get real swell height
-                            0.0, //TODO get real swell period
+                            Double.parseDouble((String) hour.get("swellHeight_m")),
+                            Double.parseDouble((String) hour.get("swellPeriod_secs")),
                             0.0, //TODO get real tide height
                             Double.parseDouble((String) hour.get("visibility")),
                             Integer.parseInt((String) hour.get("weatherCode")));
-                    sequence.add(point);
+                    points.add(point);
                 }
+
+                sequences.add(new DataSequence(date.getTime(), 
+                            0.0, //TODO actual max temperature
+                            0.0, //TODO actual min temperature
+                            points));
             } catch (java.text.ParseException e) {
                 throw new APIRequestException(); 
             }
         }
             
-        return sequence;
+        return sequences;
     }
 
     @Override
     public JSONObject getData(double longitude, double latitude) 
             throws APIRequestException {
         try {
-            HttpRequest request = HttpRequest.get(api + local, true,
+            HttpRequest request = HttpRequest.get(api + marine, true,
                     'q', latitude + "," + longitude, //Set query location
-                    "num_of_days", 7, //Whole weeks forecast
                     "date", "today",  //From today
                     "fx", "yes",      //Specify whether to include weather forecast
                     "format", "json", //Specify format (default is XML)
