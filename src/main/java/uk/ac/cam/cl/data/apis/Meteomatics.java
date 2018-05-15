@@ -25,7 +25,7 @@ import uk.ac.cam.cl.data.apis.API;
  */
 public class Meteomatics implements API<DataSequence> {
     private String apiURL, requestBody, user, password;
-    private long period, interval;
+    private int period, interval;
 
     private JSONArray getSequence(JSONArray dumpData, int i) {
         JSONObject parameter = (JSONObject) dumpData.get(i);
@@ -45,8 +45,8 @@ public class Meteomatics implements API<DataSequence> {
 
     @Override
     public void initFromConfig(Config config) throws ConfigurationException {
-        interval = (Long) config.get("api_interval"); 
-        period = (Long) config.get("api_period"); 
+        interval = Math.toIntExact((Long) config.get("api_interval")); 
+        period = Math.toIntExact((Long) config.get("api_period")); 
         apiURL = (String) config.get("api_url");
 
         StringBuilder requestBuilder = new StringBuilder();
@@ -90,6 +90,7 @@ public class Meteomatics implements API<DataSequence> {
         JSONArray code = getSequence(dumpData, 10);
 
         DateFormat format = new SimpleDateFormat("YYYY-MM-dd'T'hh:mm:ss'Z'");
+        int records = temperature.size() / interval;
 
         try {
             for (int i = 0; i < interval; i++) {
@@ -97,15 +98,15 @@ public class Meteomatics implements API<DataSequence> {
                
                 String date = (String) ((JSONObject) code.get(0)).get("date");
                 long time = format.parse(date).getTime();
-                long records = temperature.size() / interval;
-
-                for (int j = 0; j < records; j++) {
-                    long pointTime = time + (i * 24 * 60 + j * period) * 60000;
+                int base = i * records;
+                for (int j = base; j < base + records; j++) {
+                    long pointTime = time + (i * 24 * 60 + (j - base) * period) * 60000;
                     points.add(new DataPoint(pointTime,
                             getValue(temperature, j),
+                            getValue(temperature, j), //TODO feels like
                             getValue(windSpeed, j), 
-                            getValue(windDirection, j), 
                             getValue(windGusts, j), 
+                            getValue(windDirection, j), 
                             getValue(precipitation, j), 
                             getValue(chanceOfRain, j), 
                             getValue(swellHeight, j), 

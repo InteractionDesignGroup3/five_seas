@@ -58,6 +58,7 @@ public class WorldWeatherOnline implements API<DataSequence> {
                             Double.parseDouble((String) hour.get("FeelsLikeC")),
                             Double.parseDouble((String) hour.get("windspeedKmph")),
                             Double.parseDouble((String) hour.get("WindGustKmph")),
+                            0.0, //TODO wind direction
                             0.0, //TODO get real chance of rain
                             Double.parseDouble((String) hour.get("precipMM")),
                             Double.parseDouble((String) hour.get("swellHeight_m")),
