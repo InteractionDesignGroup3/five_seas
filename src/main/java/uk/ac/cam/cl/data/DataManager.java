@@ -140,6 +140,8 @@ public class DataManager {
     /**
      * Update the coordinates currently pointed to (this will 
      * automatically trigger the daemon to update its data)
+     * @param longitude the longitude coordinate
+     * @param latitude the latitude coordinate
      */
     public void setCoordinates(double longitude, double latitude) {
         this.longitude = longitude;
