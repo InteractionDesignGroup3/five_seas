@@ -24,7 +24,7 @@ import uk.ac.cam.cl.data.apis.WorldWeatherOnline;
  */
 public class DataManager {
     public static final long UPDATE_INTERVAL = 900000; 
-    public static final String CONFIG = "wwo.json";
+    public static final String CONFIG = "config.json";
 
     private static DataManager instance;
     private Thread daemon;
@@ -36,13 +36,14 @@ public class DataManager {
     private List<DataSequence> data = new ArrayList<>();
     private List<Consumer<List<DataSequence>>> listeners = new ArrayList<>();
 
+    private static final double COORD_ERROR = 9.0e-5;
+
     /**
      * Singleton constructor initialises daemon thread (could
      * throw an APIFailure but please do not catch this)
      */
     private DataManager() {
-        //TODO switch to Meteomatics
-        api = new APIConnector(new WorldWeatherOnline(), Paths.get(CONFIG));
+        api = new APIConnector(new Meteomatics(), Paths.get(CONFIG));
         
         try { 
             JSONObject apiData = api.getData();
@@ -87,7 +88,15 @@ public class DataManager {
     private void update() {
         while (true) {
             JSONObject apiData = api.getData(longitude, latitude);
-            //TODO check cache long and lat match actual long and lat
+            double apiLongitude = (Double) apiData.get("longitude");
+            double apiLatitude = (Double) apiData.get("latitude");
+
+            //If API does not return data for target use cache coordinates
+            if (Math.abs(apiLongitude - longitude) < COORD_ERROR)
+                longitude = apiLongitude;
+            if (Math.abs(apiLatitude - latitude) < COORD_ERROR)
+                latitude = apiLatitude;
+
             try {
                 data = new ArrayList<>(api.getProcessedData(apiData));
                 Collections.sort(data);
@@ -97,11 +106,9 @@ public class DataManager {
             } catch (APIRequestException | NullPointerException e) {
                 e.printStackTrace();
                 try {
-                    Thread.sleep(100);
-                    continue;
-                } catch (InterruptedException e2) {
-                    continue;
-                }
+                    Thread.sleep(500);
+                    continue; 
+                } catch (InterruptedException e2) { continue; }
             }
         }
     }
@@ -133,6 +140,8 @@ public class DataManager {
     /**
      * Update the coordinates currently pointed to (this will 
      * automatically trigger the daemon to update its data)
+     * @param longitude the longitude coordinate
+     * @param latitude the latitude coordinate
      */
     public void setCoordinates(double longitude, double latitude) {
         this.longitude = longitude;
@@ -147,6 +156,13 @@ public class DataManager {
     public void addListener(Consumer<List<DataSequence>> listener) {
         listeners.add(listener);
         listener.accept(data);
+    }
+
+    /**
+     * Triggers all attached listeners
+     */
+    public void triggerAll() {
+        listeners.forEach(listener -> listener.accept(data));
     }
 }
 

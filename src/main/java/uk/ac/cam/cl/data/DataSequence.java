@@ -2,6 +2,7 @@ package uk.ac.cam.cl.data;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import uk.ac.cam.cl.data.DataPoint;
@@ -23,6 +24,7 @@ public class DataSequence implements Comparable<DataSequence> {
      * @param time time corresponding to data (unix)
      * @param maxTemperature the maximum temperature over the sequence
      * @param minTemperature the minimum temperature over the sequence
+     * @param sequence the list of data points to intialise from
      */
     public DataSequence(long time, 
             double maxTemperature, 
@@ -43,6 +45,14 @@ public class DataSequence implements Comparable<DataSequence> {
     @Override
     public int compareTo(DataSequence other) {
         return (new Long(time)).compareTo(new Long(other.time));
+    }
+
+    public long getTime() {
+        return time;
+    }
+    
+    public Date getTimeAsDate() {
+        return new Date(time);
     }
 
     public double getMaxTemperatureC() {

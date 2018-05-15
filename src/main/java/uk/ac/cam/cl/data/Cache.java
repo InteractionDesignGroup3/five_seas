@@ -66,14 +66,7 @@ public class Cache {
             reader.close();
             
             JSONParser parser = new JSONParser();
-            JSONObject temp = (JSONObject) parser.parse(json.toString());
-
-            if (!temp.containsKey("dump") 
-                    || !temp.containsKey("cache_timestamp")
-                    || !temp.containsKey("longitude")
-                    || !temp.containsKey("latitude"))
-                throw new IOException("Malformed cache");
-            else data = temp;
+            data = (JSONObject) parser.parse(json.toString());
             reader.close();
         } catch (IOException e) {
             //Load failed so create new cache file
@@ -144,6 +137,7 @@ public class Cache {
 
     /**
      * Get currently cached data
+     * @return the currently cached data
      */
     public JSONObject getData() {
         return this.data;
@@ -151,6 +145,7 @@ public class Cache {
 
     /**
      * Was the cache just created
+     * @return true if the cache was just created (false otherwise)
      */
     public boolean isNew() {
         return this.created;

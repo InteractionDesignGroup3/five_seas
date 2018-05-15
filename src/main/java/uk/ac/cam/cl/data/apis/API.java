@@ -23,6 +23,7 @@ public interface API {
     /**
      * Returns data processed as per the format of the API such that
      * it can be used by the data manager
+     * @param data the data to be processed
      * @return the processed API response
      * @throws APIRequestException if the API data could not be processed
      */
