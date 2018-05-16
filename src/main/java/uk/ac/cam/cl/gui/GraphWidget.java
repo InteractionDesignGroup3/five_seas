@@ -29,6 +29,7 @@ public abstract class GraphWidget extends Widget {
         mChart = new AreaChart<>(xAxis, yAxis);
         mChart.setTitle(getChartTitle());
         mChart.setLegendVisible(false);
+        mChart.setId("chart");
         DataManager.getInstance().addListener(this::plot);
         this.add(mChart, 0, 0);
         // TODO: Stop graphs from compacting vertically

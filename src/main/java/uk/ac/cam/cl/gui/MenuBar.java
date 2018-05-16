@@ -3,6 +3,7 @@ package uk.ac.cam.cl.gui;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -16,6 +17,8 @@ public class MenuBar extends GridPane {
 
         this.parent = parent;
 
+        this.setId("menu-bar");
+
         ColumnConstraints col0cons = new ColumnConstraints();
         col0cons.setPercentWidth(10);
         ColumnConstraints col1cons = new ColumnConstraints();
@@ -28,6 +31,7 @@ public class MenuBar extends GridPane {
 
     private Button initBackButton() {
         Button menuBtn = new Button();
+        menuBtn.setId("menu-back-btn");
         menuBtn.setText("<");
         GridPane.setHalignment(menuBtn, HPos.CENTER);
         menuBtn.setOnAction((x) -> {

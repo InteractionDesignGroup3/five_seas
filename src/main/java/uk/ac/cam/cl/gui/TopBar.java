@@ -6,6 +6,7 @@ import impl.org.controlsfx.autocompletion.SuggestionProvider;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -55,11 +56,17 @@ public class TopBar extends GridPane {
         this.add(initLocButton(), 0, 0);
         this.add(initSearchBox(), 1, 0);
         this.add(initMenuButton(), 2, 0);
+
+        this.setId("top-bar");
+        //this.getStylesheets().add("style.css");
+
+        //this.setStyle("-fx-background-color: #003153;");
     }
 
     private Button initLocButton() {
         Button locBtn = new Button();
         locBtn.setText("#");
+        locBtn.setId("loc-btn");
         GridPane.setHalignment(locBtn, HPos.CENTER);
         return locBtn;
     }
@@ -67,21 +74,17 @@ public class TopBar extends GridPane {
     private TextField initSearchBox() {
         TextField searchBox = new TextField();
         searchBox.setText("Location");
+        searchBox.setId("search-box");
         GridPane.setHalignment(searchBox, HPos.CENTER);
 
-        AutoCompletionBinding<String> stringAutoCompletionBinding = TextFields.bindAutoCompletion(searchBox, t-> {
+        AutoCompletionBinding<Location> stringAutoCompletionBinding = TextFields.bindAutoCompletion(searchBox, t-> {
             places = dm.getLocations(searchBox.getText());
-            return places.stream().map(x -> x.toString()).collect(Collectors.toList());
+            return places;
         });
 
-        searchBox.setOnAction((event) -> {
-            for (Location loc : places) {
-                if (loc.toString().equals(searchBox.getText())) {
-                    dm.setCoordinates(loc.getLongitude(), loc.getLatitude());
-                    break;
-                }
-            }
-
+        stringAutoCompletionBinding.setOnAutoCompleted((e) -> {
+            Location x = e.getCompletion();
+            dm.setCoordinates(x.getLongitude(), x.getLatitude());
         });
 
         return searchBox;
@@ -90,6 +93,8 @@ public class TopBar extends GridPane {
     private Button initMenuButton() {
         Button menuBtn = new Button();
         menuBtn.setText("+");
+        menuBtn.setId("menu-btn");
+
         GridPane.setHalignment(menuBtn, HPos.CENTER);
         menuBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override

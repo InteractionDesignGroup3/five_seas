@@ -1,0 +1,115 @@
+#top-bar, #menu-bar {
+    -fx-background-color: #003153;
+    -fx-padding: 8px;
+}
+#menu-btn, #menu-back-btn, #loc-btn {
+    -fx-background-color: #EEEEEE;
+    -fx-background-insets: 2px;
+    -fx-background-radius: 3px;
+    -fx-font-size: 16px;
+    -fx-text-fill: #222222;
+}
+#menu-btn:hover, #menu-back-btn:hover, #loc-btn:hover {
+    -fx-background-color: #FFFFFF;
+}
+#menu-btn:pressed, #menu-back-btn:pressed, #loc-button:pressed {
+    -fx-background-color: #AAAAAA;
+}
+
+#menu-main {
+    -fx-background-color: #EEEEEE;
+}
+
+.check-box .box {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 0;
+}
+.check-box {
+    -fx-font-size: 20px;
+}
+
+#search-box {
+    -fx-background-color: #FFFFFF;
+    -fx-background-insets: 2px;
+    -fx-text-fill: #222222;
+    -fx-font-size: 16px;
+}
+
+.widget {
+    -fx-background-color: #FFFFFF;
+    -fx-background-insets: 4px;
+}
+
+.chart {
+    -fx-chart-backround-fill: #FFFFFF;
+    -fx-chart-background-stroke: #FFFFFF;
+    -fx-chart-background-stroke-width: 1px;
+}
+
+.chart .chart-title {
+    -fx-font-size: 14px;
+}
+.chart .chart-legend {
+    -fx-font-size: 10px;
+}
+.chart .chart-legend-item {
+    -fx-font-size: 8px;
+}
+
+.chart .chart-content {
+}
+
+.chart .chart-plot-background {
+    -fx-background-color: #FFFFFF;
+}
+
+.chart .chart-vertical-grid-lines {
+    -fx-stroke: #EEEEEE;
+}
+.chart .chart-horizontal-grid-lines {
+    -fx-stroke: #EEEEEE;
+}
+
+.chart .chart-alternative-row-fill {
+    -fx-fill: #FFFFFF;
+    -fx-stroke: transparent;
+    -fx-stroke-width: 0;
+}
+
+.chart .axis-tick-mark {
+    -fx-stroke: #AAAAAA;
+    -fx-stroke-width: 2;
+}
+.chart .axis-minor-tick-mark {
+    -fx-stroke: #DDDDDD;
+}
+
+.chart .chart-series-line {
+    -fx-stroke-width: 4px;
+    -fx-effect: null;
+}
+
+.default-color0.chart-series-line { -fx-stroke: #005331; }
+
+.default-color0.chart-area-symbol { -fx-background-color: #005331, #FFFFFF; }
+
+.default-color0.chart-series-area-line { -fx-stroke: #005331; }
+
+.default-color0.chart-series-area-fill { -fx-fill: #005331aa}
+
+
+.bottom-bar {
+    -fx-background-color: #EEEEEE;
+}
+
+.day-select {
+    -fx-background-color: #EEEEEE;
+}
+
+.slider .thumb {
+    -fx-background-color: #333333;
+}
+
+.slider .track {
+    -fx-background-color: #AAAAAA;
+}

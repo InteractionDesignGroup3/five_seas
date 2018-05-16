@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.GridPane;
@@ -22,7 +23,11 @@ public class BottomBar extends GridPane {
 
         this.parent = parent;
 
+        this.setId("bottom-bar");
+        this.setPadding(new Insets(5));
+
         Slider daySelect = new Slider();
+        daySelect.setId("day-select");
         daySelect.setMin(0);
         daySelect.setMax(6);
         daySelect.setPrefWidth(300.0);
