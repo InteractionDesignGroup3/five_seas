@@ -7,6 +7,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -44,9 +45,12 @@ public class Main extends Application {
      * */
     public void showMain() {
         BorderPane root = new BorderPane();
+        root.setId("root");
         GridPane topBar = new TopBar(this);
+        ScrollPane mainScrollable = new ScrollPane();
         GridPane mainSec = new GridPane();
         GridPane bottomBar = new BottomBar(this);
+        mainScrollable.setContent(mainSec);
 
         root.setPadding(new Insets(5));
         this.stage.setTitle("Five Seas");
@@ -60,9 +64,10 @@ public class Main extends Application {
 
         root.setTop(topBar);
         root.setBottom(bottomBar);
-        root.setCenter(mainSec);
+        root.setCenter(mainScrollable);
 
         this.mainScene = new Scene(root, 380, 675);
+        this.mainScene.getStylesheets().add("style/style.css");
         this.stage.setScene(this.mainScene);
         this.stage.show();
     }
@@ -78,8 +83,11 @@ public class Main extends Application {
         }
 
         BorderPane root = new BorderPane();
+        root.setId("root");
         GridPane topBar = new MenuBar(this);
+        topBar.setId("menu-bar");
         GridPane mainSec = new GridPane();
+        mainSec.setId("menu-main");
 
         
         //Example check box for widget settings with an example of how to 
@@ -87,6 +95,7 @@ public class Main extends Application {
 
         CheckBox windCompassCheckBox = new CheckBox();
         windCompassCheckBox.setText("Wind compass");
+        windCompassCheckBox.getStyleClass().add("check-box");
         windCompassCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) widgets.put(WIND_COMPASS_CODE, new WidgetContainer(new WindWidget()));
             else widgets.remove(WIND_COMPASS_CODE);
@@ -94,6 +103,7 @@ public class Main extends Application {
 
         CheckBox temperatureGraphCheckBox = new CheckBox();
         temperatureGraphCheckBox.setText("Temperature graph");
+        temperatureGraphCheckBox.getStyleClass().add("check-box");
         temperatureGraphCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) widgets.put(TEMPERATURE_GRAPH_CODE, new WidgetContainer(new TemperatureGraph()));
             else widgets.remove(TEMPERATURE_GRAPH_CODE);
@@ -101,6 +111,7 @@ public class Main extends Application {
 
         CheckBox windSpeedGraphCheckBox = new CheckBox();
         windSpeedGraphCheckBox.setText("Wind speed graph");
+        windSpeedGraphCheckBox.getStyleClass().add("check-box");
         windSpeedGraphCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) widgets.put(WIND_SPEED_GRAPH_CODE, new WidgetContainer(new WindSpeedGraph()));
             else widgets.remove(WIND_SPEED_GRAPH_CODE);
@@ -108,6 +119,7 @@ public class Main extends Application {
 
         CheckBox visibilityGraphCheckBox = new CheckBox();
         visibilityGraphCheckBox.setText("Visibility graph");
+        visibilityGraphCheckBox.getStyleClass().add("check-box");
         visibilityGraphCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) widgets.put(VISIBILITY_GRAPH_CODE, new WidgetContainer(new VisibilityGraph()));
             else widgets.remove(VISIBILITY_GRAPH_CODE);
@@ -115,6 +127,7 @@ public class Main extends Application {
 
         CheckBox swellHeightGraphCheckBox = new CheckBox();
         swellHeightGraphCheckBox.setText("Swell height graph");
+        swellHeightGraphCheckBox.getStyleClass().add("check-box");
         swellHeightGraphCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) widgets.put(SWELL_HEIGHT_GRAPH_CODE, new WidgetContainer(new SwellHeightGraph()));
             else widgets.remove(SWELL_HEIGHT_GRAPH_CODE);
@@ -122,6 +135,7 @@ public class Main extends Application {
 
         CheckBox weatherCheckBox = new CheckBox();
         weatherCheckBox.setText("Weather");
+        weatherCheckBox.getStyleClass().add("check-box");
         weatherCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) widgets.put(WEATHER_CODE, new WidgetContainer(new WeatherWidget()));
             else widgets.remove(WEATHER_CODE);
@@ -135,15 +149,13 @@ public class Main extends Application {
         mainSec.add(swellHeightGraphCheckBox, 0, 4);
         mainSec.add(weatherCheckBox, 0, 5);
 
-
-        root.setPadding(new Insets(5));
-
         this.stage.setTitle("Widget Menu");
 
         root.setTop(topBar);
         root.setCenter(mainSec);
 
         this.menuScene = new Scene(root, 380, 675);
+        this.menuScene.getStylesheets().add("style/style.css");
         this.stage.setScene(menuScene);
         this.stage.show();
     }
