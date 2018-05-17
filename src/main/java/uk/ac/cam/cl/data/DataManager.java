@@ -37,7 +37,7 @@ public class DataManager {
 
     private int day = 0;
     private long lastUpdated = 0;
-    private double longitude, latitude;
+    private Location location;
 
     private List<DataSequence> data = new ArrayList<>();
     private List<Consumer<List<DataSequence>>> listeners = new ArrayList<>();
@@ -57,15 +57,16 @@ public class DataManager {
         try { 
             JSONObject apiData = api.getData();
             data = api.getProcessedData(apiData);
-            longitude = (Double) apiData.get("longitude");
-            latitude = (Double) apiData.get("latitude");
+            double longitude = (Double) apiData.get("longitude");
+            double latitude = (Double) apiData.get("latitude");
+            String name = (String) apiData.get("place_name");
+            location = new Location(name, longitude, latitude);
             lastUpdated = (Long) apiData.get("cache_timestamp");
         } catch (NoDataException | APIRequestException e) {
             //TODO cache is fresh so generate current location (either
             //lock this to Cambridge in the config or fake it with IP -
             //currently locked to Cambridge)
-            longitude = 0.1218;
-            latitude = 52.2053;
+            location = new Location("Cambridge", 0.1218, 52.2053);
         }
 
         daemon = new Thread(() -> {
@@ -97,15 +98,15 @@ public class DataManager {
      */
     private void update() {
         while (true) {
-            JSONObject apiData = api.getData(longitude, latitude);
-            double apiLongitude = (Double) apiData.get("longitude");
-            double apiLatitude = (Double) apiData.get("latitude");
+            JSONObject apiData = api.getData(location);
+            double longitude = (Double) apiData.get("longitude");
+            double latitude = (Double) apiData.get("latitude");
+            String name = (String) apiData.get("place_name");
 
             //If API does not return data for target use cache coordinates
-            if (Math.abs(apiLongitude - longitude) < COORD_ERROR)
-                longitude = apiLongitude;
-            if (Math.abs(apiLatitude - latitude) < COORD_ERROR)
-                latitude = apiLatitude;
+            if (Math.abs(longitude - location.getLongitude()) < COORD_ERROR ||
+                    Math.abs(latitude - location.getLatitude()) < COORD_ERROR)
+                location = new Location(name, longitude, latitude);
 
             try {
                 data = new ArrayList<>(api.getProcessedData(apiData));
@@ -130,27 +131,21 @@ public class DataManager {
     public List<Location> getLocations(String target) {
         try {
             JSONObject locationData = 
-                locationService.getData(longitude, latitude, target);
+                locationService.getData(new Location(target, 
+                            location.getLongitude(), 
+                            location.getLatitude()));
             return locationService.getProcessedData(locationData);
         } catch (APIRequestException e) {
             return new ArrayList<>(); 
         }
     }
-    
+   
     /**
-     * Get the longitude coordinate the data currently regards
-     * @return current longitude
+     * Get the current location
+     * @return the current location
      */
-    public double getLongitude() {
-        return longitude;
-    }
-
-    /**
-     * Get the latitude coordinate the data currently regards
-     * @return current latitude
-     */
-    public double getLatitude() {
-        return latitude;
+    public Location getLocation() {
+        return location;
     }
 
     /**
@@ -162,14 +157,12 @@ public class DataManager {
     }
 
     /**
-     * Update the coordinates currently pointed to (this will 
+     * Update the current location of the data manager (this will 
      * automatically trigger the daemon to update its data)
-     * @param longitude the longitude coordinate
-     * @param latitude the latitude coordinate
+     * @param location the current location
      */
-    public void setCoordinates(double longitude, double latitude) {
-        this.longitude = longitude;
-        this.latitude = latitude;
+    public void setLocation(Location location) {
+        this.location = location;
         daemon.interrupt(); //Force update
     }
 

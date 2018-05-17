@@ -1,6 +1,5 @@
 package uk.ac.cam.cl.gui.widgets;
 
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import javafx.geometry.HPos;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;

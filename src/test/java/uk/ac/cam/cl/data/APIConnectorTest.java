@@ -28,7 +28,7 @@ public class APIConnectorTest {
                     new Config(Paths.get("config.json")), 
                     mockCache);
 
-        JSONObject response = target.getData(50, 50);
+        JSONObject response = target.getData(new Location("", 50, 50));
 
         assertThat((int) response.get("nonce")).isEqualTo(nonce);
         verify(mockCache, times(1)).getData();
@@ -45,7 +45,7 @@ public class APIConnectorTest {
                 config, 
                 mockCache);
 
-        JSONObject response = target.getData(50, 50);
+        JSONObject response = target.getData(new Location("", 50, 50));
 
         verify(mockCache, times(1)).update(any(JSONObject.class));
     }
@@ -59,13 +59,13 @@ public class APIConnectorTest {
                 config, 
                 mockCache);
 
-        target.getData(-180, 0);   //Valid
-        target.getData(0, 180);
-        target.getData(180, 0);
-        target.getData(180, 180);
-        target.getData(280, -100); //Invalid 
-        target.getData(-320, 190);
-        target.getData(Double.MAX_VALUE, Double.MAX_VALUE);
+        target.getData(new Location("", -180, 0));   //Valid
+        target.getData(new Location("", 0, 180));
+        target.getData(new Location("", 180, 0));
+        target.getData(new Location("", 180, 180));
+        target.getData(new Location("", -280, 100)); //Invalid 
+        target.getData(new Location("", -320, 190));
+        target.getData(new Location("", Double.MAX_VALUE, Double.MAX_VALUE));
 
         verify(mockCache, times(4)).update(any(JSONObject.class));
     }
