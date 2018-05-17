@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 import java.util.*;
 import uk.ac.cam.cl.data.DataManager;
 import uk.ac.cam.cl.gui.*;
+import uk.ac.cam.cl.gui.widgets.*;
 
 public class Main extends Application {
     private Stage stage;

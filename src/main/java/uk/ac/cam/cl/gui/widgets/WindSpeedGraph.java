@@ -1,16 +1,15 @@
-package uk.ac.cam.cl.gui;
+package uk.ac.cam.cl.gui.widgets;
 
 import uk.ac.cam.cl.data.DataPoint;
 
-public class SwellHeightGraph extends GraphWidget {
-
+public class WindSpeedGraph extends GraphWidget {
     @Override
     protected String getChartTitle() {
-        return "Swell Height";
+        return "Wind Speed";
     }
 
     @Override
     protected double getRelevantData(DataPoint dataPoint) {
-        return Math.max(dataPoint.getSwellHeightM(), 0.0);
+        return dataPoint.getWindSpeedMPH();
     }
 }

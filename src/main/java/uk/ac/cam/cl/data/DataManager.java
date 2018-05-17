@@ -67,9 +67,6 @@ public class DataManager {
             latitude = 52.2053;
         }
 
-        // initial update must be synchronous so that when widgets load they have data they can use
-        update();
-
         daemon = new Thread(() -> {
             while (true) {
                 update();

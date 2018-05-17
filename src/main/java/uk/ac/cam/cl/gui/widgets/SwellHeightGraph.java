@@ -1,16 +1,16 @@
-package uk.ac.cam.cl.gui;
+package uk.ac.cam.cl.gui.widgets;
 
 import uk.ac.cam.cl.data.DataPoint;
 
-public class VisibilityGraph extends GraphWidget {
+public class SwellHeightGraph extends GraphWidget {
 
     @Override
     protected String getChartTitle() {
-        return "Visibility";
+        return "Swell Height";
     }
 
     @Override
     protected double getRelevantData(DataPoint dataPoint) {
-        return dataPoint.getVisibilityMiles();
+        return Math.max(dataPoint.getSwellHeightM(), 0.0);
     }
 }
