@@ -25,8 +25,14 @@ public class Main extends Application {
 
     private static int NUM_OF_WIDGETS = 10;
 
+    private String WIND_COMPASS_CODE = "wind_compass";
+    private String TEMPERATURE_GRAPH_CODE = "temperature_graph";
+    private String WIND_SPEED_GRAPH_CODE = "wind_speed_graph";
+    private String VISIBILITY_GRAPH_CODE = "visibility_graph";
+    private String SWELL_HEIGHT_GRAPH_CODE = "swell_height";
+
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         this.stage = primaryStage;
         showMain();
     }
@@ -76,34 +82,48 @@ public class Main extends Application {
         
         //Example check box for widget settings with an example of how to 
         //add widgets to the main screen
-        CheckBox windWidgCheck = new CheckBox();
-        windWidgCheck.setText("Wind speed/direction");
-        windWidgCheck.selectedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, 
-                    Boolean oldValue, Boolean newValue) {
-                if (newValue) {
-                    widgets.put("wind", new WindWidget());
-                } else {
-                    widgets.remove("wind");
-                }
-            }
+
+        CheckBox windCompassCheckBox = new CheckBox();
+        windCompassCheckBox.setText("Wind compass");
+        windCompassCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) widgets.put(WIND_COMPASS_CODE, new WindWidget());
+            else widgets.remove(WIND_COMPASS_CODE);
         });
-        CheckBox tempWidgCheck = new CheckBox();
-        tempWidgCheck.setText("Temperature forecast");
-        tempWidgCheck.selectedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable,
-                                Boolean oldValue, Boolean newValue) {
-                if (newValue) {
-                    widgets.put("temp", new TemperatureGraph());
-                } else {
-                    widgets.remove("temp");
-                }
-            }
+
+        CheckBox temperatureGraphCheckBox = new CheckBox();
+        temperatureGraphCheckBox.setText("Temperature graph");
+        temperatureGraphCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) widgets.put(TEMPERATURE_GRAPH_CODE, new TemperatureGraph());
+            else widgets.remove(TEMPERATURE_GRAPH_CODE);
         });
-        mainSec.add(windWidgCheck, 0, 0);
-        mainSec.add(tempWidgCheck, 0, 1);
+
+        CheckBox windSpeedGraphCheckBox = new CheckBox();
+        windSpeedGraphCheckBox.setText("Wind speed graph");
+        windSpeedGraphCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) widgets.put(WIND_SPEED_GRAPH_CODE, new WindSpeedGraph());
+            else widgets.remove(WIND_SPEED_GRAPH_CODE);
+        });
+
+        CheckBox visibilityGraphCheckBox = new CheckBox();
+        visibilityGraphCheckBox.setText("Visibility graph");
+        visibilityGraphCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) widgets.put(VISIBILITY_GRAPH_CODE, new VisibilityGraph());
+            else widgets.remove(VISIBILITY_GRAPH_CODE);
+        });
+
+        CheckBox swellHeightGraphCheckBox = new CheckBox();
+        swellHeightGraphCheckBox.setText("Swell height graph");
+        swellHeightGraphCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) widgets.put(SWELL_HEIGHT_GRAPH_CODE, new SwellHeightGraph());
+            else widgets.remove(SWELL_HEIGHT_GRAPH_CODE);
+        });
+
+
+        mainSec.add(windCompassCheckBox, 0, 0);
+        mainSec.add(temperatureGraphCheckBox, 0, 1);
+        mainSec.add(windSpeedGraphCheckBox, 0, 2);
+        mainSec.add(visibilityGraphCheckBox, 0, 3);
+        mainSec.add(swellHeightGraphCheckBox, 0, 4);
 
         root.setPadding(new Insets(5));
 
