@@ -4,6 +4,11 @@ import uk.ac.cam.cl.data.DataPoint;
 
 public class VisibilityGraph extends GraphWidget {
 
+    public VisibilityGraph() {
+        super();
+        getStyleClass().add("visibility-graph");
+    }
+
     @Override
     public String getName() {
         return "Visibility";

@@ -8,6 +8,11 @@ import uk.ac.cam.cl.data.DataPoint;
  */
 public class WindSpeedGraph extends GraphWidget {
 
+    public WindSpeedGraph() {
+        super();
+        getStyleClass().add("wind-speed-graph");
+    }
+
     @Override
     public String getName() {
         return "Wind Speed";

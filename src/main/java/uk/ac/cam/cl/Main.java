@@ -21,6 +21,7 @@ import static javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import uk.ac.cam.cl.data.DataManager;
 import uk.ac.cam.cl.gui.*;
 
+
 public class Main extends Application {
     private Stage stage;
     private Scene mainScene = null;
@@ -30,12 +31,8 @@ public class Main extends Application {
 
     private static int NUM_OF_WIDGETS = 10;
 
-    private String WIND_COMPASS_CODE = "wind_compass";
-    private String WEATHER_CODE = "weather";
-    private String TEMPERATURE_GRAPH_CODE = "temperature_graph";
-    private String WIND_SPEED_GRAPH_CODE = "wind_speed_graph";
-    private String VISIBILITY_GRAPH_CODE = "visibility_graph";
-    private String SWELL_HEIGHT_GRAPH_CODE = "swell_height";
+    private final ArrayList<Widget> widgetList = new ArrayList<Widget>(Arrays.asList(
+            new SwellHeightGraph(), new TemperatureGraph(), new TideGraph(), new VisibilityGraph(), new WeatherWidget(), new WindWidget()));
 
     @Override
     public void start(Stage primaryStage) {
@@ -98,61 +95,18 @@ public class Main extends Application {
         //Example check box for widget settings with an example of how to 
         //add widgets to the main screen
 
-        CheckBox windCompassCheckBox = new CheckBox();
-        windCompassCheckBox.setText("Wind compass");
-        windCompassCheckBox.getStyleClass().add("check-box");
-        windCompassCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) widgets.put(WIND_COMPASS_CODE, new WidgetContainer(new WindWidget()));
-            else widgets.remove(WIND_COMPASS_CODE);
-        });
-
-        CheckBox temperatureGraphCheckBox = new CheckBox();
-        temperatureGraphCheckBox.setText("Temperature graph");
-        temperatureGraphCheckBox.getStyleClass().add("check-box");
-        temperatureGraphCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) widgets.put(TEMPERATURE_GRAPH_CODE, new WidgetContainer(new TemperatureGraph()));
-            else widgets.remove(TEMPERATURE_GRAPH_CODE);
-        });
-
-        CheckBox windSpeedGraphCheckBox = new CheckBox();
-        windSpeedGraphCheckBox.setText("Wind speed graph");
-        windSpeedGraphCheckBox.getStyleClass().add("check-box");
-        windSpeedGraphCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) widgets.put(WIND_SPEED_GRAPH_CODE, new WidgetContainer(new WindSpeedGraph()));
-            else widgets.remove(WIND_SPEED_GRAPH_CODE);
-        });
-
-        CheckBox visibilityGraphCheckBox = new CheckBox();
-        visibilityGraphCheckBox.setText("Visibility graph");
-        visibilityGraphCheckBox.getStyleClass().add("check-box");
-        visibilityGraphCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) widgets.put(VISIBILITY_GRAPH_CODE, new WidgetContainer(new VisibilityGraph()));
-            else widgets.remove(VISIBILITY_GRAPH_CODE);
-        });
-
-        CheckBox swellHeightGraphCheckBox = new CheckBox();
-        swellHeightGraphCheckBox.setText("Swell height graph");
-        swellHeightGraphCheckBox.getStyleClass().add("check-box");
-        swellHeightGraphCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) widgets.put(SWELL_HEIGHT_GRAPH_CODE, new WidgetContainer(new SwellHeightGraph()));
-            else widgets.remove(SWELL_HEIGHT_GRAPH_CODE);
-        });
-
-        CheckBox weatherCheckBox = new CheckBox();
-        weatherCheckBox.setText("Weather");
-        weatherCheckBox.getStyleClass().add("check-box");
-        weatherCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) widgets.put(WEATHER_CODE, new WidgetContainer(new WeatherWidget()));
-            else widgets.remove(WEATHER_CODE);
-        });
-
-
-        mainSec.add(windCompassCheckBox, 0, 0);
-        mainSec.add(temperatureGraphCheckBox, 0, 1);
-        mainSec.add(windSpeedGraphCheckBox, 0, 2);
-        mainSec.add(visibilityGraphCheckBox, 0, 3);
-        mainSec.add(swellHeightGraphCheckBox, 0, 4);
-        mainSec.add(weatherCheckBox, 0, 5);
+        for(Integer i = 0; i < widgetList.size(); i++)
+        {
+            Widget y = widgetList.get(i);
+            CheckBox x = new CheckBox();
+            x.setText(y.getName());
+            x.getStyleClass().add("check-box");
+            x.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue) widgets.put(y.getName().replaceAll(" ", "_").toLowerCase(), new WidgetContainer(y));
+                else widgets.remove(y.getName());
+            });
+            mainSec.add(x, 0, i);
+        }
 
         this.stage.setTitle("Widget Menu");
 
