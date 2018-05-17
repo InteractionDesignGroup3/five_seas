@@ -11,6 +11,6 @@ public class SwellHeightGraph extends GraphWidget {
 
     @Override
     protected double getRelevantData(DataPoint dataPoint) {
-        return dataPoint.getSwellHeightM();
+        return Math.max(dataPoint.getSwellHeightM(), 0.0);
     }
 }
