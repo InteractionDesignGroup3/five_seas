@@ -17,7 +17,7 @@ import uk.ac.cam.cl.data.Config;
 import uk.ac.cam.cl.data.ConfigurationException;
 import uk.ac.cam.cl.data.DataPoint;
 import uk.ac.cam.cl.data.DataSequence;
-import uk.ac.cam.cl.data.apis.API;
+import uk.ac.cam.cl.data.Location;
 
 /**
  * Implementation of the Meteomatics API
@@ -124,7 +124,7 @@ public class Meteomatics implements API<DataSequence> {
     }
 
     @Override
-    public JSONObject getData(double longitude, double latitude) 
+    public JSONObject getData(Location location) 
             throws APIRequestException {
         try {
             DateFormat format = new SimpleDateFormat("YYYY-MM-dd");
@@ -133,7 +133,7 @@ public class Meteomatics implements API<DataSequence> {
                     apiURL + 
                     time + 
                     requestBody +
-                    latitude + "," + longitude +
+                    location.getLatitude() + "," + location.getLongitude() +
                     "/json?model=mix", true).basic(user, password); 
             
             if (request.ok()) { 
@@ -152,12 +152,6 @@ public class Meteomatics implements API<DataSequence> {
             e.printStackTrace(); 
             throw new APIRequestException();  
         }
-    }
-
-    @Override
-    public JSONObject getData(double longitude, double latitude, String target) 
-            throws APIRequestException {
-        return getData(longitude, latitude);
     }
 }
 

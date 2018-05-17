@@ -93,59 +93,34 @@ public class APIConnector<T> {
         else {
             double longitude = (Double) cache.getData().get("longitude");
             double latitude = (Double) cache.getData().get("latitude");
-            return getData(longitude, latitude);
-        }
-    }
-
-    /**
-     * Makes a request to the API for fresh data for the given longitude 
-     * and latitude (if this can't be found or is somehow malformed, 
-     * previously cached data is returned)
-     * @param longitude target longitude
-     * @param latitude target latitude
-     * @return parsed JSON object from API or cache
-     */
-    @SuppressWarnings("unchecked")
-    public JSONObject getData(double longitude, double latitude) {
-        if (disableRequests)
-            return cache.getData();
-        if (latitude > 180 || latitude < 0 || longitude > 180 || latitude < -180)
-            return cache.getData();
-        JSONObject temp = new JSONObject();
-        temp.put("longitude", longitude);
-        temp.put("latitude", latitude);
-
-        try {
-            JSONObject apiResponse = api.getData(longitude, latitude);
-            temp.put("dump", apiResponse);
-            cache.update(temp);
-            return cache.getData();
-        } catch (APIRequestException e) {
-            return cache.getData(); 
+            String name = (String) cache.getData().get("place_name");
+            return getData(new Location(name, longitude, latitude));
         }
     }
     
     /**
-     * Makes a request to the API for fresh data for the given coordinates 
-     * and target (if this can't be found or is somehow malformed, 
-     * previously cached data is returned)
-     * @param longitude target longitude
-     * @param latitude target latitude
-     * @param target the name of the target location
+     * Makes a request to the API for fresh data for the given location 
+     * (if this can't be found or is somehow malformed, previously cached 
+     * data is returned)
+     * @param location target location
      * @return parsed JSON object from API or cache
      */
     @SuppressWarnings("unchecked")
-    public JSONObject getData(double longitude, double latitude, String target) {
+    public JSONObject getData(Location location) {
         if (disableRequests)
             return cache.getData();
-        if (latitude > 180 || latitude < 0 || longitude > 180 || latitude < -180)
+        if (location.getLatitude() > 180 
+                || location.getLatitude() < 0 
+                || location.getLongitude() > 180 
+                || location.getLatitude() < -180)
             return cache.getData();
         JSONObject temp = new JSONObject();
-        temp.put("longitude", longitude);
-        temp.put("latitude", latitude);
+        temp.put("longitude", location.getLongitude());
+        temp.put("latitude", location.getLongitude());
+        temp.put("place_name", location.getName());
 
         try {
-            JSONObject apiResponse = api.getData(longitude, latitude, target);
+            JSONObject apiResponse = api.getData(location);
             temp.put("dump", apiResponse);
             cache.update(temp);
             return cache.getData();

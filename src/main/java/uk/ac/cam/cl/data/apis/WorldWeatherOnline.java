@@ -17,6 +17,7 @@ import uk.ac.cam.cl.data.Config;
 import uk.ac.cam.cl.data.ConfigurationException;
 import uk.ac.cam.cl.data.DataPoint;
 import uk.ac.cam.cl.data.DataSequence;
+import uk.ac.cam.cl.data.Location;
 
 /**
  * Implementation of the World Weather Online API
@@ -82,17 +83,17 @@ public class WorldWeatherOnline implements API<DataSequence> {
     }
 
     @Override
-    public JSONObject getData(double longitude, double latitude) 
+    public JSONObject getData(Location location) 
             throws APIRequestException {
         try {
             HttpRequest request = HttpRequest.get(api + marine, true,
-                    'q', latitude + "," + longitude, //Set query location
-                    "date", "today",  //From today
-                    "fx", "yes",      //Specify whether to include weather forecast
-                    "format", "json", //Specify format (default is XML)
-                    "key", token,     //Pass API token
-                    "tp", 1,          //Sets the time period for requests (hours)
-                    "includelocation", "yes"); //Show location
+                    'q', location.getLatitude() + "," + location.getLongitude(),
+                    "date", "today",
+                    "fx", "yes",
+                    "format", "json",
+                    "key", token,
+                    "tp", 1,
+                    "includelocation", "yes");
             System.out.println(request.toString());
 
             if (request.ok()) {
@@ -109,12 +110,6 @@ public class WorldWeatherOnline implements API<DataSequence> {
             e.printStackTrace(); 
             throw new APIRequestException(); 
         }
-    }
-    
-    @Override
-    public JSONObject getData(double longitude, double latitude, String target) 
-            throws APIRequestException {
-        return getData(longitude, latitude);
     }
 }
 
