@@ -1,4 +1,4 @@
-package uk.ac.cam.cl.gui;
+package uk.ac.cam.cl.gui.widgets;
 
 import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import javafx.geometry.HPos;
@@ -84,5 +84,10 @@ public class WeatherWidget extends Widget
         { day = 1;}
         Image image = new Image("file:res/symbols/" + day + weatherCodeToImagePath.get(weatherCode) + ".png");
         return image;
+    }
+
+    @Override
+    public String getName() {
+        return "Weather";
     }
 }

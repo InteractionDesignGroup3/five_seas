@@ -15,7 +15,6 @@ import javafx.stage.Stage;
 import java.util.*;
 import uk.ac.cam.cl.data.DataManager;
 import uk.ac.cam.cl.gui.*;
-import uk.ac.cam.cl.gui.WeatherWidget;
 import uk.ac.cam.cl.gui.widgets.*;
 
 public class Main extends Application {
@@ -124,7 +123,7 @@ public class Main extends Application {
         CheckBox weatherCheckBox = new CheckBox();
         weatherCheckBox.setText("Weather");
         weatherCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) widgets.put(WEATHER_CODE, new WeatherWidget());
+            if (newValue) widgets.put(WEATHER_CODE, new WidgetContainer(new WeatherWidget()));
             else widgets.remove(WEATHER_CODE);
         });
 
