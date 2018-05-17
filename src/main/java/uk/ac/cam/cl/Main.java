@@ -125,7 +125,7 @@ public class Main extends Application {
                     settings.set(canonicalName, true);
                 }
                 else {
-                    widgets.remove(y.getName());
+                    widgets.remove(canonicalName);
                     settings.set(canonicalName, false);
                 }
             });
