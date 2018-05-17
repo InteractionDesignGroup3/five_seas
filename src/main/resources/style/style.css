@@ -3,36 +3,42 @@
 }
 
 #top-bar, #menu-bar {
-    -fx-background-color: #003153;
+    -fx-background-color: #2196F3;
     -fx-padding: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 5);
 }
 
 #bottom-bar {
-    -fx-background-color: #EEEEEE;
+    -fx-background-color: #FFFFFF;
     -fx-padding: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, -5);
 }
 
 #menu-btn, #menu-back-btn, #loc-btn {
-    -fx-background-color: #EEEEEE;
+    -fx-background-color: #2196F3;
     -fx-background-insets: 2px;
     -fx-background-radius: 3px;
     -fx-font-size: 16px;
-    -fx-text-fill: #222222;
+    -fx-text-fill: #FFFFFF;
 }
+
+/*
 #menu-btn:hover, #menu-back-btn:hover, #loc-btn:hover {
     -fx-background-color: #FFFFFF;
 }
+
 #menu-btn:pressed, #menu-back-btn:pressed, #loc-button:pressed {
     -fx-background-color: #AAAAAA;
 }
+*/
 
 #menu-main {
-    -fx-background-color: #EEEEEE;
+    -fx-background-color: #FFFFFF;
 }
 
 .check-box .box {
     -fx-background-color: #FFFFFF;
-    -fx-background-radius: 0;
+    -fx-background-radius: 1;
 }
 .check-box {
     -fx-font-size: 20px;
@@ -42,15 +48,27 @@
 #search-box {
     -fx-background-color: #FFFFFF;
     -fx-background-insets: 2px;
-    -fx-text-fill: #222222;
+    -fx-text-fill: #212121;
     -fx-font-size: 16px;
 }
 
-.widget {
+.widget_container {
+    -fx-max-width: 375px;
+    -fx-max-height: 300px;
+    -fx-hgap: 20px;
+    -fx-padding: 15px;
+    -fx-border-insets: 5px;
+    -fx-background-insets: 5px;
+
     -fx-background-color: #FFFFFF;
-    -fx-background-insets: 4px;
-    -fx-max-width: 360px;
-    -fx-max-height: 200px;
+    -fx-background-radius: 5px;
+
+    -fx-border-radius: 5px;
+    -fx-border-width: 0px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 10, 0, 0, 0);
+}
+
+.widget {
 }
 
 .chart {
@@ -77,10 +95,10 @@
 }
 
 .chart .chart-vertical-grid-lines {
-    -fx-stroke: #EEEEEE;
+    -fx-stroke: #BDBDBD;
 }
 .chart .chart-horizontal-grid-lines {
-    -fx-stroke: #EEEEEE;
+    -fx-stroke: #BDBDBD;
 }
 
 .chart .chart-alternative-row-fill {
@@ -90,11 +108,11 @@
 }
 
 .chart .axis-tick-mark {
-    -fx-stroke: #AAAAAA;
+    -fx-stroke: #BDBDBD;
     -fx-stroke-width: 2;
 }
 .chart .axis-minor-tick-mark {
-    -fx-stroke: #DDDDDD;
+    -fx-stroke: #BDBDBD;
 }
 
 .chart .chart-series-line {
@@ -102,23 +120,24 @@
     -fx-effect: null;
 }
 
-.default-color0.chart-series-line { -fx-stroke: #005331; }
+.default-color0.chart-series-line { -fx-stroke: #2196F3; }
 
-.default-color0.chart-area-symbol { -fx-background-color: #005331, #FFFFFF; }
+.default-color0.chart-area-symbol { -fx-background-color: #2196F3, #FFFFFF; }
 
-.default-color0.chart-series-area-line { -fx-stroke: #005331; }
+.default-color0.chart-series-area-line { -fx-stroke: #2196F3; }
 
-.default-color0.chart-series-area-fill { -fx-fill: #005331aa}
+.default-color0.chart-series-area-fill { -fx-fill: #BBDEFBaa; }
 
 
 #day-select {
-    -fx-background-color: #EEEEEE;
+    -fx-background-color: #FFFFFF;
 }
 
 .slider .thumb {
-    -fx-background-color: #333333;
+    -fx-background-color: #2196F3;
 }
 
 .slider .track {
-    -fx-background-color: #AAAAAA;
+    -fx-background-color: #BDBDBD;
 }
+
