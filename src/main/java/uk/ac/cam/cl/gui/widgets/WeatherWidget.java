@@ -78,8 +78,6 @@ public class WeatherWidget extends Widget
         scrollPane.setPrefViewportHeight(100);
         this.add(scrollPane, 0, 0);
         Label label = new Label();
-        label.setText("Weather");
-        this.add(label, 0, 1);
     }
 
     /**
