@@ -22,7 +22,10 @@ public class BottomBar extends GridPane {
 
         this.parent = parent;
 
+        this.setId("bottom-bar");
+
         Slider daySelect = new Slider();
+        daySelect.setId("day-select");
         daySelect.setMin(0);
         daySelect.setMax(6);
         daySelect.setPrefWidth(300.0);

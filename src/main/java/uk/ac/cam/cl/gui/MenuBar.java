@@ -16,6 +16,8 @@ public class MenuBar extends GridPane {
 
         this.parent = parent;
 
+        this.setId("menu-bar");
+
         ColumnConstraints col0cons = new ColumnConstraints();
         col0cons.setPercentWidth(10);
         ColumnConstraints col1cons = new ColumnConstraints();
@@ -29,6 +31,7 @@ public class MenuBar extends GridPane {
     private Button initBackButton() {
         Button menuBtn = new Button();
         menuBtn.setText("<");
+        menuBtn.setId("menu-back-btn");
         GridPane.setHalignment(menuBtn, HPos.CENTER);
         menuBtn.setOnAction((x) -> {
                 System.out.println("< menu button pressed");

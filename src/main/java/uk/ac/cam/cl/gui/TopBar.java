@@ -44,6 +44,7 @@ public class TopBar extends GridPane {
         super();
 
         this.parent = parent;
+        this.setId("top-bar");
 
         ColumnConstraints col0cons = new ColumnConstraints();
         col0cons.setPercentWidth(10);
@@ -60,13 +61,16 @@ public class TopBar extends GridPane {
     private Button initLocButton() {
         Button locBtn = new Button();
         locBtn.setText("#");
+        locBtn.setId("loc-btn");
         GridPane.setHalignment(locBtn, HPos.CENTER);
         return locBtn;
     }
 
     private TextField initSearchBox() {
         TextField searchBox = new TextField();
-        searchBox.setText("Location");
+        searchBox.setPromptText("Location");
+        searchBox.setText(dm.getLocation().getName());
+        searchBox.setId("search-box");
         GridPane.setHalignment(searchBox, HPos.CENTER);
 
         AutoCompletionBinding<String> stringAutoCompletionBinding = TextFields.bindAutoCompletion(searchBox, t-> {
@@ -90,6 +94,7 @@ public class TopBar extends GridPane {
     private Button initMenuButton() {
         Button menuBtn = new Button();
         menuBtn.setText("+");
+        menuBtn.setId("menu-btn");
         GridPane.setHalignment(menuBtn, HPos.CENTER);
         menuBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
