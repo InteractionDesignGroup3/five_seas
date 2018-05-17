@@ -1,5 +1,8 @@
 package uk.ac.cam.cl;
 
+import uk.ac.cam.cl.gui.widgets.*;
+
+import java.util.*;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -8,19 +11,18 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import java.awt.*;
-import java.util.*;
-
 import uk.ac.cam.cl.data.AppSettings;
+import static javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import uk.ac.cam.cl.data.DataManager;
 import uk.ac.cam.cl.gui.*;
-import uk.ac.cam.cl.gui.MenuBar;
-import uk.ac.cam.cl.gui.widgets.*;
+
 
 public class Main extends Application {
     private Stage stage;
@@ -53,6 +55,8 @@ public class Main extends Application {
         GridPane mainSec = new GridPane();
         GridPane bottomBar = new BottomBar(this);
         mainScrollable.setContent(mainSec);
+        mainScrollable.setHbarPolicy(ScrollBarPolicy.NEVER);
+        mainScrollable.setVbarPolicy(ScrollBarPolicy.NEVER);
 
         root.setPadding(new Insets(5));
         this.stage.setTitle("Five Seas");
@@ -73,9 +77,9 @@ public class Main extends Application {
             i++;
         }
 
-        root.setTop(topBar);
-        root.setBottom(bottomBar);
         root.setCenter(mainScrollable);
+        root.setBottom(bottomBar);
+        root.setTop(topBar);
 
         this.mainScene = new Scene(root, 380, 675);
         this.mainScene.getStylesheets().add("style/style.css");
