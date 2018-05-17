@@ -18,7 +18,7 @@ import java.util.List;
  */
 public abstract class GraphWidget extends Widget {
 
-    private AreaChart<String, Number> mChart;
+    private AreaChart<String, Number> chart;
     private CategoryAxis xAxis;
     private NumberAxis yAxis;
 
@@ -26,12 +26,12 @@ public abstract class GraphWidget extends Widget {
         super();
         xAxis = new CategoryAxis();
         yAxis = new NumberAxis();
-        mChart = new AreaChart<>(xAxis, yAxis);
-        mChart.setTitle(getChartTitle());
-        mChart.setLegendVisible(false);
+        chart = new AreaChart<>(xAxis, yAxis);
+        chart.setTitle(getChartTitle());
+        chart.setLegendVisible(false);
         DataManager.getInstance().addListener(this::plot);
-        this.add(mChart, 0, 0);
-        // TODO: Stop graphs from compacting vertically
+        this.add(chart, 0, 0);
+        // TODO Stop graphs from compacting vertically
     }
 
     /**
@@ -41,28 +41,34 @@ public abstract class GraphWidget extends Widget {
     protected abstract String getChartTitle();
 
     /**
-     * Plots the passed data. It uses getRelevantData to extract the useful data from this
-     * DataPoint; this code therefore covers all types of graph.
-     * @param dataSequenceList A List of DataSequence objects, where the DataSequence at index
-     *                         n contains DataPoint objects for the day n days from today.
+     * Plots the passed data. It uses getRelevantData to extract the useful 
+     * data from this DataPoint; this code therefore covers all types of graph.
+     * @param dataSequenceList data sequences to potentially plot from
      */
     private void plot(List<DataSequence> dataSequenceList) {
-        XYChart.Series series = new XYChart.Series();
-        DataSequence toPlot = dataSequenceList.get(DataManager.getInstance().getDay());
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        DataSequence toPlot = 
+            dataSequenceList.get(DataManager.getInstance().getDay());
         for (int i = 0; i < toPlot.size(); i++) {
-            if (i % 4 != 0) continue;  // TODO: Find a better way to plot only hourly values
+            //TODO Find a better way to plot only hourly values
+            if (i % 4 != 0) continue;  
             DataPoint dataPoint = toPlot.get(i);
             Instant instant = dataPoint.getTimeAsDate().toInstant();
-            String timeFormatted = DateTimeFormatter.ofPattern("HH:mm").withZone(ZoneId.systemDefault()).format(instant);
-            series.getData().add(new XYChart.Data(timeFormatted, getRelevantData(dataPoint)));
+            String timeFormatted = DateTimeFormatter.ofPattern("HH:mm")
+                    .withZone(ZoneId.systemDefault())
+                    .format(instant);
+            series.getData().add(new XYChart.Data<String, Number>(timeFormatted, 
+                    getRelevantData(dataPoint)));
         }
-        mChart.getData().clear();
-        mChart.getData().addAll(series);
+
+        chart.getData().clear();
+        chart.getData().add(series);
     }
 
     /**
-     * Returns the needed data from a DataPoint object - this is specific to the graph being displayed. Subclasses
-     * implement this method and extract the relevant information from the passed DataPoint object.
+     * Returns the needed data from a DataPoint object - this is specific to 
+     * the graph being displayed. Subclasses implement this method and extract 
+     * the relevant information from the passed DataPoint object.
      * @param dataPoint a DataPoint object from which to extract data
      * @return the data that was extracted from it
      */
