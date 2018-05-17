@@ -8,6 +8,11 @@ import uk.ac.cam.cl.data.DataPoint;
  */
 public class TemperatureGraph extends GraphWidget {
 
+    public TemperatureGraph() {
+        super();
+        getStyleClass().add("temperature-graph");
+    }
+
     @Override
     protected double getRelevantData(DataPoint dataPoint) {
         return dataPoint.getTemperatureCelcius();

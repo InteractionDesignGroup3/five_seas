@@ -1,6 +1,7 @@
 package uk.ac.cam.cl.gui.widgets;
 
 import javafx.scene.chart.*;
+import javafx.util.StringConverter;
 import uk.ac.cam.cl.data.DataManager;
 import uk.ac.cam.cl.data.DataPoint;
 import uk.ac.cam.cl.data.DataSequence;
@@ -17,16 +18,38 @@ import java.util.List;
  */
 public abstract class GraphWidget extends Widget {
 
-    private AreaChart<String, Number> chart;
-    private CategoryAxis xAxis;
+    private AreaChart<Number, Number> chart;
+    private NumberAxis xAxis;
     private NumberAxis yAxis;
 
     public GraphWidget() {
         super();
-        xAxis = new CategoryAxis();
+        xAxis = new NumberAxis();
         yAxis = new NumberAxis();
         chart = new AreaChart<>(xAxis, yAxis);
-//        chart.setTitle(getChartTitle());
+
+        xAxis.setTickLabelFormatter(new StringConverter<Number>() {
+            @Override
+            public String toString(Number time) {
+//                Instant instant = dataPoint.getTimeAsDate().toInstant();
+                Instant instant = Instant.ofEpochMilli(time.longValue());
+                System.out.println(time.longValue());
+                String timeFormatted = DateTimeFormatter.ofPattern("HH:mm")
+                        .withZone(ZoneId.systemDefault())
+                        .format(instant);
+                return timeFormatted;
+            }
+
+            @Override
+            public Number fromString(String string) {
+                return null;  // Never called
+            }
+        });
+        xAxis.setForceZeroInRange(false);
+//        xAxis.setTickUnit(1000*60*60*3);
+//        xAxis.setTickCo
+//        xAxis.setMinorTickCount(24);
+
         chart.setLegendVisible(false);
         DataManager.getInstance().addListener(this::plot);
         this.add(chart, 0, 0);
@@ -39,19 +62,22 @@ public abstract class GraphWidget extends Widget {
      * @param dataSequenceList data sequences to potentially plot from
      */
     private void plot(List<DataSequence> dataSequenceList) {
-        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        XYChart.Series<Number, Number> series = new XYChart.Series<>();
         DataSequence toPlot = 
             dataSequenceList.get(DataManager.getInstance().getDay());
         for (int i = 0; i < toPlot.size(); i++) {
             //TODO Find a better way to plot only hourly values
             if (i % 4 != 0) continue;  
             DataPoint dataPoint = toPlot.get(i);
-            Instant instant = dataPoint.getTimeAsDate().toInstant();
-            String timeFormatted = DateTimeFormatter.ofPattern("HH:mm")
-                    .withZone(ZoneId.systemDefault())
-                    .format(instant);
-            series.getData().add(new XYChart.Data<String, Number>(timeFormatted, 
+//            Instant instant = dataPoint.getTimeAsDate().toInstant();
+//            String timeFormatted = DateTimeFormatter.ofPattern("HH:mm")
+//                    .withZone(ZoneId.systemDefault())
+//                    .format(instant);
+//            long dayStart = dataPoint.getTimeAsDate().toInstant()
+            series.getData().add(new XYChart.Data<>(dataPoint.getTime(),
                     getRelevantData(dataPoint)));
+            xAxis.setLowerBound(series.getData().get(0).getXValue().longValue());
+            xAxis.setUpperBound(series.getData().get(series.getData().size() - 1).getXValue().longValue());
         }
 
         chart.getData().clear();

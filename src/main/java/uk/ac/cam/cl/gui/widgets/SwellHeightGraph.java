@@ -8,6 +8,11 @@ import uk.ac.cam.cl.data.DataPoint;
  */
 public class SwellHeightGraph extends GraphWidget {
 
+    public SwellHeightGraph() {
+        super();
+        getStyleClass().add("swell-height-graph");
+    }
+
     @Override
     public String getName() {
         return "Swell Height";

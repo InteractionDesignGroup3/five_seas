@@ -8,6 +8,11 @@ import uk.ac.cam.cl.data.DataPoint;
  */
 public class TideGraph extends GraphWidget {
 
+    public TideGraph() {
+        super();
+        getStyleClass().add("tide-graph");
+    }
+
     @Override
     public String getName() {
         return "Tides";
