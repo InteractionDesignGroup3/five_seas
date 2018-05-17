@@ -7,6 +7,7 @@ import javafx.scene.control.Label;
  * @author Max Campman
  * */
 public class WindWidget extends Widget {
+
     public WindWidget() {
         super();
 
@@ -15,5 +16,10 @@ public class WindWidget extends Widget {
 
         this.add(label, 0, 0);
 
+    }
+
+    @Override
+    public String getName() {
+        return "Wind Compass";
     }
 }

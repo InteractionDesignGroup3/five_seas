@@ -26,18 +26,12 @@ public abstract class GraphWidget extends Widget {
         xAxis = new CategoryAxis();
         yAxis = new NumberAxis();
         chart = new AreaChart<>(xAxis, yAxis);
-        chart.setTitle(getChartTitle());
+//        chart.setTitle(getChartTitle());
         chart.setLegendVisible(false);
         DataManager.getInstance().addListener(this::plot);
         this.add(chart, 0, 0);
         // TODO Stop graphs from compacting vertically
     }
-
-    /**
-     * Returns the name of the chart, determined by the specific graph.
-     * @return the name of the chart
-     */
-    protected abstract String getChartTitle();
 
     /**
      * Plots the passed data. It uses getRelevantData to extract the useful 

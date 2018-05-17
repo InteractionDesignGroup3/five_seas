@@ -2,9 +2,14 @@ package uk.ac.cam.cl.gui.widgets;
 
 import uk.ac.cam.cl.data.DataPoint;
 
+/**
+ * Displays wind speed for one day in a graph.
+ * @author Ben Cole
+ */
 public class WindSpeedGraph extends GraphWidget {
+
     @Override
-    protected String getChartTitle() {
+    public String getName() {
         return "Wind Speed";
     }
 

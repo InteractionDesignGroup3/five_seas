@@ -15,14 +15,13 @@ import javafx.stage.Stage;
 import java.util.*;
 import uk.ac.cam.cl.data.DataManager;
 import uk.ac.cam.cl.gui.*;
-import uk.ac.cam.cl.gui.WeatherWidget;
 import uk.ac.cam.cl.gui.widgets.*;
 
 public class Main extends Application {
     private Stage stage;
     private Scene mainScene = null;
     private Scene menuScene = null;
-    private Map<String,Widget> widgets = new HashMap<>();  
+    private Map<String,WidgetContainer> widgets = new HashMap<>();
     // widgets to be added to screen mapping name => widget
 
     private static int NUM_OF_WIDGETS = 10;
@@ -54,8 +53,8 @@ public class Main extends Application {
 
         // add widgets to the panel
         int i = 0;
-        for (Widget widget : widgets.values()) {
-            mainSec.add(widget, 0, i);
+        for (WidgetContainer widgetContainer : widgets.values()) {
+            mainSec.add(widgetContainer, 0, i);
             i++;
         }
 
@@ -89,42 +88,42 @@ public class Main extends Application {
         CheckBox windCompassCheckBox = new CheckBox();
         windCompassCheckBox.setText("Wind compass");
         windCompassCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) widgets.put(WIND_COMPASS_CODE, new WindWidget());
+            if (newValue) widgets.put(WIND_COMPASS_CODE, new WidgetContainer(new WindWidget()));
             else widgets.remove(WIND_COMPASS_CODE);
         });
 
         CheckBox temperatureGraphCheckBox = new CheckBox();
         temperatureGraphCheckBox.setText("Temperature graph");
         temperatureGraphCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) widgets.put(TEMPERATURE_GRAPH_CODE, new TemperatureGraph());
+            if (newValue) widgets.put(TEMPERATURE_GRAPH_CODE, new WidgetContainer(new TemperatureGraph()));
             else widgets.remove(TEMPERATURE_GRAPH_CODE);
         });
 
         CheckBox windSpeedGraphCheckBox = new CheckBox();
         windSpeedGraphCheckBox.setText("Wind speed graph");
         windSpeedGraphCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) widgets.put(WIND_SPEED_GRAPH_CODE, new WindSpeedGraph());
+            if (newValue) widgets.put(WIND_SPEED_GRAPH_CODE, new WidgetContainer(new WindSpeedGraph()));
             else widgets.remove(WIND_SPEED_GRAPH_CODE);
         });
 
         CheckBox visibilityGraphCheckBox = new CheckBox();
         visibilityGraphCheckBox.setText("Visibility graph");
         visibilityGraphCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) widgets.put(VISIBILITY_GRAPH_CODE, new VisibilityGraph());
+            if (newValue) widgets.put(VISIBILITY_GRAPH_CODE, new WidgetContainer(new VisibilityGraph()));
             else widgets.remove(VISIBILITY_GRAPH_CODE);
         });
 
         CheckBox swellHeightGraphCheckBox = new CheckBox();
         swellHeightGraphCheckBox.setText("Swell height graph");
         swellHeightGraphCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) widgets.put(SWELL_HEIGHT_GRAPH_CODE, new SwellHeightGraph());
+            if (newValue) widgets.put(SWELL_HEIGHT_GRAPH_CODE, new WidgetContainer(new SwellHeightGraph()));
             else widgets.remove(SWELL_HEIGHT_GRAPH_CODE);
         });
 
         CheckBox weatherCheckBox = new CheckBox();
         weatherCheckBox.setText("Weather");
         weatherCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) widgets.put(WEATHER_CODE, new WeatherWidget());
+            if (newValue) widgets.put(WEATHER_CODE, new WidgetContainer(new WeatherWidget()));
             else widgets.remove(WEATHER_CODE);
         });
 
