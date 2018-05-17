@@ -47,6 +47,22 @@ public class AppSettings {
     public<T> T get(String key) {
         return (T) settings.getData().get(key);
     }
+    
+    /**
+     * Gets the setting with the given key (if the key is not found, sets the
+     * setting to the default value and returns the default value)
+     * @param key the key for the desired value
+     * @param t the default setting value
+     * @throws ClassCastException if the value is not of the desired type
+     */
+    @SuppressWarnings("unchecked")
+    public<T> T getOrDefault(String key, T t) {
+        T value = (T) settings.getData().get(key);
+        if (value == null) {
+            this.set(key, t);
+            return t;
+        } else return value;
+    }
 
     /**
      * Updates the setting with the given key to the given value
