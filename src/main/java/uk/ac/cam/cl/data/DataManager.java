@@ -56,10 +56,11 @@ public class DataManager {
         
         try { 
             JSONObject apiData = api.getData();
+            data = api.getProcessedData(apiData);
             longitude = (Double) apiData.get("longitude");
             latitude = (Double) apiData.get("latitude");
             lastUpdated = (Long) apiData.get("cache_timestamp");
-        } catch (NoDataException e) {
+        } catch (NoDataException | APIRequestException e) {
             //TODO cache is fresh so generate current location (either
             //lock this to Cambridge in the config or fake it with IP -
             //currently locked to Cambridge)
