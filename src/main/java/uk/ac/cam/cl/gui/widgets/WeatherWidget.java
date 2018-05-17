@@ -92,7 +92,7 @@ public class WeatherWidget extends Widget
         //arbitary selection of when night time is
         if(timeHour < 6 || timeHour > 20)
         { day = 1;}
-        Image image = new Image("file:res/symbols/" + day + weatherCodeToImagePath.get(weatherCode) + ".png");
+        Image image = new Image("file:src/main/resources/symbols/" + day + weatherCodeToImagePath.get(weatherCode) + ".png");
         return image;
     }
 
