@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 import java.util.*;
 import uk.ac.cam.cl.data.DataManager;
 import uk.ac.cam.cl.gui.*;
+import uk.ac.cam.cl.gui.WeatherWidget;
 import uk.ac.cam.cl.gui.widgets.*;
 
 public class Main extends Application {
@@ -27,6 +28,7 @@ public class Main extends Application {
     private static int NUM_OF_WIDGETS = 10;
 
     private String WIND_COMPASS_CODE = "wind_compass";
+    private String WEATHER_CODE = "weather";
     private String TEMPERATURE_GRAPH_CODE = "temperature_graph";
     private String WIND_SPEED_GRAPH_CODE = "wind_speed_graph";
     private String VISIBILITY_GRAPH_CODE = "visibility_graph";
@@ -119,12 +121,21 @@ public class Main extends Application {
             else widgets.remove(SWELL_HEIGHT_GRAPH_CODE);
         });
 
+        CheckBox weatherCheckBox = new CheckBox();
+        weatherCheckBox.setText("Weather");
+        weatherCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) widgets.put(WEATHER_CODE, new WeatherWidget());
+            else widgets.remove(WEATHER_CODE);
+        });
+
 
         mainSec.add(windCompassCheckBox, 0, 0);
         mainSec.add(temperatureGraphCheckBox, 0, 1);
         mainSec.add(windSpeedGraphCheckBox, 0, 2);
         mainSec.add(visibilityGraphCheckBox, 0, 3);
         mainSec.add(swellHeightGraphCheckBox, 0, 4);
+        mainSec.add(weatherCheckBox, 0, 5);
+
 
         root.setPadding(new Insets(5));
 
