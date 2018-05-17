@@ -22,6 +22,11 @@ import java.util.*;
 
 public class WeatherWidget extends Widget
 {
+    /**
+     * A weather widget for displaying the hourly weather
+     * @author Andrew Coalter
+     */
+
     // static final map which maps weather codes to their associated symbols
     // 00. no clouds 01. partial cloud 02. unknown 03. light cloud 04. brown cloud 05. cloud with bar 06. lightning 07. dark cloud 08. rain and snow 09. light rain 10. snow 11. heavy rain 12. hail 13. shower 14. snow shower
     private static final Map<Long, String> weatherCodeToImagePath = new HashMap<Long, String>(){
@@ -44,6 +49,10 @@ public class WeatherWidget extends Widget
         DataManager.getInstance().addListener(this::assign);
     }
 
+    /**
+     * Generates the widget and displays the relevant symbol and time
+     * @param dataSequenceList data sequences to get weather codes from
+     */
     private void assign(List<DataSequence> dataSequenceList)
     {
         ScrollPane scrollPane = new ScrollPane();
@@ -54,11 +63,10 @@ public class WeatherWidget extends Widget
             if (i % 4 != 0) continue;
             DataPoint dataPoint = dataSequence.get(i);
             Label label = new Label();
-            //get symbol
-            Image image = getSymbol(dataPoint.getWeatherCode(), dataPoint.getTime());
+            Instant instant = new Date(dataPoint.getTime()).toInstant();
+            Image image = getSymbol(dataPoint.getWeatherCode(), instant);
             ImageView imageView = new ImageView();
             imageView.setImage(image);
-            Instant instant = new Date(dataPoint.getTime()).toInstant();
             String timeFormatted = DateTimeFormatter.ofPattern("HH:mm").withZone(ZoneId.systemDefault()).format(instant);
             label.setText(timeFormatted);
             gridPane.add(imageView, i, 0);
@@ -70,13 +78,16 @@ public class WeatherWidget extends Widget
         scrollPane.setPrefViewportHeight(100);
         this.add(scrollPane, 0, 0);
         Label label = new Label();
-        label.setText("Weather");
-        this.add(label, 0, 1);
     }
 
-    private Image getSymbol(long weatherCode, long time)
+    /**
+     * This method takes in a weather code and returns the relevant weather symbol image
+     * @param weatherCode is the weather code to fetch a symbol for
+     * @param instant holds the time that the weather code is for
+     * @return dataSequenceList data sequences to potentially plot from
+     */
+    private Image getSymbol(long weatherCode, Instant instant)
     {
-        Instant instant = new Date(time).toInstant();
         int timeHour = Integer.parseInt(DateTimeFormatter.ofPattern("HH").withZone(ZoneId.systemDefault()).format(instant));
         int day = 0;
         //arbitary selection of when night time is
