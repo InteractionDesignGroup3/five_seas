@@ -5,7 +5,7 @@ import uk.ac.cam.cl.data.DataPoint;
 public class VisibilityGraph extends GraphWidget {
 
     @Override
-    protected String getChartTitle() {
+    public String getName() {
         return "Visibility";
     }
 

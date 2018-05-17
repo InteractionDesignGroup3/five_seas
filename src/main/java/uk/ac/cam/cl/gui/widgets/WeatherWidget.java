@@ -96,4 +96,9 @@ public class WeatherWidget extends Widget
         Image image = new Image("file:res/symbols/" + day + weatherCodeToImagePath.get(weatherCode) + ".png");
         return image;
     }
+
+    @Override
+    public String getName() {
+        return "Weather";
+    }
 }
