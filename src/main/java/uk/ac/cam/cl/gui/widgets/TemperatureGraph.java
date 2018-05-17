@@ -14,7 +14,7 @@ public class TemperatureGraph extends GraphWidget {
     }
 
     @Override
-    protected String getChartTitle() {
+    public String getName() {
         return "Temperature";
     }
 }
