@@ -33,8 +33,7 @@ public class Main extends Application {
 
     private static int NUM_OF_WIDGETS = 10;
 
-    private final ArrayList<Widget> widgetList = new ArrayList<Widget>(Arrays.asList(
-            new SwellHeightGraph(), new TemperatureGraph(), new TideGraph(), new VisibilityGraph(), new WeatherWidget(), new WindWidget()));
+    private ArrayList<Widget> widgetList;
 
     private AppSettings settings = AppSettings.getInstance();
 
@@ -60,6 +59,9 @@ public class Main extends Application {
 
         root.setPadding(new Insets(5));
         this.stage.setTitle("Five Seas");
+
+        widgetList = new ArrayList<Widget>(Arrays.asList(
+                new SwellHeightGraph(), new TemperatureGraph(), new TideGraph(), new VisibilityGraph(), new WeatherWidget(), new WindWidget()));
 
         for(Integer i = 0; i < widgetList.size(); i++)
         {
