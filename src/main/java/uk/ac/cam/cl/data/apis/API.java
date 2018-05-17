@@ -7,6 +7,7 @@ import org.json.simple.JSONObject;
 import uk.ac.cam.cl.data.Config;
 import uk.ac.cam.cl.data.ConfigurationException;
 import uk.ac.cam.cl.data.DataSequence;
+import uk.ac.cam.cl.data.Location;
 
 /**
  * Standard interface implemented by all APIs 
@@ -31,27 +32,14 @@ public interface API<T> {
             throws APIRequestException;
 
     /**
-     * Makes a request to the API for fresh data for the given longitude 
-     * and latitude 
-     * @param longitude target longitude
-     * @param latitude target latitude
-     * @return parsed JSON object from API
-     * @throws APIRequestException if API data could not be fetched
-     */
-    public JSONObject getData(double longitude, double latitude)
-            throws APIRequestException;
-    
-    /**
-     * Makes a request to the API for fresh data for the given location name
-     * and coordinates
+     * Makes a request to the API for fresh data for the given location
      * @param longitude target longitude
      * @param latitude target latitude
      * @param target the target location
      * @return parsed JSON object from API
      * @throws APIRequestException if API data could not be fetched
      */
-    public JSONObject getData(double longitude, double latitude, String target)
+    public JSONObject getData(Location location) 
             throws APIRequestException;
-
 }
 

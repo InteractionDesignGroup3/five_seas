@@ -77,7 +77,7 @@ public class TopBar extends GridPane {
         searchBox.setOnAction((event) -> {
             for (Location loc : places) {
                 if (loc.toString().equals(searchBox.getText())) {
-                    dm.setCoordinates(loc.getLongitude(), loc.getLatitude());
+                    dm.setLocation(loc);
                     break;
                 }
             }

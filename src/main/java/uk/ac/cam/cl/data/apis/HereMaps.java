@@ -22,12 +22,14 @@ import uk.ac.cam.cl.data.Location;
 public class HereMaps implements API<Location> {
     private String apiURL, appId, appCode;
 
+    @Override
     public void initFromConfig(Config config) throws ConfigurationException {
         apiURL = (String) config.get("api_url");
         appId = (String) config.get("app_id");
         appCode = (String) config.get("app_code");
     }
 
+    @Override
     public List<Location> getProcessedData(JSONObject data)
             throws APIRequestException {
         List<Location> results = new ArrayList<>();
@@ -53,16 +55,13 @@ public class HereMaps implements API<Location> {
         return results;
     }
 
-    public JSONObject getData(double longitude, double latitude) {
-        return null;  
-    }
-
-    public JSONObject getData(double longitude, double latitude, String target)
+    @Override
+    public JSONObject getData(Location location)
             throws APIRequestException {
         try { 
             HttpRequest request = HttpRequest.get(apiURL, false,
-                "at", latitude + "," + longitude, 
-                "q", target,
+                "at", location.getLatitude() + "," + location.getLatitude(), 
+                "q", location.getName(),
                 "app_id", appId,
                 "app_code", appCode,
                 "tf", "plain").accept("application/json");
