@@ -1,4 +1,4 @@
-package uk.ac.cam.cl.gui;
+package uk.ac.cam.cl.gui.widgets;
 
 import uk.ac.cam.cl.data.DataPoint;
 

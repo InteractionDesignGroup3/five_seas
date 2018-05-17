@@ -1,5 +1,4 @@
-package uk.ac.cam.cl.gui;
-
+package uk.ac.cam.cl.gui.widgets;
 
 import javafx.scene.chart.*;
 import uk.ac.cam.cl.data.DataManager;
