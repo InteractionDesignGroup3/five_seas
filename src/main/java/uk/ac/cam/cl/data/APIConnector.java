@@ -137,7 +137,11 @@ public class APIConnector<T> {
      */
     public List<T> getProcessedData(JSONObject data) 
             throws APIRequestException {
-        return api.getProcessedData(data);
+        try { 
+            return api.getProcessedData(data);
+        } catch (NullPointerException e) {
+            throw new APIRequestException();
+        }
     }
 
     /**
