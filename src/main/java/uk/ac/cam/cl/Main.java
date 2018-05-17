@@ -15,6 +15,8 @@ import javafx.stage.Stage;
 
 import java.awt.*;
 import java.util.*;
+
+import uk.ac.cam.cl.data.AppSettings;
 import uk.ac.cam.cl.data.DataManager;
 import uk.ac.cam.cl.gui.*;
 import uk.ac.cam.cl.gui.MenuBar;
@@ -31,6 +33,8 @@ public class Main extends Application {
 
     private final ArrayList<Widget> widgetList = new ArrayList<Widget>(Arrays.asList(
             new SwellHeightGraph(), new TemperatureGraph(), new TideGraph(), new VisibilityGraph(), new WeatherWidget(), new WindWidget()));
+
+    private AppSettings settings = AppSettings.getInstance();
 
     @Override
     public void start(Stage primaryStage) {
@@ -53,6 +57,15 @@ public class Main extends Application {
         root.setPadding(new Insets(5));
         this.stage.setTitle("Five Seas");
 
+        for(Integer i = 0; i < widgetList.size(); i++)
+        {
+            Widget y = widgetList.get(i);
+
+            if (settings.getOrDefault(getCanonicalName(y), false)) {
+                widgets.put(getCanonicalName(y), new WidgetContainer(y));
+            }
+        }
+
         // add widgets to the panel
         int i = 0;
         for (WidgetContainer widgetContainer : widgets.values()) {
@@ -68,6 +81,10 @@ public class Main extends Application {
         this.mainScene.getStylesheets().add("style/style.css");
         this.stage.setScene(this.mainScene);
         this.stage.show();
+    }
+
+    private String getCanonicalName(Widget w) {
+        return w.getName().replaceAll(" ", "_").toLowerCase();
     }
 
     /**
@@ -94,14 +111,25 @@ public class Main extends Application {
         for(Integer i = 0; i < widgetList.size(); i++)
         {
             Widget y = widgetList.get(i);
+            String canonicalName = getCanonicalName(y);
             CheckBox x = new CheckBox();
             x.setText(y.getName());
             x.getStyleClass().add("check-box");
             x.selectedProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue) widgets.put(y.getName().replaceAll(" ", "_").toLowerCase(), new WidgetContainer(y));
-                else widgets.remove(y.getName());
+                if (newValue) {
+                    widgets.put(canonicalName, new WidgetContainer(y));
+                    settings.set(canonicalName, true);
+                }
+                else {
+                    widgets.remove(y.getName());
+                    settings.set(canonicalName, false);
+                }
             });
             mainSec.add(x, 0, i);
+
+            if (settings.getOrDefault(canonicalName, false)) {
+                x.setSelected(true);
+            }
         }
 
         this.stage.setTitle("Widget Menu");
