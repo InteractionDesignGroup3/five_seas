@@ -1,16 +1,21 @@
 package uk.ac.cam.cl.gui;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.GridPane;
 import javafx.util.StringConverter;
+import uk.ac.cam.cl.data.DataManager;
 
+import javax.xml.crypto.Data;
 import java.util.Calendar;
 
 public class BottomBar extends GridPane {
     private Application parent;
+    private DataManager dm = DataManager.getInstance();
 
     public BottomBar(Application parent) {
         super();
@@ -59,6 +64,15 @@ public class BottomBar extends GridPane {
                 return 0.0;
             }
         });
+
+        daySelect.valueProperty().addListener(
+                new ChangeListener<Number>() {
+                    @Override
+                    public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                        dm.setDay(newValue.intValue());
+                    }
+                }
+        );
 
         GridPane.setHalignment(daySelect, HPos.CENTER);
         this.setAlignment(Pos.CENTER);
