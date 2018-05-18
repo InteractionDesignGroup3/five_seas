@@ -5,6 +5,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import javafx.scene.chart.*;
+import javafx.scene.control.Label;
 import uk.ac.cam.cl.data.DataManager;
 import uk.ac.cam.cl.data.DataPoint;
 import uk.ac.cam.cl.data.DataSequence;
@@ -18,24 +19,37 @@ public abstract class GraphWidget extends Widget {
   private AreaChart<String, Number> chart;
   private CategoryAxis xAxis;
   private NumberAxis yAxis;
+  private Boolean initialised;
+  private Label noDataLabel;
 
   public GraphWidget() {
     super();
+    initialised = false;
+    DataManager.getInstance().addListener(this::plot);
+    noDataLabel = new Label("No Data");
+    add(noDataLabel, 0, 0);
+  }
+
+  private void initialiseGraph() {
+    getChildren().removeAll(noDataLabel);
     xAxis = new CategoryAxis();
     yAxis = new NumberAxis();
     chart = new AreaChart<>(xAxis, yAxis);
     chart.setLegendVisible(false);
-    DataManager.getInstance().addListener(this::plot);
-    this.add(chart, 0, 0);
+    add(chart, 0, 0);
   }
 
   /**
-   * Plots the passed data. It uses getRelevantData to extract the useful data from this DataPoint;
-   * this code therefore covers all types of graph.
+   * Plots the passed data. It uses getRelevantData to extract the useful data
+   * from this DataPoint; this code therefore covers all types of graph.
    *
    * @param dataSequenceList data sequences to potentially plot from
    */
   private void plot(List<DataSequence> dataSequenceList) {
+    if (!initialised) {
+      initialiseGraph();
+      initialised = true;
+    }
     XYChart.Series<String, Number> series = new XYChart.Series<>();
     DataSequence toPlot = dataSequenceList.get(DataManager.getInstance().getDay());
     for (int i = 0; i < toPlot.size(); i++) {

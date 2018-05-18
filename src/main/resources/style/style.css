@@ -56,6 +56,7 @@
 
 .widget_container {
     -fx-max-width: 375px;
+    -fx-min-width: 375px;
     -fx-max-height: 300px;
     -fx-hgap: 20px;
     -fx-padding: 15px;
