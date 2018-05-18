@@ -6,17 +6,17 @@ import javafx.scene.layout.HBox;
 
 /**
  * Wraps a Widget with a border.
+ *
  * @author Ben Cole
  */
 public class WidgetContainer extends BorderPane {
-
-    public WidgetContainer(Widget widget) {
-        super();
-        setCenter(widget);
-        HBox bottom = new HBox();
-        Label nameLabel = new Label(widget.getName());
-        bottom.getChildren().addAll(nameLabel);
-        setBottom(bottom);
-        this.getStyleClass().add("widget_container");
-    }
+  public WidgetContainer(Widget widget) {
+    super();
+    setCenter(widget);
+    HBox bottom = new HBox();
+    Label nameLabel = new Label(widget.getName());
+    bottom.getChildren().addAll(nameLabel);
+    setBottom(bottom);
+    this.getStyleClass().add("widget_container");
+  }
 }

@@ -22,11 +22,13 @@
     -fx-text-fill: #FFFFFF;
 }
 
-/*
+
 #menu-btn:hover, #menu-back-btn:hover, #loc-btn:hover {
-    -fx-background-color: #FFFFFF;
+    -fx-background-color: #1976D2;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 5, 0, 0, 0);
 }
 
+/*
 #menu-btn:pressed, #menu-back-btn:pressed, #loc-button:pressed {
     -fx-background-color: #AAAAAA;
 }
@@ -69,6 +71,7 @@
 }
 
 .widget {
+    -fx-background-color: #FFFFFF;
 }
 
 .chart {
