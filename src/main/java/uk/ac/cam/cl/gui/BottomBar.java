@@ -27,7 +27,7 @@ public class BottomBar extends GridPane {
     daySelect.setMin(0);
     daySelect.setMax(6);
     daySelect.setPrefWidth(300.0);
-    daySelect.setValue(0);
+    daySelect.setValue(dm.getDay());
     daySelect.setBlockIncrement(1);
     daySelect.setMajorTickUnit(1);
     daySelect.setMinorTickCount(0);
