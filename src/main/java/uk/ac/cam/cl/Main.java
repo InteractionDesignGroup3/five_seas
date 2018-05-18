@@ -1,20 +1,22 @@
 package uk.ac.cam.cl;
 
-import static javafx.scene.control.ScrollPane.ScrollBarPolicy;
+import uk.ac.cam.cl.gui.widgets.*;
 
 import java.util.*;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import static javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import uk.ac.cam.cl.data.AppSettings;
 import uk.ac.cam.cl.data.DataManager;
 import uk.ac.cam.cl.gui.*;
-import uk.ac.cam.cl.gui.widgets.*;
 
 public class Main extends Application {
   private Stage stage;
@@ -24,9 +26,7 @@ public class Main extends Application {
   // widgets to be added to screen mapping name => widget
 
   private static int NUM_OF_WIDGETS = 10;
-
   private ArrayList<Widget> widgetList;
-
   private AppSettings settings = AppSettings.getInstance();
 
   @Override
@@ -63,12 +63,11 @@ public class Main extends Application {
     for (Integer i = 0; i < widgetList.size(); i++) {
       Widget y = widgetList.get(i);
 
-      if (settings.getOrDefault(getCanonicalName(y), false)) {
+      if (settings.getOrDefault(getCanonicalName(y), false))
         widgets.put(getCanonicalName(y), new WidgetContainer(y));
-      }
     }
 
-    //Add widgets to the panel
+    // Add widgets to the panel
     int i = 0;
     for (WidgetContainer widgetContainer : widgets.values()) {
       mainSec.add(widgetContainer, 0, i);
@@ -107,8 +106,12 @@ public class Main extends Application {
     for (Integer i = 0; i < widgetList.size(); i++) {
       Widget y = widgetList.get(i);
       String canonicalName = getCanonicalName(y);
+      
+      Label label = new Label(y.getName());
+      label.setContentDisplay(ContentDisplay.RIGHT);
+
       CheckBox x = new CheckBox();
-      x.setText(y.getName());
+      label.setGraphic(x);
       x.getStyleClass().add("check-box");
       x.selectedProperty()
           .addListener(
@@ -121,11 +124,9 @@ public class Main extends Application {
                   settings.set(canonicalName, false);
                 }
               });
-      mainSec.add(x, 0, i);
+      mainSec.add(label, 0, i);
 
-      if (settings.getOrDefault(canonicalName, false)) {
-        x.setSelected(true);
-      }
+      if (settings.getOrDefault(canonicalName, false)) x.setSelected(true);
     }
 
     this.stage.setTitle("Widget Menu");

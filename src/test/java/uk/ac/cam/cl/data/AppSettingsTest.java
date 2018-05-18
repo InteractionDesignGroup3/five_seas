@@ -4,9 +4,9 @@ import org.junit.*;
 
 /**
  * App settings unit tests
+ *
  * @author Nathan Corbyn
  */
 public class AppSettingsTest {
-    //TODO
+  // TODO
 }
-
