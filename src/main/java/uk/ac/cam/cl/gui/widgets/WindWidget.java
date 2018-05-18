@@ -7,7 +7,7 @@ import javafx.scene.control.Label;
  *
  * @author Max Campman
  */
-public class WindWidget extends Widget {
+public class WindWidget extends Widget {  // TODO: Literally the entire widget
   public WindWidget() {
     super();
 
@@ -20,5 +20,10 @@ public class WindWidget extends Widget {
   @Override
   public String getName() {
     return "Wind Compass";
+  }
+
+  @Override
+  public String getUnit() {
+    return "mph";
   }
 }

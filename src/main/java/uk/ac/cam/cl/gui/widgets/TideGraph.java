@@ -1,5 +1,6 @@
 package uk.ac.cam.cl.gui.widgets;
 
+import uk.ac.cam.cl.data.AppSettings;
 import uk.ac.cam.cl.data.DataPoint;
 
 /**
@@ -19,7 +20,18 @@ public class TideGraph extends GraphWidget {
   }
 
   @Override
+  public String getUnit() {
+    return isMeters() ? "m" : "ft";
+  }
+
+  @Override
   protected double getRelevantData(DataPoint dataPoint) {
-    return dataPoint.getTideHeightM();
+    return isMeters() ? dataPoint.getTideHeightM() : dataPoint.getTideHeightFeet();
+  }
+
+  private boolean isMeters() {
+    return AppSettings.getInstance()
+            .getOrDefault("heightUnit", "meter")
+            .equals("meter");
   }
 }

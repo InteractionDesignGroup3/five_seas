@@ -1,5 +1,6 @@
 package uk.ac.cam.cl.gui.widgets;
 
+import uk.ac.cam.cl.data.AppSettings;
 import uk.ac.cam.cl.data.DataPoint;
 
 /**
@@ -20,7 +21,19 @@ public class SwellHeightGraph extends GraphWidget {
   }
 
   @Override
+  public String getUnit() {
+    return isMeters() ? "m" : "ft";
+  }
+
+  @Override
   protected double getRelevantData(DataPoint dataPoint) {
-    return Math.max(dataPoint.getSwellHeightM(), 0.0);
+    double data = isMeters() ? dataPoint.getSwellHeightM() : dataPoint.getSwellHeightFeet();
+    return Math.max(data, 0.0);
+  }
+
+  private boolean isMeters() {
+    return AppSettings.getInstance()
+            .getOrDefault("heightUnit", "meter")
+            .equals("meter");
   }
 }
