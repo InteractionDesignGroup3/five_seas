@@ -25,13 +25,13 @@ public abstract class GraphWidget extends Widget {
   public GraphWidget() {
     super();
     initialised = false;
-    DataManager.getInstance().addListener(this::plot);
     noDataLabel = new Label("No Data");
     add(noDataLabel, 0, 0);
+    DataManager.getInstance().addListener(this::plot);
   }
 
   private void initialiseGraph() {
-    getChildren().removeAll(noDataLabel);
+    getChildren().remove(noDataLabel);
     xAxis = new CategoryAxis();
     yAxis = new NumberAxis();
     chart = new AreaChart<>(xAxis, yAxis);

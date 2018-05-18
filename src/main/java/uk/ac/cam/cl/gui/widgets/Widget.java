@@ -2,7 +2,11 @@ package uk.ac.cam.cl.gui.widgets;
 
 import javafx.scene.layout.GridPane;
 
-//TODO Change this from GridPane so it stops stretching to fill its container
+/**
+ * Encapsulates all widgets.
+ *
+ * @author Ben Cole
+ */
 public abstract class Widget extends GridPane {
   public Widget() {
     super();
@@ -15,4 +19,11 @@ public abstract class Widget extends GridPane {
    * @return the name of the widget
    */
   public abstract String getName();
+
+  /**
+   * Returns the name of the widget with its unit in brackets.
+   *
+   * @return the name of the widget and its unit
+   */
+  public abstract String getUnit();
 }

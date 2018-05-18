@@ -89,11 +89,11 @@ public class DataPoint implements Comparable<DataPoint> {
     return new Date(time);
   }
 
-  public double getTemperatureCelcius() {
+  public double getTemperatureCelsius() {
     return temperature;
   }
 
-  public double getTemperatureFarenheit() {
+  public double getTemperatureFahrenheit() {
     return Conversions.celciusToFarenheit(temperature);
   }
 

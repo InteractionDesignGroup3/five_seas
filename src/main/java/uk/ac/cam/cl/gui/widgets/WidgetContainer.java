@@ -14,9 +14,20 @@ public class WidgetContainer extends BorderPane {
     super();
     setCenter(widget);
     HBox bottom = new HBox();
-    Label nameLabel = new Label(widget.getName());
+    Label nameLabel = new Label();
+    nameLabel.setText(getWidgetName(widget));
     bottom.getChildren().addAll(nameLabel);
     setBottom(bottom);
     this.getStyleClass().add("widget_container");
+  }
+
+  /**
+   * Returns the formatted widget name followed by its unit in brackets.
+   *
+   * @param widget the widget to format
+   * @return the formatted name of the widget with a unit
+   */
+  private String getWidgetName(Widget widget) {
+    return widget.getName() + " (" + widget.getUnit() + ")";
   }
 }

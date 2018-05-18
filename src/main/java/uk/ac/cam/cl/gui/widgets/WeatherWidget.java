@@ -10,6 +10,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import uk.ac.cam.cl.data.AppSettings;
 import uk.ac.cam.cl.data.DataManager;
 import uk.ac.cam.cl.data.DataPoint;
 import uk.ac.cam.cl.data.DataSequence;
@@ -194,5 +195,16 @@ public class WeatherWidget extends Widget {
   @Override
   public String getName() {
     return "Weather";
+  }
+
+  @Override
+  public String getUnit() {
+    return isCelsius() ? "°C" : "°F";
+  }
+
+  private boolean isCelsius() {
+    return AppSettings.getInstance()
+            .getOrDefault("temperatureUnit", "celsius")
+            .equals("celsius");
   }
 }
