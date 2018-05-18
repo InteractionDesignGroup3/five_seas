@@ -4,22 +4,21 @@ import javafx.scene.control.Label;
 
 /**
  * This is an example class, additional functionality should be added.
+ *
  * @author Max Campman
- * */
+ */
 public class WindWidget extends Widget {
+  public WindWidget() {
+    super();
 
-    public WindWidget() {
-        super();
+    Label label = new Label();
+    label.setText("Wind");
 
-        Label label = new Label();
-        label.setText("Wind");
+    this.add(label, 0, 0);
+  }
 
-        this.add(label, 0, 0);
-
-    }
-
-    @Override
-    public String getName() {
-        return "Wind Compass";
-    }
+  @Override
+  public String getName() {
+    return "Wind Compass";
+  }
 }

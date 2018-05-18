@@ -4,22 +4,23 @@ import uk.ac.cam.cl.data.DataPoint;
 
 /**
  * Shows a plot of swell height for one day.
+ *
  * @author Ben Cole
  */
 public class SwellHeightGraph extends GraphWidget {
 
-    public SwellHeightGraph() {
-        super();
-        getStyleClass().add("swell-height-graph");
-    }
+  public SwellHeightGraph() {
+    super();
+    getStyleClass().add("swell-height-graph");
+  }
 
-    @Override
-    public String getName() {
-        return "Swell Height";
-    }
+  @Override
+  public String getName() {
+    return "Swell Height";
+  }
 
-    @Override
-    protected double getRelevantData(DataPoint dataPoint) {
-        return Math.max(dataPoint.getSwellHeightM(), 0.0);
-    }
+  @Override
+  protected double getRelevantData(DataPoint dataPoint) {
+    return Math.max(dataPoint.getSwellHeightM(), 0.0);
+  }
 }
