@@ -1,18 +1,15 @@
 package uk.ac.cam.cl.data.apis;
 
 import com.github.kevinsawicki.http.HttpRequest;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
 import uk.ac.cam.cl.data.Config;
 import uk.ac.cam.cl.data.ConfigurationException;
 import uk.ac.cam.cl.data.DataPoint;
@@ -21,95 +18,107 @@ import uk.ac.cam.cl.data.Location;
 
 /**
  * Implementation of the World Weather Online API
+ *
  * @author Nathan Corbyn
  */
 public class WorldWeatherOnline implements API<DataSequence> {
-    private String api, token, marine, local;
+  private String api, token, marine, local;
 
-    @Override
-    public void initFromConfig(Config config) throws ConfigurationException {
-        api = (String) config.get("api_url");
-        marine = (String) config.get("marine_api");
-        local = (String) config.get("local_api");
-        token = (String) config.get("api_token");
-    }
+  @Override
+  public void initFromConfig(Config config) throws ConfigurationException {
+    api = (String) config.get("api_url");
+    marine = (String) config.get("marine_api");
+    local = (String) config.get("local_api");
+    token = (String) config.get("api_token");
+  }
 
-    @Override
-    public List<DataSequence> getProcessedData(JSONObject data) 
-            throws APIRequestException {
-        List<DataSequence> sequences = new ArrayList<>();
+  @Override
+  public List<DataSequence> getProcessedData(JSONObject data) throws APIRequestException {
+    List<DataSequence> sequences = new ArrayList<>();
 
-        JSONObject dump = (JSONObject) data.get("dump");
-        JSONObject dumpData = (JSONObject) dump.get("data");
-        JSONArray weather = (JSONArray) dumpData.get("weather");
-        for (int i = 0; i < weather.size(); i++) {
-            List<DataPoint> points = new ArrayList<>();
-            JSONObject current = (JSONObject) weather.get(i);
-            JSONArray hourly = (JSONArray) current.get("hourly");
+    JSONObject dump = (JSONObject) data.get("dump");
+    JSONObject dumpData = (JSONObject) dump.get("data");
+    JSONArray weather = (JSONArray) dumpData.get("weather");
+    for (int i = 0; i < weather.size(); i++) {
+      List<DataPoint> points = new ArrayList<>();
+      JSONObject current = (JSONObject) weather.get(i);
+      JSONArray hourly = (JSONArray) current.get("hourly");
 
-            try {
-                DateFormat format = new SimpleDateFormat("YYYY-MM-dd");
-                Date date = format.parse((String) current.get("date"));
+      try {
+        DateFormat format = new SimpleDateFormat("YYYY-MM-dd");
+        Date date = format.parse((String) current.get("date"));
 
-                for (int j = 0; j < hourly.size(); j++) {
-                    JSONObject hour = (JSONObject) hourly.get(j);
-                    long time = date.getTime() + 3600000 * j;
-                    DataPoint point = new DataPoint(time,
-                            Double.parseDouble((String) hour.get("tempC")),
-                            Double.parseDouble((String) hour.get("FeelsLikeC")),
-                            Double.parseDouble((String) hour.get("windspeedKmph")),
-                            Double.parseDouble((String) hour.get("WindGustKmph")),
-                            0.0, //TODO wind direction
-                            0.0, //TODO get real chance of rain
-                            Double.parseDouble((String) hour.get("precipMM")),
-                            Double.parseDouble((String) hour.get("swellHeight_m")),
-                            Double.parseDouble((String) hour.get("swellPeriod_secs")),
-                            0.0, //TODO get real tide height
-                            Double.parseDouble((String) hour.get("visibility")),
-                            Integer.parseInt((String) hour.get("weatherCode")));
-                    points.add(point);
-                }
-
-                sequences.add(new DataSequence(date.getTime(), 
-                            0.0, //TODO actual max temperature
-                            0.0, //TODO actual min temperature
-                            points));
-            } catch (java.text.ParseException e) {
-                throw new APIRequestException(); 
-            }
+        for (int j = 0; j < hourly.size(); j++) {
+          JSONObject hour = (JSONObject) hourly.get(j);
+          long time = date.getTime() + 3600000 * j;
+          DataPoint point =
+              new DataPoint(
+                  time,
+                  Double.parseDouble((String) hour.get("tempC")),
+                  Double.parseDouble((String) hour.get("FeelsLikeC")),
+                  Double.parseDouble((String) hour.get("windspeedKmph")),
+                  Double.parseDouble((String) hour.get("WindGustKmph")),
+                  0.0, // TODO wind direction
+                  0.0, // TODO get real chance of rain
+                  Double.parseDouble((String) hour.get("precipMM")),
+                  Double.parseDouble((String) hour.get("swellHeight_m")),
+                  Double.parseDouble((String) hour.get("swellPeriod_secs")),
+                  0.0, // TODO get real tide height
+                  Double.parseDouble((String) hour.get("visibility")),
+                  Integer.parseInt((String) hour.get("weatherCode")));
+          points.add(point);
         }
-            
-        return sequences;
+
+        sequences.add(
+            new DataSequence(
+                date.getTime(),
+                0.0, // TODO actual max temperature
+                0.0, // TODO actual min temperature
+                points));
+      } catch (java.text.ParseException e) {
+        throw new APIRequestException();
+      }
     }
 
-    @Override
-    public JSONObject getData(Location location) 
-            throws APIRequestException {
+    return sequences;
+  }
+
+  @Override
+  public JSONObject getData(Location location) throws APIRequestException {
+    try {
+      HttpRequest request =
+          HttpRequest.get(
+              api + marine,
+              true,
+              'q',
+              location.getLatitude() + "," + location.getLongitude(),
+              "date",
+              "today",
+              "fx",
+              "yes",
+              "format",
+              "json",
+              "key",
+              token,
+              "tp",
+              1,
+              "includelocation",
+              "yes");
+      System.out.println(request.toString());
+
+      if (request.ok()) {
+        String response = request.body();
         try {
-            HttpRequest request = HttpRequest.get(api + marine, true,
-                    'q', location.getLatitude() + "," + location.getLongitude(),
-                    "date", "today",
-                    "fx", "yes",
-                    "format", "json",
-                    "key", token,
-                    "tp", 1,
-                    "includelocation", "yes");
-            System.out.println(request.toString());
-
-            if (request.ok()) {
-                String response = request.body();
-                try {
-                    JSONParser parser = new JSONParser();
-                    return (JSONObject) parser.parse(response);
-                } catch (ParseException e) { 
-                    e.printStackTrace(); 
-                    throw new APIRequestException(); 
-                }
-            } else throw new APIRequestException();
-        } catch (HttpRequest.HttpRequestException e) { 
-            e.printStackTrace(); 
-            throw new APIRequestException(); 
+          JSONParser parser = new JSONParser();
+          return (JSONObject) parser.parse(response);
+        } catch (ParseException e) {
+          e.printStackTrace();
+          throw new APIRequestException();
         }
+      } else throw new APIRequestException();
+    } catch (HttpRequest.HttpRequestException e) {
+      e.printStackTrace();
+      throw new APIRequestException();
     }
+  }
 }
-
