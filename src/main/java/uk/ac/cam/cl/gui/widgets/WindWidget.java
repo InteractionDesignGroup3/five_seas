@@ -8,8 +8,6 @@ import java.util.List;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Path;
@@ -17,9 +15,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.util.StringConverter;
 
-import uk.ac.cam.cl.data.DataManager;
-import uk.ac.cam.cl.data.DataPoint;
-import uk.ac.cam.cl.data.DataSequence;
+import uk.ac.cam.cl.data.*;
 
 /**
  * This widget indicates wind speed and direction. It follows the metaphor of a weather vane.
@@ -27,6 +23,9 @@ import uk.ac.cam.cl.data.DataSequence;
  * @author Mike Cachopo
  */
 public class WindWidget extends Widget {
+
+  public static final String WIND_WIDGET_UNIT_SETTINGS = "windWidgetUnit";
+
   private DataSequence dataSequence;
   private final Label timeValue = new Label(),
           gustSpeed = new Label();
@@ -97,7 +96,9 @@ public class WindWidget extends Widget {
     this.add(timeSelecter, 0, 3);
   }
 
-  /** Updates the widget display. Should be called when either day of week or time of day change. */
+  /**
+   * Updates the widget display. Should be called when either day of week or time of day change.
+   * */
   private void update() {
     // Number of 15 minute blocks past midnight, and associated DataPoint
     int i = (int) timeSelecter.getValue();
@@ -140,8 +141,11 @@ public class WindWidget extends Widget {
   }
 
   @Override
-  public String getUnit() {
-    // TODO Auto-generated method stub
-    return null;
+  public Unit getUnit() {
+    String unit = AppSettings
+            .getInstance()
+            .getOrDefault(WIND_WIDGET_UNIT_SETTINGS,
+                    Unit.KILOMETERS_PER_HOUR.toString());
+    return Unit.fromString(unit);
   }
 }

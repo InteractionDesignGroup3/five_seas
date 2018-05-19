@@ -2,6 +2,7 @@ package uk.ac.cam.cl.gui.widgets;
 
 import uk.ac.cam.cl.data.AppSettings;
 import uk.ac.cam.cl.data.DataPoint;
+import uk.ac.cam.cl.data.Unit;
 
 /**
  * Shows a plot of tide data for one day.
@@ -9,6 +10,9 @@ import uk.ac.cam.cl.data.DataPoint;
  * @author Ben Cole
  */
 public class TideGraph extends GraphWidget {
+
+  public static final String TIDE_GRAPH_UNIT_SETTINGS = "tideGraphUnit";
+
   public TideGraph() {
     super();
     getStyleClass().add("tide-graph");
@@ -20,18 +24,26 @@ public class TideGraph extends GraphWidget {
   }
 
   @Override
-  public String getUnit() {
-    return isMeters() ? "m" : "ft";
+  public Unit getUnit() {
+    String unit = AppSettings.getInstance()
+            .getOrDefault(TIDE_GRAPH_UNIT_SETTINGS, Unit.METERS.toString());
+    return Unit.fromString(unit);
   }
 
   @Override
   protected double getRelevantData(DataPoint dataPoint) {
-    return isMeters() ? dataPoint.getTideHeightM() : dataPoint.getTideHeightFeet();
+    switch (getUnit()) {
+      case FEET:
+        return dataPoint.getTideHeightFeet();
+      case METERS:
+      default:
+        return dataPoint.getTideHeightM();
+    }
   }
 
   private boolean isMeters() {
     return AppSettings.getInstance()
-            .getOrDefault("heightUnit", "meter")
+            .getOrDefault(TIDE_GRAPH_UNIT_SETTINGS, "meter")
             .equals("meter");
   }
 }
