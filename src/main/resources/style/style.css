@@ -180,6 +180,16 @@
   -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 5, 0, 0, 0);
 }
 
+#compass {
+  -fx-fill: #2196F3;
+  -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 0);
+}
+
+#vane {
+  -fx-fill: #FFFFFF;
+  -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 0);
+}
+
 #day-select {
   -fx-background-color: #FFFFFF;
 }
