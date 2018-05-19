@@ -21,12 +21,8 @@ public enum Unit {
     this.display = display;
   }
 
-  /**
-   * Returns the display name of the unit.
-   *
-   * @return the display name of the unit
-   */
-  public String getDisplay() {
+  @Override
+  public String toString() {
     return display;
   }
 
