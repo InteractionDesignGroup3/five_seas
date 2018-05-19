@@ -29,30 +29,23 @@ public class WidgetContainer extends BorderPane {
   private BorderPane top;
   private Button swipe;
   private StackPane view;
+  private Label nameLabel;
+  private HBox bottom;
 
   public WidgetContainer(Widget widget, Integer pos) {
     super();
     setCenter(widget);
     position = pos;
-    HBox bottom = new HBox();
     Label nameLabel = new Label();
     nameLabel.setText(getWidgetName(widget));
+    bottom = new HBox();
     bottom.getChildren().addAll(nameLabel);
     setBottom(bottom);
     this.getStyleClass().add("widget_container");
   }
 
   public WidgetContainer(Widget widget, Settings sett, Integer pos) {
-
-    position = pos;
-    HBox bottom = new HBox();
-    Label nameLabel = new Label();
-    nameLabel.setText(getWidgetName(widget));
-    bottom.getChildren().addAll(nameLabel);
-    setBottom(bottom);
-    this.getStyleClass().add("widget_container");
-
-    //this(widget, pos);
+    this(widget, pos); 
     this.top = new BorderPane();
     this.swipe = new Button();
     this.swipe.setGraphic(new ImageView(Main.SETTINGS_ICON));
@@ -73,19 +66,19 @@ public class WidgetContainer extends BorderPane {
   }
 
   private void swap() {
-
     if (this.onMain) {
-      this.swipe.setGraphic(new ImageView(Main.BACK_ICON));
-      top.setRight(null);
-      top.setCenter(new Label("Settings"));
-      top.setLeft(swipe);
-
       FadeTransition ft = new FadeTransition(Duration.millis(500), this.main);
       ft.setFromValue(1.0);
       ft.setToValue(0.0);
       ft.setCycleCount(1);
       ft.play();
 
+      this.swipe.setGraphic(new ImageView(Main.BACK_ICON));
+      top.setRight(null);
+      top.setCenter(new Label("Settings"));
+      top.setLeft(swipe);
+      setBottom(null);
+      
       FadeTransition ft2 = new FadeTransition((Duration.millis(500)), this.sett);
       ft2.setFromValue(0.0);
       ft2.setToValue(1.0);
@@ -98,16 +91,16 @@ public class WidgetContainer extends BorderPane {
       ft.setCycleCount(1);
       ft.play();
 
+      this.swipe.setGraphic(new ImageView(Main.SETTINGS_ICON));
+      top.setLeft(null);
+      top.setCenter(null);
+      top.setRight(swipe);
+
       FadeTransition ft2 = new FadeTransition((Duration.millis(500)), this.main);
       ft2.setFromValue(0.0);
       ft2.setToValue(1.0);
       ft2.setCycleCount(1);
       ft2.play();
-
-      this.swipe.setGraphic(new ImageView(Main.SETTINGS_ICON));
-      top.setLeft(null);
-      top.setCenter(null);
-      top.setRight(swipe);
     }
 
     Node first = view.getChildren().remove(0);
