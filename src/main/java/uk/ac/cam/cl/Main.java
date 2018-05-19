@@ -31,6 +31,7 @@ public class Main extends Application {
 
   private static int NUM_OF_WIDGETS = 10;
   private ArrayList<Widget> widgetList;
+  private ArrayList<Settings> settingsList;
   private ArrayList<WidgetContainer> widgetOrder;
   private AppSettings settings = AppSettings.getInstance();
 
@@ -76,14 +77,24 @@ public class Main extends Application {
                 new WeatherWidget(),
                 new WindWidget()));
 
+    settingsList = new ArrayList<Settings>(Arrays.asList(
+            new WindSettings(),
+            new WindSettings(),
+            new WindSettings(),
+            new WindSettings(),
+            new WindSettings(),
+            new WindSettings(),
+            new WindSettings()));
+
     widgetOrder = new ArrayList<>();
     int j = 0;
     for(Integer i = 0; i < widgetList.size(); i++)
     {
       Widget y = widgetList.get(i);
+      Settings s = settingsList.get(i);
 
       if (settings.getOrDefault(getCanonicalName(y), false)) {
-        WidgetContainer z = new WidgetContainer(y, j);
+        WidgetContainer z = new WidgetContainer(y, s, j);
         z.setOnDragDetected(event -> {
           Dragboard db = z.startDragAndDrop(TransferMode.MOVE);
           ClipboardContent c = new ClipboardContent();
