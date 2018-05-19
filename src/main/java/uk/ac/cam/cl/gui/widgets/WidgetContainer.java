@@ -9,10 +9,14 @@ import javafx.scene.layout.HBox;
  *
  * @author Ben Cole
  */
+
 public class WidgetContainer extends BorderPane {
-  public WidgetContainer(Widget widget) {
+  private Integer position;
+
+  public WidgetContainer(Widget widget, Integer pos) {
     super();
     setCenter(widget);
+    position = pos;
     HBox bottom = new HBox();
     Label nameLabel = new Label();
     nameLabel.setText(getWidgetName(widget));
@@ -29,5 +33,14 @@ public class WidgetContainer extends BorderPane {
    */
   private String getWidgetName(Widget widget) {
     return widget.getName() + " (" + widget.getUnit() + ")";
+  }
+
+  public Integer getPosition()
+  {
+    return position;
+  }
+  public void setPosition(Integer pos)
+  {
+    position = pos;
   }
 }
