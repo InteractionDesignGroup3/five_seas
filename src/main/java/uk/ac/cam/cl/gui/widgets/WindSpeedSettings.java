@@ -13,7 +13,7 @@ public class WindSpeedSettings extends Settings {
 
 
     public WindSpeedSettings() {
-        SETTING_NAME = "windSpeedGraphUnit";
+        SETTING_NAME = WindSpeedGraph.WIND_SPEED_GRAPH_UNIT_SETTINGS;
 
         setTitle("Wind Speed Settings");
 

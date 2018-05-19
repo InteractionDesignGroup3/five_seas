@@ -10,7 +10,7 @@ public class WindSettings extends Settings {
     private AppSettings settings = AppSettings.getInstance();
 
     public WindSettings() {
-        SETTING_NAME = "windWidgetUnit";
+        SETTING_NAME = WindWidget.WIND_WIDGET_UNIT_SETTINGS;
 
         setTitle("Wind Settings");
 

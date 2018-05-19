@@ -10,7 +10,7 @@ public class TideSettings extends Settings {
     private AppSettings settings = AppSettings.getInstance();
 
     public TideSettings() {
-        SETTING_NAME = "tideGraphUnit";
+        SETTING_NAME = TideGraph.TIDE_GRAPH_UNIT_SETTINGS;
 
         setTitle("Tide Settings");
 

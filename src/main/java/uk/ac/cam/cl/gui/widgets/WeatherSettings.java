@@ -10,7 +10,7 @@ public class WeatherSettings extends Settings {
     private AppSettings settings = AppSettings.getInstance();
 
     public WeatherSettings() {
-        SETTING_NAME = "temperatureGraphUnit";
+        SETTING_NAME = WeatherWidget.WEATHER_WIDGET_TEMPERATURE_UNIT_SETTINGS;
 
         setTitle("Temperature Settings");
 

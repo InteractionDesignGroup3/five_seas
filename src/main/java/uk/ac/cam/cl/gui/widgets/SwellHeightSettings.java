@@ -10,7 +10,7 @@ public class SwellHeightSettings extends Settings {
     private AppSettings settings = AppSettings.getInstance();
 
     public SwellHeightSettings() {
-        SETTING_NAME = "swellHeightGraphUnit";
+        SETTING_NAME = SwellHeightGraph.SWELL_HEIGHT_GRAPH_UNIT_SETTINGS;
 
         setTitle("Swell Height Settings");
 

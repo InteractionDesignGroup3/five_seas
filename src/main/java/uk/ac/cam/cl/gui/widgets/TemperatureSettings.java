@@ -10,7 +10,7 @@ public class TemperatureSettings extends Settings {
     private AppSettings settings = AppSettings.getInstance();
 
     public TemperatureSettings() {
-        SETTING_NAME = "temperatureGraphUnit";
+        SETTING_NAME = TemperatureGraph.TEMPERATURE_GRAPH_UNIT_SETTINGS;
 
         setTitle("Temperature Settings");
 

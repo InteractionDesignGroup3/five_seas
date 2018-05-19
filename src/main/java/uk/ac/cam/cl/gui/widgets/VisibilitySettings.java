@@ -10,7 +10,7 @@ public class VisibilitySettings extends Settings {
     private AppSettings settings = AppSettings.getInstance();
 
     public VisibilitySettings() {
-        SETTING_NAME = "visibilityGraphUnit";
+        SETTING_NAME = VisibilityGraph.VISIBILITY_GRAPH_UNIT_SETTINGS;
 
         setTitle("Visibility Settings");
 
