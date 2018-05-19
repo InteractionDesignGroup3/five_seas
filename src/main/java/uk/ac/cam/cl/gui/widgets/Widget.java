@@ -1,6 +1,7 @@
 package uk.ac.cam.cl.gui.widgets;
 
 import javafx.scene.layout.GridPane;
+import uk.ac.cam.cl.data.Unit;
 
 /**
  * Encapsulates all widgets.
@@ -21,9 +22,9 @@ public abstract class Widget extends GridPane {
   public abstract String getName();
 
   /**
-   * Returns the name of the widget with its unit in brackets.
+   * Returns the Unit in use by this widget.
    *
-   * @return the name of the widget and its unit
+   * @return the Unit in use
    */
-  public abstract String getUnit();
+  public abstract Unit getUnit();
 }
