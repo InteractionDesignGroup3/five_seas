@@ -1,18 +1,21 @@
 package uk.ac.cam.cl.gui.widgets;
 
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import uk.ac.cam.cl.data.AppSettings;
 import uk.ac.cam.cl.data.Unit;
 
-public class WindSettings extends Settings {
+import java.util.ArrayList;
+import java.util.List;
+
+public class WindSpeedSettings extends Settings {
     private AppSettings settings = AppSettings.getInstance();
 
-    public WindSettings() {
-        SETTING_NAME = WindWidget.WIND_WIDGET_UNIT_SETTINGS;
 
-        setTitle("Wind Settings");
+
+    public WindSpeedSettings() {
+        SETTING_NAME = WindSpeedGraph.WIND_SPEED_GRAPH_UNIT_SETTINGS;
+
+        setTitle("Wind Speed Settings");
 
         ToggleGroup group = new ToggleGroup();
         RadioButton kph = new RadioButton();
