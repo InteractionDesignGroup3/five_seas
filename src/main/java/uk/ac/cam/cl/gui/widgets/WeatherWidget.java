@@ -17,11 +17,9 @@ import uk.ac.cam.cl.data.DataSequence;
 
 /**
  * A weather widget for displaying the hourly weather - includes a mechanism for converting from
- * weather codes to symbol codes:
- *
- * <p>00 no clouds 01 partial cloud 02 unknown 03 light cloud 04 brown cloud 05 cloud with bar 06
- * lightning 07 dark cloud 08 rain and snow 09 light rain 10 snow 11 heavy rain 12 hail 13 shower 14
- * snow shower
+ * weather codes to symbol codes: 00 no clouds; 01 partial cloud; 02 unknown; 03 light cloud; 04
+ * brown cloud; 05 cloud with bar; 06 lightning; 07 dark cloud; 08 rain and snow; 09 light rain; 10
+ * snow; 11 heavy rain; 12 hail; 13 shower; 14 snow shower
  *
  * @author Andrew Coalter
  */
@@ -146,7 +144,9 @@ public class WeatherWidget extends Widget {
    */
   private void assign(List<DataSequence> dataSequenceList) {
     ScrollPane scrollPane = new ScrollPane();
+    scrollPane.setId("weather_widget");
     GridPane gridPane = new GridPane();
+    gridPane.setId("weather");
     DataSequence dataSequence = dataSequenceList.get(DataManager.getInstance().getDay());
     for (int i = 0; i < dataSequence.size(); i++) {
       if (i % 4 != 0) continue;

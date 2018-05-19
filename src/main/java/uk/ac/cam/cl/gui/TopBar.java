@@ -61,13 +61,13 @@ public class TopBar extends GridPane {
             searchBox,
             t -> {
               places = dm.getLocations(searchBox.getText());
-              return places.stream().map(x -> x.toString()).collect(Collectors.toList());
+              return places.stream().map(x -> x.getName()).collect(Collectors.toList());
             });
 
     searchBox.setOnAction(
         (event) -> {
           for (Location loc : places) {
-            if (loc.toString().equals(searchBox.getText())) {
+            if (loc.getName().equals(searchBox.getText())) {
               dm.setLocation(loc);
               break;
             }

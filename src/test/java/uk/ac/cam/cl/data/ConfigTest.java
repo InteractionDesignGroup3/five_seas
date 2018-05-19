@@ -4,9 +4,9 @@ import org.junit.*;
 
 /**
  * Configuration unit tests
+ *
  * @author Nathan Corbyn
  */
 public class ConfigTest {
-    //TODO
+  // TODO
 }
-
