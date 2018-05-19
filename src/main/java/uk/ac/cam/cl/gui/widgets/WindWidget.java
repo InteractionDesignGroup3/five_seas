@@ -4,13 +4,19 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Path;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import javafx.util.StringConverter;
+
 import uk.ac.cam.cl.data.DataManager;
 import uk.ac.cam.cl.data.DataPoint;
 import uk.ac.cam.cl.data.DataSequence;
@@ -22,29 +28,38 @@ import uk.ac.cam.cl.data.DataSequence;
  */
 public class WindWidget extends Widget {
   private DataSequence dataSequence;
-  private final Label timeValue = new Label();
-  private final Image pointer =
-      new Image("file:src/main/resources/graphics/black.png", 120, 120, true, true);
-  private final ImageView vane = new ImageView(pointer);
+  private final Label timeValue = new Label(),
+          gustSpeed = new Label();
+  private final Shape compass, vane;
   private final Label numberBox = new Label();
   private final Slider timeSelecter = new Slider();
+  private final Label north = new Label("N");
 
   public WindWidget() {
     super();
-    DataManager.getInstance().addListener(this::assign);
 
-    // Creates a display above the vane to indicate the time of day currently selected
-    StackPane topPane = new StackPane();
-    Label timeLabel = new Label("Time:");
-    topPane.getChildren().addAll(timeLabel, timeValue);
-    StackPane.setAlignment(timeLabel, Pos.BOTTOM_LEFT);
-    StackPane.setAlignment(timeValue, Pos.BOTTOM_RIGHT);
+    north.getStyleClass().add("cardinal");
+
+    Circle circle = new Circle(0, 0, 65);
+    Rectangle rect = new Rectangle(0, -65, 65, 65);
+    vane = Path.union(circle, rect);
+    vane.setId("vane");
+    compass = new Circle(0, 0, Math.sqrt(2) * 65);
+    compass.setId("compass");
+
+    DataManager.getInstance().addListener(this::assign);
 
     // Assign vane and text box to the middle of the widget
     StackPane mainPane = new StackPane();
-    mainPane.getChildren().addAll(vane, numberBox);
+    mainPane.getChildren().addAll(compass, vane, north, numberBox);
     mainPane.setPrefHeight(400);
     mainPane.setPrefWidth(675);
+
+    StackPane bottomPane = new StackPane();
+    bottomPane.getChildren().addAll(gustSpeed, timeValue);
+    StackPane.setAlignment(timeValue, Pos.BOTTOM_RIGHT);
+    StackPane.setAlignment(gustSpeed, Pos.BOTTOM_LEFT);
+    StackPane.setAlignment(north, Pos.TOP_CENTER);
 
     // Adjust the time selecter preferences
     timeSelecter.setMax(95);
@@ -77,8 +92,8 @@ public class WindWidget extends Widget {
             });
 
     // Add all components to the widget display
-    this.add(topPane, 0, 1);
-    this.add(mainPane, 0, 2);
+    this.add(mainPane, 0, 1);
+    this.add(bottomPane, 0, 2);
     this.add(timeSelecter, 0, 3);
   }
 
@@ -88,6 +103,7 @@ public class WindWidget extends Widget {
     int i = (int) timeSelecter.getValue();
     DataPoint dataPoint = dataSequence.get(i);
     timeValue.setText(intToDate(i));
+    gustSpeed.setText("Gusts " + Double.toString(dataPoint.getGustSpeedKmPH()) + "km/h");
     vane.setRotate(dataPoint.getWindDirection() - 45);
     numberBox.setText(Double.toString(dataPoint.getWindSpeedKmPH()) + "km/h");
   }
@@ -120,7 +136,7 @@ public class WindWidget extends Widget {
 
   @Override
   public String getName() {
-    return "Wind Compass";
+    return "Wind Speed and Direction";
   }
 
   @Override
