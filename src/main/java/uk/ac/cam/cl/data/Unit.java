@@ -42,6 +42,7 @@ public enum Unit {
         return unit;
       }
     }
+    return null;  // Should never be executed
   }
 
 }
