@@ -22,7 +22,7 @@
   -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, -5);
 }
 
-#menu-btn, #menu-back-btn, #loc-btn {
+.button {
   -fx-background-color: #2196F3;
   -fx-background-insets: 2px;
   -fx-background-radius: 3px;
@@ -31,12 +31,12 @@
 }
 
 
-#menu-btn:hover, #menu-back-btn:hover, #loc-btn:hover {
+.button:hover {
   -fx-background-color: #42A5F5;
   -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 5, 0, 0, 0);
 }
 
-#menu-btn:pressed, #menu-back-btn:pressed, #loc-button:pressed {
+.button:pressed {
   -fx-background-color: #1976D2;
   -fx-effect: innershadow(gaussian, rgba(0, 0, 0, 0.1), 5, 0, 0, 0);
 }
@@ -91,9 +91,11 @@
 .chart .chart-title {
   -fx-font-size: 14px;
 }
+
 .chart .chart-legend {
   -fx-font-size: 10px;
 }
+
 .chart .chart-legend-item {
   -fx-font-size: 8px;
 }

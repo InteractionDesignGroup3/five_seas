@@ -1,16 +1,19 @@
 package uk.ac.cam.cl.gui.widgets;
 
+import java.util.Set;
+
 import javafx.animation.FadeTransition;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
-import java.util.Set;
+import uk.ac.cam.cl.Main;
 
 /**
  * Wraps a Widget with a border.
@@ -52,7 +55,7 @@ public class WidgetContainer extends BorderPane {
     //this(widget, pos);
     this.top = new BorderPane();
     this.swipe = new Button();
-    this.swipe.setText(">");
+    this.swipe.setGraphic(new ImageView(Main.SETTINGS_ICON));
 
     this.main = widget;
     this.sett = sett;
@@ -72,7 +75,11 @@ public class WidgetContainer extends BorderPane {
   private void swap() {
 
     if (this.onMain) {
-      this.swipe.setText("<");
+      this.swipe.setGraphic(new ImageView(Main.BACK_ICON));
+      top.setRight(null);
+      top.setCenter(new Label("Settings"));
+      top.setLeft(swipe);
+
       FadeTransition ft = new FadeTransition(Duration.millis(500), this.main);
       ft.setFromValue(1.0);
       ft.setToValue(0.0);
@@ -84,8 +91,7 @@ public class WidgetContainer extends BorderPane {
       ft2.setToValue(1.0);
       ft2.setCycleCount(1);
       ft2.play();
-    }
-    else {
+    } else {
       FadeTransition ft = new FadeTransition(Duration.millis(500), this.sett);
       ft.setFromValue(1.0);
       ft.setToValue(0.0);
@@ -98,7 +104,10 @@ public class WidgetContainer extends BorderPane {
       ft2.setCycleCount(1);
       ft2.play();
 
-      this.swipe.setText(">");
+      this.swipe.setGraphic(new ImageView(Main.SETTINGS_ICON));
+      top.setLeft(null);
+      top.setCenter(null);
+      top.setRight(swipe);
     }
 
     Node first = view.getChildren().remove(0);

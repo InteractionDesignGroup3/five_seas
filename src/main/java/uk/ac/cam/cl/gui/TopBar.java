@@ -3,15 +3,19 @@ package uk.ac.cam.cl.gui;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
+
 import uk.ac.cam.cl.Main;
 import uk.ac.cam.cl.data.DataManager;
 import uk.ac.cam.cl.data.Location;
@@ -43,8 +47,8 @@ public class TopBar extends GridPane {
 
   private Button initLocButton() {
     Button locBtn = new Button();
-    locBtn.setText("#");
-    locBtn.setId("loc-btn");
+    locBtn.setGraphic(new ImageView(Main.LOCATION_ICON));
+    locBtn.getStyleClass().add("button");
     GridPane.setHalignment(locBtn, HPos.CENTER);
     return locBtn;
   }
@@ -79,8 +83,8 @@ public class TopBar extends GridPane {
 
   private Button initMenuButton() {
     Button menuBtn = new Button();
-    menuBtn.setText("+");
-    menuBtn.setId("menu-btn");
+    menuBtn.setGraphic(new ImageView(Main.ADD_ICON));
+    menuBtn.getStyleClass().add("button");
     GridPane.setHalignment(menuBtn, HPos.CENTER);
     menuBtn.setOnAction(
         new EventHandler<ActionEvent>() {
