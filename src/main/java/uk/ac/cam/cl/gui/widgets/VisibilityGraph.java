@@ -26,7 +26,7 @@ public class VisibilityGraph extends GraphWidget {
 
   private boolean isMiles() {
     return AppSettings.getInstance()
-            .getOrDefault("distanceUnit", "miles")
+            .getOrDefault("distanceUnit", "kilometers")
             .equals("miles");
   }
 }

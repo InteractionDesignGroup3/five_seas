@@ -57,6 +57,7 @@ public class Main extends Application {
                 new TemperatureGraph(),
                 new TideGraph(),
                 new VisibilityGraph(),
+                new WindSpeedGraph(),
                 new WeatherWidget(),
                 new WindWidget()));
 
