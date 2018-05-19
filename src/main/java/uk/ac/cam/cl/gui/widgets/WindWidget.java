@@ -33,9 +33,12 @@ public class WindWidget extends Widget {
   private final Shape compass, vane;
   private final Label numberBox = new Label();
   private final Slider timeSelecter = new Slider();
+  private final Label north = new Label("N");
 
   public WindWidget() {
     super();
+
+    north.getStyleClass().add("cardinal");
 
     Circle circle = new Circle(0, 0, 65);
     Rectangle rect = new Rectangle(0, -65, 65, 65);
@@ -48,7 +51,7 @@ public class WindWidget extends Widget {
 
     // Assign vane and text box to the middle of the widget
     StackPane mainPane = new StackPane();
-    mainPane.getChildren().addAll(compass, vane, numberBox);
+    mainPane.getChildren().addAll(compass, vane, north, numberBox);
     mainPane.setPrefHeight(400);
     mainPane.setPrefWidth(675);
 
@@ -56,6 +59,7 @@ public class WindWidget extends Widget {
     bottomPane.getChildren().addAll(gustSpeed, timeValue);
     StackPane.setAlignment(timeValue, Pos.BOTTOM_RIGHT);
     StackPane.setAlignment(gustSpeed, Pos.BOTTOM_LEFT);
+    StackPane.setAlignment(north, Pos.TOP_CENTER);
 
     // Adjust the time selecter preferences
     timeSelecter.setMax(95);
