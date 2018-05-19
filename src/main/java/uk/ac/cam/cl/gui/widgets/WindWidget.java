@@ -17,9 +17,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.util.StringConverter;
 
-import uk.ac.cam.cl.data.DataManager;
-import uk.ac.cam.cl.data.DataPoint;
-import uk.ac.cam.cl.data.DataSequence;
+import uk.ac.cam.cl.data.*;
 
 /**
  * This widget indicates wind speed and direction. It follows the metaphor of a weather vane.
@@ -140,8 +138,8 @@ public class WindWidget extends Widget {
   }
 
   @Override
-  public String getUnit() {
-    // TODO Auto-generated method stub
-    return null;
+  public Unit getUnit() {
+    String unit = AppSettings.getInstance().getOrDefault("windWidgetUnit", Unit.KILOMETERS_PER_HOUR.toString());
+    return Unit.fromString(unit);
   }
 }
