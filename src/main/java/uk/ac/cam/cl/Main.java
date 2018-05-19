@@ -78,12 +78,12 @@ public class Main extends Application {
                 new WindWidget()));
 
     settingsList = new ArrayList<Settings>(Arrays.asList(
-            new WindSettings(),
-            new WindSettings(),
-            new WindSettings(),
-            new WindSettings(),
-            new WindSettings(),
-            new WindSettings(),
+            new SwellHeightSettings(),
+            new TemperatureSettings(),
+            new TideSettings(),
+            new VisibilitySettings(),
+            new WindSpeedSettings(),
+            new WeatherSettings(),
             new WindSettings()));
 
     widgetOrder = new ArrayList<>();
@@ -94,7 +94,12 @@ public class Main extends Application {
       Settings s = settingsList.get(i);
 
       if (settings.getOrDefault(getCanonicalName(y), false)) {
-        WidgetContainer z = new WidgetContainer(y, s, j);
+        WidgetContainer z;
+        if (s != null) {
+          z = new WidgetContainer(y, s, j);
+        } else {
+          z = new WidgetContainer(y, j);
+        }
         z.setOnDragDetected(event -> {
           Dragboard db = z.startDragAndDrop(TransferMode.MOVE);
           ClipboardContent c = new ClipboardContent();

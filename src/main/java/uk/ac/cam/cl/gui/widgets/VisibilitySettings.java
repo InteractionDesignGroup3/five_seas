@@ -32,8 +32,20 @@ public class VisibilitySettings extends Settings {
             setUnit(Unit.MILES);
         });
 
+        Unit curr = getUnit();
+        if (curr == Unit.KILOMETERS) {
+            opt1.setSelected(true);
+        } else {
+            opt2.setSelected(true);
+        }
+
         this.add(title, 0, 0);
         this.add(opt1, 0, 1);
         this.add(opt2, 0, 2);
+    }
+
+    @Override
+    public Unit getUnit() {
+        return Unit.fromString(settings.getOrDefault(SETTING_NAME, (String) Unit.KILOMETERS.toString()));
     }
 }

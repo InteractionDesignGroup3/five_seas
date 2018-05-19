@@ -33,6 +33,13 @@ public class WindSettings extends Settings {
             setUnit(Unit.MILES_PER_HOUR);
         });
 
+        Unit curr = getUnit();
+        if (curr == Unit.KILOMETERS_PER_HOUR) {
+            kph.setSelected(true);
+        } else {
+            mph.setSelected(true);
+        }
+
         this.add(title, 0, 0);
         this.add(kph, 0, 1);
         this.add(mph, 0, 2);
@@ -40,11 +47,6 @@ public class WindSettings extends Settings {
 
     @Override
     public Unit getUnit() {
-        return Unit.fromString(settings.get(SETTING_NAME));
-    }
-
-    @Override
-    public void setUnit(Unit unit) {
-        settings.set(SETTING_NAME, (String) unit.toString());
+        return Unit.fromString(settings.getOrDefault(SETTING_NAME, (String) Unit.KILOMETERS_PER_HOUR.toString()));
     }
 }

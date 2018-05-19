@@ -12,7 +12,7 @@ public class TemperatureSettings extends Settings {
     public TemperatureSettings() {
         SETTING_NAME = "temperatureGraphUnit";
         Label title = new Label();
-        title.setText("SwellHeight Settings");
+        title.setText("Temperature Settings");
         title.getStyleClass().add("setting-title");
 
         ToggleGroup group = new ToggleGroup();
@@ -26,14 +26,26 @@ public class TemperatureSettings extends Settings {
 
         RadioButton opt2 = new RadioButton();
         opt2.getStyleClass().add("radio-btn");
-        opt2.setText("\u00bF");
+        opt2.setText("\u00b0F");
         opt2.setToggleGroup(group);
         opt2.setOnAction((action) -> {
             setUnit(Unit.FAHRENHEIT);
         });
 
+        Unit curr = getUnit();
+        if (curr == Unit.CELSIUS) {
+            opt1.setSelected(true);
+        } else {
+            opt2.setSelected(true);
+        }
+
         this.add(title, 0, 0);
         this.add(opt1, 0, 1);
         this.add(opt2, 0, 2);
+    }
+
+    @Override
+    public Unit getUnit() {
+        return Unit.fromString(settings.getOrDefault(SETTING_NAME, (String) Unit.CELSIUS.toString()));
     }
 }
