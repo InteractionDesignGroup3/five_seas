@@ -1,6 +1,6 @@
 package uk.ac.cam.cl;
 
-import uk.ac.cam.cl.gui.widgets.*;
+import static javafx.scene.control.ScrollPane.ScrollBarPolicy;
 
 import java.util.*;
 import javafx.application.Application;
@@ -18,10 +18,10 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import static javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import uk.ac.cam.cl.data.AppSettings;
 import uk.ac.cam.cl.data.DataManager;
 import uk.ac.cam.cl.gui.*;
+import uk.ac.cam.cl.gui.widgets.*;
 
 public class Main extends Application {
   private Stage stage;
@@ -37,9 +37,9 @@ public class Main extends Application {
   private AppSettings settings = AppSettings.getInstance();
 
   public static final Image SETTINGS_ICON = new Image("icons/1x/settings.png"),
-         BACK_ICON = new Image("icons/1x/back.png"), 
-         ADD_ICON = new Image("icons/1x/add.png"), 
-         LOCATION_ICON = new Image("icons/1x/location.png");
+      BACK_ICON = new Image("icons/1x/back.png"),
+      ADD_ICON = new Image("icons/1x/add.png"),
+      LOCATION_ICON = new Image("icons/1x/location.png");
 
   @Override
   public void start(Stage primaryStage) {
@@ -84,16 +84,15 @@ public class Main extends Application {
                 new WindSpeedGraph(),
                 new WeatherWidget(),
                 new WindWidget()));
-
     settingsList =
         new ArrayList<Settings>(
             Arrays.asList(
-                new WindSettings(),
-                new WindSettings(),
-                new WindSettings(),
-                new WindSettings(),
-                new WindSettings(),
-                new WindSettings(),
+                new SwellHeightSettings(),
+                new TemperatureSettings(),
+                new TideSettings(),
+                new VisibilitySettings(),
+                new WindSpeedSettings(),
+                new WeatherSettings(),
                 new WindSettings()));
 
     widgetOrder = new ArrayList<>();
@@ -103,7 +102,12 @@ public class Main extends Application {
       Settings s = settingsList.get(i);
 
       if (settings.getOrDefault(getCanonicalName(y), false)) {
-        WidgetContainer z = new WidgetContainer(y, s, j);
+        WidgetContainer z;
+        if (s != null) {
+          z = new WidgetContainer(y, s, j);
+        } else {
+          z = new WidgetContainer(y, j);
+        }
         z.setOnDragDetected(
             event -> {
               Dragboard db = z.startDragAndDrop(TransferMode.MOVE);
