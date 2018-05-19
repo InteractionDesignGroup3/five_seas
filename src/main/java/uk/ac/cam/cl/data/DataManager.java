@@ -90,17 +90,17 @@ public class DataManager {
   /** Updates the available data and triggers all listeners */
   private void update() {
     while (true) {
-      JSONObject apiData = api.getData(location);
-      double longitude = (Double) apiData.get("longitude");
-      double latitude = (Double) apiData.get("latitude");
-      String name = (String) apiData.get("place_name");
-
-      // If API does not return data for target use cache coordinates
-      if (Math.abs(longitude - location.getLongitude()) < COORD_ERROR
-          || Math.abs(latitude - location.getLatitude()) < COORD_ERROR)
-        location = new Location(name, longitude, latitude);
-
       try {
+        JSONObject apiData = api.getData(location);
+        double longitude = (Double) apiData.get("longitude");
+        double latitude = (Double) apiData.get("latitude");
+        String name = (String) apiData.get("place_name");
+
+        // If API does not return data for target use cache coordinates
+        if (Math.abs(longitude - location.getLongitude()) < COORD_ERROR
+            || Math.abs(latitude - location.getLatitude()) < COORD_ERROR)
+          location = new Location(name, longitude, latitude);
+
         data = new ArrayList<>(api.getProcessedData(apiData));
         Collections.sort(data);
         triggerAll();

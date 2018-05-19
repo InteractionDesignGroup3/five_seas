@@ -74,9 +74,9 @@ public class Meteomatics implements API<DataSequence> {
     JSONArray dumpData = (JSONArray) dump.get("data");
 
     JSONArray temperature = getSequence(dumpData, 0);
-    JSONArray windSpeed = getSequence(dumpData, 1);
-    JSONArray windDirection = getSequence(dumpData, 2);
-    JSONArray windGusts = getSequence(dumpData, 3);
+    JSONArray windGusts = getSequence(dumpData, 1);
+    JSONArray windSpeed = getSequence(dumpData, 2);
+    JSONArray windDirection = getSequence(dumpData, 3);
     JSONArray precipitation = getSequence(dumpData, 4);
     JSONArray chanceOfRain = getSequence(dumpData, 5);
     JSONArray swellHeight = getSequence(dumpData, 6);
@@ -102,8 +102,8 @@ public class Meteomatics implements API<DataSequence> {
                   pointTime,
                   getValue(temperature, j),
                   getValue(temperature, j), // TODO feels like
-                  getValue(windSpeed, j),
                   getValue(windGusts, j),
+                  getValue(windSpeed, j),
                   getValue(windDirection, j),
                   getValue(precipitation, j),
                   getValue(chanceOfRain, j),
