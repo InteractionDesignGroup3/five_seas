@@ -1,5 +1,9 @@
 package uk.ac.cam.cl;
 
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DataFormat;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import uk.ac.cam.cl.gui.widgets.*;
 
 import java.util.*;
@@ -27,6 +31,8 @@ public class Main extends Application {
 
   private static int NUM_OF_WIDGETS = 10;
   private ArrayList<Widget> widgetList;
+  private ArrayList<Settings> settingsList;
+  private ArrayList<WidgetContainer> widgetOrder;
   private AppSettings settings = AppSettings.getInstance();
 
   @Override
@@ -41,8 +47,18 @@ public class Main extends Application {
     root.setId("root");
     GridPane topBar = new TopBar(this);
     ScrollPane mainScrollable = new ScrollPane();
+    topBar.setOnDragOver(event -> {
+      event.acceptTransferModes(TransferMode.MOVE);
+      mainScrollable.setVvalue(mainScrollable.getVvalue()-0.015);
+      event.consume();
+    });
     GridPane mainSec = new GridPane();
     GridPane bottomBar = new BottomBar(this);
+    bottomBar.setOnDragOver(event -> {
+      event.acceptTransferModes(TransferMode.MOVE);
+      mainScrollable.setVvalue(mainScrollable.getVvalue()+0.015);
+      event.consume();
+    });
     mainScrollable.setContent(mainSec);
     mainScrollable.setHbarPolicy(ScrollBarPolicy.NEVER);
     mainScrollable.setVbarPolicy(ScrollBarPolicy.NEVER);
@@ -57,22 +73,68 @@ public class Main extends Application {
                 new TemperatureGraph(),
                 new TideGraph(),
                 new VisibilityGraph(),
+                new WindSpeedGraph(),
                 new WeatherWidget(),
                 new WindWidget()));
 
-    for (Integer i = 0; i < widgetList.size(); i++) {
+    settingsList = new ArrayList<Settings>(Arrays.asList(
+            new WindSettings(),
+            new WindSettings(),
+            new WindSettings(),
+            new WindSettings(),
+            new WindSettings(),
+            new WindSettings(),
+            new WindSettings()));
+
+    widgetOrder = new ArrayList<>();
+    int j = 0;
+    for(Integer i = 0; i < widgetList.size(); i++)
+    {
       Widget y = widgetList.get(i);
+      Settings s = settingsList.get(i);
 
-      if (settings.getOrDefault(getCanonicalName(y), false))
-        widgets.put(getCanonicalName(y), new WidgetContainer(y));
+      if (settings.getOrDefault(getCanonicalName(y), false)) {
+        WidgetContainer z = new WidgetContainer(y, s, j);
+        z.setOnDragDetected(event -> {
+          Dragboard db = z.startDragAndDrop(TransferMode.MOVE);
+          ClipboardContent c = new ClipboardContent();
+          c.putString(z.getPosition().toString());
+          db.setContent(c);
+          event.consume();
+        });
+        z.setOnDragOver(event -> {
+          event.acceptTransferModes(TransferMode.MOVE);
+          event.consume();
+        });
+        z.setOnDragDropped(event -> {
+          int pos = Integer.parseInt((event.getDragboard().getContent(DataFormat.PLAIN_TEXT)).toString());
+          WidgetContainer temp = widgetOrder.get(pos);
+          widgetOrder.remove(pos);
+          int position = z.getPosition();
+          temp.setPosition(z.getPosition());
+          if(z.getPosition() < pos) {
+            for (int k = z.getPosition(); k < pos; k++) {
+              widgetOrder.get(k).setPosition(widgetOrder.get(k).getPosition() + 1);
+            }
+          }
+          else
+          {
+            for (int k = pos; k < z.getPosition(); k++) {
+              widgetOrder.get(k).setPosition(widgetOrder.get(k).getPosition() - 1); 
+            }
+          }
+          widgetOrder.add(position, temp);
+          addWidgets(mainSec);
+          event.consume();
+        });
+        widgets.put(getCanonicalName(y), z);
+        widgetOrder.add(j, z);
+        j++;
+      }
     }
 
-    // Add widgets to the panel
-    int i = 0;
-    for (WidgetContainer widgetContainer : widgets.values()) {
-      mainSec.add(widgetContainer, 0, i);
-      i++;
-    }
+    // add widgets to the panel
+    addWidgets(mainSec);
 
     root.setCenter(mainScrollable);
     root.setBottom(bottomBar);
@@ -117,7 +179,7 @@ public class Main extends Application {
           .addListener(
               (observable, oldValue, newValue) -> {
                 if (newValue) {
-                  widgets.put(canonicalName, new WidgetContainer(y));
+                  widgets.put(canonicalName, new WidgetContainer(y, 0));
                   settings.set(canonicalName, true);
                 } else {
                   widgets.remove(canonicalName);
@@ -148,5 +210,15 @@ public class Main extends Application {
             });
 
     launch(args);
+  }
+
+  private void addWidgets(GridPane mainSec)
+  {
+    mainSec.getChildren().clear();
+    int i = 0;
+    for (WidgetContainer widgetContainer : widgetOrder) {
+      mainSec.add(widgetContainer, 0, i);
+      i++;
+    }
   }
 }
