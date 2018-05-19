@@ -10,12 +10,12 @@ import java.util.List;
 public class WindSpeedSettings extends Settings {
     private AppSettings settings = AppSettings.getInstance();
 
-    private static String SETTING_NAME = "windSpeedGraphUnit";
+
 
     public WindSpeedSettings() {
-        Label title = new Label();
-        title.setText("Wind Settings");
-        title.getStyleClass().add("setting-title");
+        SETTING_NAME = "windSpeedGraphUnit";
+
+        setTitle("Wind Speed Settings");
 
         ToggleGroup group = new ToggleGroup();
         RadioButton kph = new RadioButton();
@@ -41,7 +41,6 @@ public class WindSpeedSettings extends Settings {
             mph.setSelected(true);
         }
 
-        this.add(title, 0, 0);
         this.add(kph, 0, 1);
         this.add(mph, 0, 2);
     }

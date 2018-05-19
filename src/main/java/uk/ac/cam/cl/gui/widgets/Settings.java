@@ -7,6 +7,8 @@ import uk.ac.cam.cl.data.Unit;
 public class Settings extends GridPane {
     protected String SETTING_NAME = "";
 
+    private String title;
+
     private AppSettings settings = AppSettings.getInstance();
 
     public Settings() {
@@ -20,5 +22,13 @@ public class Settings extends GridPane {
 
     public void setUnit(Unit unit) {
         settings.set(SETTING_NAME, (String) unit.toString());
+    }
+
+    public void setTitle(String tit) {
+        title = tit;
+    }
+
+    public String getTitle() {
+        return title;
     }
 }

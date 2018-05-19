@@ -9,12 +9,10 @@ import uk.ac.cam.cl.data.Unit;
 public class WindSettings extends Settings {
     private AppSettings settings = AppSettings.getInstance();
 
-    private static String SETTING_NAME = "windSpeedGraphUnit";
-
     public WindSettings() {
-        Label title = new Label();
-        title.setText("Wind Settings");
-        title.getStyleClass().add("setting-title");
+        SETTING_NAME = "windWidgetUnit";
+
+        setTitle("Wind Settings");
 
         ToggleGroup group = new ToggleGroup();
         RadioButton kph = new RadioButton();
@@ -40,7 +38,6 @@ public class WindSettings extends Settings {
             mph.setSelected(true);
         }
 
-        this.add(title, 0, 0);
         this.add(kph, 0, 1);
         this.add(mph, 0, 2);
     }

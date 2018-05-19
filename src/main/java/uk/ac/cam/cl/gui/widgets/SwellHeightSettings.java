@@ -11,9 +11,8 @@ public class SwellHeightSettings extends Settings {
 
     public SwellHeightSettings() {
         SETTING_NAME = "swellHeightGraphUnit";
-        Label title = new Label();
-        title.setText("Swell Height Settings");
-        title.getStyleClass().add("setting-title");
+
+        setTitle("Swell Height Settings");
 
         ToggleGroup group = new ToggleGroup();
         RadioButton opt1 = new RadioButton();
@@ -39,7 +38,6 @@ public class SwellHeightSettings extends Settings {
             opt2.setSelected(true);
         }
 
-        this.add(title, 0, 0);
         this.add(opt1, 0, 1);
         this.add(opt2, 0, 2);
     }

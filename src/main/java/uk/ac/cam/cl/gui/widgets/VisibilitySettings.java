@@ -11,9 +11,8 @@ public class VisibilitySettings extends Settings {
 
     public VisibilitySettings() {
         SETTING_NAME = "visibilityGraphUnit";
-        Label title = new Label();
-        title.setText("Visibility Settings");
-        title.getStyleClass().add("setting-title");
+
+        setTitle("Visibility Settings");
 
         ToggleGroup group = new ToggleGroup();
         RadioButton opt1 = new RadioButton();
@@ -39,7 +38,6 @@ public class VisibilitySettings extends Settings {
             opt2.setSelected(true);
         }
 
-        this.add(title, 0, 0);
         this.add(opt1, 0, 1);
         this.add(opt2, 0, 2);
     }
