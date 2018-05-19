@@ -12,6 +12,7 @@ import javafx.scene.layout.StackPane;
 import javafx.util.StringConverter;
 import javafx.scene.control.Slider;
 import javafx.geometry.Pos;
+import javafx.scene.paint.Color;
 
 import uk.ac.cam.cl.data.DataManager;
 import uk.ac.cam.cl.data.DataPoint;
@@ -19,20 +20,20 @@ import uk.ac.cam.cl.data.DataSequence;
 
 
 /**
- * This widget indicates wind speed and direction. It follows the metaphor of a weather vane.
+ * This widget indicates gust speed and direction. It follows the metaphor of a weather vane.
  * @author Mike Cachopo
  * */
-public class WindWidget extends Widget {
+public class GustWidget extends Widget {
 	
 	private DataSequence dataSequence;
-	private final Label title = new Label("Wind speed and direction");
+	private final Label title = new Label("Gust speed and direction");
 	private final Label timeValue = new Label();
-	private final Image pointer = new Image("file:src/main/resources/graphics/white.png", 150, 150, true, true);
+	private final Image pointer = new Image("file:src/main/resources/graphics/black.png", 150, 150, true, true);
 	private final ImageView vane = new ImageView(pointer);
 	private final Label numberBox = new Label();
 	private final Slider timeSelecter = new Slider();
 	
-    public WindWidget() {
+    public GustWidget() {
         super();
         DataManager.getInstance().addListener(this::assign);        
         
@@ -46,6 +47,7 @@ public class WindWidget extends Widget {
         
         //Assign vane and text box to the middle of the widget
         StackPane mainPane = new StackPane();
+        numberBox.setTextFill(Color.WHITE);
         mainPane.getChildren().addAll(vane, numberBox);
         mainPane.setPrefHeight(400);
         mainPane.setPrefWidth(675);
@@ -96,7 +98,7 @@ public class WindWidget extends Widget {
     	
         vane.setRotate(dataPoint.getWindDirection() - 45);
     	
-        numberBox.setText(Double.toString(dataPoint.getWindSpeedKmPH()) + "km/h");
+        numberBox.setText(Double.toString(dataPoint.getGustSpeedKmPH()) + "km/h");
 
     }
     
@@ -127,7 +129,7 @@ public class WindWidget extends Widget {
 
     @Override
     public String getName() {
-        return "Wind Compass";
+        return "Gust Compass";
     }
 
 	@Override
