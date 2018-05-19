@@ -21,6 +21,9 @@ import uk.ac.cam.cl.data.*;
  * @author Andrew Coalter
  */
 public class WeatherWidget extends Widget {
+
+  public static final String WEATHER_WIDGET_TEMPERATURE_UNIT_SETTINGS = "weatherWidgetUnit";
+
   private static final Map<Long, String> weatherCodeToImagePath =
       new HashMap<Long, String>() {
         private static final long serialVersionUID = 1L;
@@ -197,7 +200,7 @@ public class WeatherWidget extends Widget {
   @Override
   public Unit getUnit() {
     String unitName = AppSettings.getInstance().getOrDefault(
-            "weatherWidgetTemperatureUnit", Unit.CELSIUS.toString());
+            WEATHER_WIDGET_TEMPERATURE_UNIT_SETTINGS, Unit.CELSIUS.toString());
     return Unit.fromString(unitName);
   }
 

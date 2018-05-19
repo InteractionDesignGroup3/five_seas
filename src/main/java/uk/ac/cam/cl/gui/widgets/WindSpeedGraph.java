@@ -10,6 +10,9 @@ import uk.ac.cam.cl.data.Unit;
  * @author Ben Cole
  */
 public class WindSpeedGraph extends GraphWidget {
+
+  public static final String WIND_SPEED_GRAPH_UNIT_SETTINGS = "windSpeedGraphUnit";
+
   public WindSpeedGraph() {
     super();
     getStyleClass().add("wind-speed-graph");
@@ -24,7 +27,7 @@ public class WindSpeedGraph extends GraphWidget {
   public Unit getUnit() {
     String unit = AppSettings
             .getInstance()
-            .getOrDefault("windSpeedGraphUnit",
+            .getOrDefault(WIND_SPEED_GRAPH_UNIT_SETTINGS,
                     Unit.KILOMETERS_PER_HOUR.toString());
     return Unit.fromString(unit);
   }

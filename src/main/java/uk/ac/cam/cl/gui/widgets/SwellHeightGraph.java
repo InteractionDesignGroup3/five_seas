@@ -11,6 +11,8 @@ import uk.ac.cam.cl.data.Unit;
  */
 public class SwellHeightGraph extends GraphWidget {
 
+  public static final String SWELL_HEIGHT_GRAPH_UNIT_SETTINGS = "swellHeightGraphUnit";
+
   public SwellHeightGraph() {
     super();
     getStyleClass().add("swell-height-graph");
@@ -25,7 +27,7 @@ public class SwellHeightGraph extends GraphWidget {
   public Unit getUnit() {
     String data = AppSettings
             .getInstance()
-            .getOrDefault("swellHeightGraphUnit", Unit.METERS.toString());
+            .getOrDefault(SWELL_HEIGHT_GRAPH_UNIT_SETTINGS, Unit.METERS.toString());
     return Unit.fromString(data);
   }
 

@@ -5,6 +5,9 @@ import uk.ac.cam.cl.data.DataPoint;
 import uk.ac.cam.cl.data.Unit;
 
 public class VisibilityGraph extends GraphWidget {
+
+  public static final String VISIBILITY_GRAPH_UNIT_SETTINGS = "visibilityGraphUnit";
+
   public VisibilityGraph() {
     super();
     getStyleClass().add("visibility-graph");
@@ -19,7 +22,7 @@ public class VisibilityGraph extends GraphWidget {
   public Unit getUnit() {
     String unit = AppSettings
             .getInstance()
-            .getOrDefault("visibilityGraphUnit", Unit.KILOMETERS.toString());
+            .getOrDefault(VISIBILITY_GRAPH_UNIT_SETTINGS, Unit.KILOMETERS.toString());
     return Unit.fromString(unit);
   }
 

@@ -10,6 +10,9 @@ import uk.ac.cam.cl.data.Unit;
  * @author Ben Cole
  */
 public class TideGraph extends GraphWidget {
+
+  public static final String TIDE_GRAPH_UNIT_SETTINGS = "tideGraphUnit";
+
   public TideGraph() {
     super();
     getStyleClass().add("tide-graph");
@@ -22,7 +25,8 @@ public class TideGraph extends GraphWidget {
 
   @Override
   public Unit getUnit() {
-    String unit = AppSettings.getInstance().getOrDefault("tideGraphUnit", Unit.METERS.toString());
+    String unit = AppSettings.getInstance()
+            .getOrDefault(TIDE_GRAPH_UNIT_SETTINGS, Unit.METERS.toString());
     return Unit.fromString(unit);
   }
 
@@ -39,7 +43,7 @@ public class TideGraph extends GraphWidget {
 
   private boolean isMeters() {
     return AppSettings.getInstance()
-            .getOrDefault("heightUnit", "meter")
+            .getOrDefault(TIDE_GRAPH_UNIT_SETTINGS, "meter")
             .equals("meter");
   }
 }

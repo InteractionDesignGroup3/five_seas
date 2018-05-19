@@ -11,6 +11,8 @@ import uk.ac.cam.cl.data.Unit;
  */
 public class TemperatureGraph extends GraphWidget {
 
+  public static final String TEMPERATURE_GRAPH_UNIT_SETTINGS = "temperatureGraphUnit";
+
   public TemperatureGraph() {
     super();
     getStyleClass().add("temperature-graph");
@@ -35,7 +37,8 @@ public class TemperatureGraph extends GraphWidget {
   @Override
   public Unit getUnit() {
     String unitName = AppSettings.getInstance()
-            .getOrDefault("temperatureGraphUnit", Unit.CELSIUS.toString());
+            .getOrDefault(TEMPERATURE_GRAPH_UNIT_SETTINGS,
+                    Unit.CELSIUS.toString());
     return Unit.fromString(unitName);
   }
 
