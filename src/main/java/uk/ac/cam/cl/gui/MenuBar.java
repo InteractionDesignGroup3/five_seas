@@ -31,7 +31,7 @@ public class MenuBar extends GridPane {
   private Button initBackButton() {
     Button menuBtn = new Button();
     menuBtn.setGraphic(new ImageView(Main.BACK_ICON));
-    menuBtn.setId("menu-back-btn");
+    menuBtn.getStyleClass().add("button");
     GridPane.setHalignment(menuBtn, HPos.CENTER);
     menuBtn.setOnAction(
         (x) -> {

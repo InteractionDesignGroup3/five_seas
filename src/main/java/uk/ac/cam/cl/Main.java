@@ -51,7 +51,7 @@ public class Main extends Application {
   public void showMain() {
     BorderPane root = new BorderPane();
     root.setId("root");
-    GridPane topBar = new TopBar(this);
+    BorderPane topBar = new TopBar(this);
     ScrollPane mainScrollable = new ScrollPane();
     topBar.setOnDragOver(
         event -> {
@@ -92,7 +92,7 @@ public class Main extends Application {
                 new TideSettings(),
                 new VisibilitySettings(),
                 new WindSpeedSettings(),
-                new WeatherSettings(),
+                null,
                 new WindSettings()));
 
     widgetOrder = new ArrayList<>();
@@ -103,11 +103,8 @@ public class Main extends Application {
 
       if (settings.getOrDefault(getCanonicalName(y), false)) {
         WidgetContainer z;
-        if (s != null) {
-          z = new WidgetContainer(y, s, j);
-        } else {
-          z = new WidgetContainer(y, j);
-        }
+        if (s != null) z = new WidgetContainer(y, s, j);
+        else z = new WidgetContainer(y, j);
         z.setOnDragDetected(
             event -> {
               Dragboard db = z.startDragAndDrop(TransferMode.MOVE);

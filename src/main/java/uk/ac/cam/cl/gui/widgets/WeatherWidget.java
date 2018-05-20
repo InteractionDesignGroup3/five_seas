@@ -144,7 +144,6 @@ public class WeatherWidget extends Widget {
    */
   private void assign(List<DataSequence> dataSequenceList) {
     ScrollPane scrollPane = new ScrollPane();
-    scrollPane.setId("weather_widget");
     GridPane gridPane = new GridPane();
     gridPane.setId("weather");
     DataSequence dataSequence = dataSequenceList.get(DataManager.getInstance().getDay());
@@ -199,9 +198,6 @@ public class WeatherWidget extends Widget {
 
   @Override
   public Unit getUnit() {
-    String unitName = AppSettings.getInstance().getOrDefault(
-            WEATHER_WIDGET_TEMPERATURE_UNIT_SETTINGS, Unit.CELSIUS.toString());
-    return Unit.fromString(unitName);
+    return Unit.NONE;
   }
-
 }

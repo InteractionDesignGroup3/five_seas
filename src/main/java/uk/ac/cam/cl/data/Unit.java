@@ -14,7 +14,8 @@ public enum Unit {
   KILOMETERS_PER_HOUR("kph"),
   MILES_PER_HOUR("mph"),
   CELSIUS("°C"),
-  FAHRENHEIT("°F");
+  FAHRENHEIT("°F"),
+  NONE("");
 
   private String display;
   Unit(String display) {
@@ -38,7 +39,6 @@ public enum Unit {
         return unit;
       }
     }
-    return null;  // Should never be executed
+    return NONE;  // Should never be executed
   }
-
 }

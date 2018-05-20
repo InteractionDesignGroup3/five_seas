@@ -1,26 +1,23 @@
 package uk.ac.cam.cl.gui.widgets;
 
-import java.util.Set;
-
 import javafx.animation.FadeTransition;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
 import uk.ac.cam.cl.Main;
+import uk.ac.cam.cl.data.Unit;
 
 /**
  * Wraps a Widget with a border.
  *
  * @author Ben Cole
  */
-
 public class WidgetContainer extends BorderPane {
   private Integer position;
   private boolean onMain = true;
@@ -36,8 +33,7 @@ public class WidgetContainer extends BorderPane {
     super();
     setCenter(widget);
     position = pos;
-    Label nameLabel = new Label();
-    nameLabel.setText(getWidgetName(widget));
+    nameLabel = new Label(getWidgetName(widget));
     bottom = new HBox();
     bottom.getChildren().addAll(nameLabel);
     setBottom(bottom);
@@ -45,7 +41,7 @@ public class WidgetContainer extends BorderPane {
   }
 
   public WidgetContainer(Widget widget, Settings sett, Integer pos) {
-    this(widget, pos); 
+    this(widget, pos);
     this.top = new BorderPane();
     this.swipe = new Button();
     this.swipe.setGraphic(new ImageView(Main.SETTINGS_ICON));
@@ -57,9 +53,10 @@ public class WidgetContainer extends BorderPane {
 
     this.top.setRight(this.swipe);
 
-    this.swipe.setOnAction((actionEvent) -> {
-      swap();
-    });
+    this.swipe.setOnAction(
+        (actionEvent) -> {
+          swap();
+        });
 
     setCenter(view);
     setTop(top);
@@ -78,7 +75,7 @@ public class WidgetContainer extends BorderPane {
       top.setCenter(new Label("Settings"));
       top.setLeft(swipe);
       setBottom(null);
-      
+
       FadeTransition ft2 = new FadeTransition((Duration.millis(500)), this.sett);
       ft2.setFromValue(0.0);
       ft2.setToValue(1.0);
@@ -95,6 +92,7 @@ public class WidgetContainer extends BorderPane {
       top.setLeft(null);
       top.setCenter(null);
       top.setRight(swipe);
+      setBottom(nameLabel);
 
       FadeTransition ft2 = new FadeTransition((Duration.millis(500)), this.main);
       ft2.setFromValue(0.0);
@@ -116,15 +114,17 @@ public class WidgetContainer extends BorderPane {
    * @return the formatted name of the widget with a unit
    */
   private String getWidgetName(Widget widget) {
-    return widget.getName() + " (" + widget.getUnit() + ")";
+    Unit unit = widget.getUnit();
+    if (unit != Unit.NONE) 
+      return widget.getName() + " (" + widget.getUnit() + ")";
+    else return widget.getName();
   }
 
-  public Integer getPosition()
-  {
+  public Integer getPosition() {
     return position;
   }
-  public void setPosition(Integer pos)
-  {
+
+  public void setPosition(Integer pos) {
     position = pos;
   }
 }

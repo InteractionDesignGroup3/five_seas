@@ -21,7 +21,7 @@ public class Settings extends GridPane {
     }
 
     public void setUnit(Unit unit) {
-        settings.set(SETTING_NAME, (String) unit.toString());
+        settings.set(SETTING_NAME, unit.toString());
     }
 
     public void setTitle(String tit) {

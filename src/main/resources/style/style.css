@@ -7,12 +7,18 @@
   -fx-padding: 0;
   -fx-font-family: 'Roboto';
   -fx-font-size: 16px;
+  -fx-accent: #2196F3;
+  -fx-focus-color: #2196F3;
 }
 
 #top-bar, #menu-bar {
   -fx-background-color: #2196F3; 
   -fx-padding: 8px;
   -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 5);
+}
+
+#search-box {
+  -fx-min-height: 40px;
 }
 
 #bottom-bar {
@@ -23,6 +29,8 @@
 }
 
 .button {
+  -fx-min-width: 40px; 
+  -fx-min-height: 40px; 
   -fx-background-color: #2196F3;
   -fx-background-insets: 2px;
   -fx-background-radius: 3px;
@@ -141,11 +149,11 @@
 
 .default-color0.chart-series-area-fill { -fx-fill: #BBDEFBaa; }
 
-#weather_widget {
+.scroll-pane {
   -fx-background-color: #FFFFFF;
 }
 
-#weather_widget > .viewport {
+.scroll-pane > .viewport {
    -fx-background-color: transparent;
 }
 
@@ -153,33 +161,39 @@
   -fx-background-color: #FFFFFF;
 }
 
-#weather_widget > .scroll-bar:horizontal, 
-#weather_widget > .scroll-bar:vertical {
+.scroll-bar:horizontal, 
+.scroll-bar:vertical {
   -fx-background-color: transparent;
   -fx-pref-height: 15;
 }
 
-#weather_widget > .increment-button, 
-#weather_widget > .decrement-button {
+.increment-button, 
+.decrement-button {
   -fx-background-color: transparent;
   -fx-border-color: transparent;
 }
 
-#weather_widget > .increment-button:hover, 
-#weather_widget > .decrement-button:hover {
+.increment-button:hover, 
+.decrement-button:hover {
   -fx-background-insets: 0 0 0 0, 0;
 }
 
-#weather_widget > .scroll-bar:horizontal .track {
+.scroll-bar:horizontal .track,
+.scroll-bar:vertical .track {
   -fx-border-color: transparent;
   -fx-background-radius: 5em;
   -fx-background-color: #EEEEEE;
 }
 
-#weather_widget > .scroll-bar:horizontal .thumb {
+.scroll-bar:horizontal .thumb,
+.scroll-bar:vertical .thumb {
   -fx-background-color: #2196F3;
   -fx-background-radius: 5em;
   -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 5, 0, 0, 0);
+}
+
+.scroll-pane > .corner {
+  -fx-background-color: #FFFFFF;
 }
 
 #compass {
