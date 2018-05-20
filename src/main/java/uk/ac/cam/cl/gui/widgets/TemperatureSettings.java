@@ -44,6 +44,6 @@ public class TemperatureSettings extends Settings {
 
     @Override
     public Unit getUnit() {
-        return Unit.fromString(settings.getOrDefault(SETTING_NAME, (String) Unit.CELSIUS.toString()));
+        return Unit.fromString(settings.getOrDefault(SETTING_NAME, Unit.CELSIUS.toString()));
     }
 }

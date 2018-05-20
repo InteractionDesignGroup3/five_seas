@@ -97,6 +97,29 @@
   -fx-background-image: url("../icons/2x/check.png");
 }
 
+.radio-button {
+  -fx-padding: 10px 10px 0px 10px;
+}
+
+.radio-button .radio {
+  -fx-background-color: transparent;
+  -fx-border-width: 1;
+  -fx-border-color: #BDBDBD;
+  -fx-border-radius: 15px;
+  -fx-padding: 4px;
+}
+
+.radio-button .radio:selected {
+  -fx-background-color: transparent;
+  -fx-background-image: null;
+}
+
+.radio-button .dot {
+  -fx-background-radius: 15px;
+  -fx-padding: 8px;
+  -fx-padding: 6px;
+}
+
 #search-box {
   -fx-background-color: #FFFFFF;
   -fx-background-insets: 2px;
