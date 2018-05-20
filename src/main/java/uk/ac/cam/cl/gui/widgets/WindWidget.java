@@ -100,9 +100,46 @@ public class WindWidget extends Widget {
     int i = (int) timeSelecter.getValue();
     DataPoint dataPoint = dataSequence.get(i);
     timeValue.setText(intToDate(i));
-    gustSpeed.setText("Gusts " + Double.toString(dataPoint.getGustSpeedKmPH()) + "km/h");
+    double value = Math.round(getValueInCorrectUnit(dataPoint) * 10.0) / 10.0;
+    String unitAsString = getSelectedUnit().toString();
+    gustSpeed.setText("Gusts " + Double.toString(value) + unitAsString);
     vane.setRotate(dataPoint.getWindDirection() - 45);
-    numberBox.setText(Double.toString(dataPoint.getWindSpeedKmPH()) + "km/h");
+    numberBox.setText(Double.toString(value) + unitAsString);
+  }
+
+  /**
+   * Returns the unit selected for the speed.
+   *
+   * @return the unit selected for the speed
+   */
+  private Unit getSelectedUnit() {
+    String unitString = AppSettings
+            .getInstance()
+            .getOrDefault(
+                    getSettingName(), getAvailableUnits().get(0).toString());
+    return Unit.fromString(unitString);
+  }
+
+  /**
+   * Returns the wind speed of a DataPoint object in the selected unit.
+   *
+   * @param dataPoint the DataPoint containing the data to be extracted
+   *                  in the selected unit
+   * @return the wind speed in the selected unit
+   */
+  private double getValueInCorrectUnit(DataPoint dataPoint) {
+    Unit unit = getSelectedUnit();
+    switch (unit) {
+      case MILES_PER_HOUR:
+        return dataPoint.getWindSpeedMPH();
+      case METRES_PER_SECOND:
+        return dataPoint.getWindSpeedMS();
+      case KNOTS:
+        return dataPoint.getWindSpeedKnots();
+      case KILOMETERS_PER_HOUR:
+      default:
+        return dataPoint.getWindSpeedKmPH();
+    }
   }
 
   /**
