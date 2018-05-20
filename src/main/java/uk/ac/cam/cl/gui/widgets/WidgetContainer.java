@@ -10,7 +10,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
-
 import uk.ac.cam.cl.Main;
 import uk.ac.cam.cl.data.Unit;
 
@@ -50,7 +49,7 @@ public class WidgetContainer extends BorderPane {
       top = new BorderPane();
       swipe = new Button();
       swipe.setGraphic(new ImageView(Main.SETTINGS_ICON));
-      setting = new Settings(main); 
+      setting = new Settings(main);
       view = new StackPane();
       view.getChildren().addAll(setting, main);
 
@@ -121,21 +120,34 @@ public class WidgetContainer extends BorderPane {
    */
   private String getWidgetName() {
     Unit unit = main.getUnit();
-    if (unit != Unit.NONE) 
-      return main.getName() + " (" + main.getUnit() + ")";
+    if (unit != Unit.NONE) return main.getName() + " (" + main.getUnit() + ")";
     else return main.getName();
   }
 
-  public Integer getPosition() {
+  /**
+   * Returns the position of the widget in the main screen
+   *
+   * @return the position of the widget
+   */
+  public int getPosition() {
     return position;
   }
 
-  public void setPosition(Integer pos) {
-    position = pos;
+  /**
+   * Sets the position of the widget in the main screen
+   *
+   * @param position the position to set the widget to
+   */
+  public void setPosition(int position) {
+    this.position = position;
   }
 
-  public Widget getWidget()
-  {
+  /**
+   * Get the widget contained by this container
+   *
+   * @return the widget contained by this container
+   */
+  public Widget getWidget() {
     return widget;
   }
 }

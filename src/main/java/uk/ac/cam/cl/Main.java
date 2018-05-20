@@ -1,6 +1,6 @@
 package uk.ac.cam.cl;
 
-import uk.ac.cam.cl.gui.widgets.*;
+import static javafx.scene.control.ScrollPane.ScrollBarPolicy;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -24,17 +24,16 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import static javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import uk.ac.cam.cl.data.AppSettings;
 import uk.ac.cam.cl.data.DataManager;
 import uk.ac.cam.cl.gui.*;
+import uk.ac.cam.cl.gui.widgets.*;
 
 public class Main extends Application {
   private Stage stage;
   private Scene mainScene = null;
   private Scene menuScene = null;
   private Map<String, WidgetContainer> widgets = new HashMap<>();
-  // widgets to be added to screen mapping name => widget
 
   private static int NUM_OF_WIDGETS = 10;
   private ArrayList<Widget> widgetList;
@@ -50,11 +49,12 @@ public class Main extends Application {
 
   @Override
   public void start(Stage primaryStage) {
-    this.stage = primaryStage;
+    stage = primaryStage;
+    stage.setResizable(false);
     showMain();
   }
 
-  /** Show the main panel. */
+  /** Show the main panel */
   public void showMain() {
     BorderPane root = new BorderPane();
     root.setId("root");
@@ -78,7 +78,7 @@ public class Main extends Application {
     mainScrollable.setVbarPolicy(ScrollBarPolicy.NEVER);
 
     root.setPadding(new Insets(5));
-    this.stage.setTitle("Five Seas");
+    stage.setTitle("Five Seas");
 
     widgetList =
         new ArrayList<Widget>(
@@ -91,21 +91,22 @@ public class Main extends Application {
                 new WeatherWidget(),
                 new WindWidget()));
 
-      ArrayList<Widget> newWidgetList = new ArrayList<Widget>();
-      for(int i = 0; i < widgetList.size(); i++) {
-          for (int j = 0; j < widgetList.size(); j++) {
-              if (settings.getOrDefault("" + widgetList.get(j).getName() + "L", new Long(-1)) == i) {
-                  newWidgetList.add(widgetList.get(j));
-              }
-          }
+    ArrayList<Widget> newWidgetList = new ArrayList<Widget>();
+    for (int i = 0; i < widgetList.size(); i++) {
+      for (int j = 0; j < widgetList.size(); j++) {
+        if (settings.getOrDefault("" + widgetList.get(j).getName() + "L", new Long(-1)) == i) {
+          newWidgetList.add(widgetList.get(j));
+        }
       }
-      for(int i = 0; i < widgetList.size(); i++){
-          if(!newWidgetList.contains(widgetList.get(i)))
-          {
-              newWidgetList.add(widgetList.get(i));
-          }
+    }
+
+    for (int i = 0; i < widgetList.size(); i++) {
+      if (!newWidgetList.contains(widgetList.get(i))) {
+        newWidgetList.add(widgetList.get(i));
       }
-      widgetList = newWidgetList;
+    }
+
+    widgetList = newWidgetList;
     widgetOrder = new ArrayList<>();
     int j = 0;
     for (Integer i = 0; i < widgetList.size(); i++) {
@@ -117,7 +118,7 @@ public class Main extends Application {
             event -> {
               Dragboard db = z.startDragAndDrop(TransferMode.MOVE);
               ClipboardContent c = new ClipboardContent();
-              c.putString(z.getPosition().toString());
+              c.putString(Integer.toString(z.getPosition()));
               db.setContent(c);
               event.consume();
             });
@@ -138,12 +139,16 @@ public class Main extends Application {
               settings.set(temp.getWidget().getName() + "L", new Long(z.getPosition()));
               if (z.getPosition() < pos) {
                 for (int k = z.getPosition(); k < pos; k++) {
-                    settings.set(widgetOrder.get(k).getWidget().getName() + "L", new Long(widgetOrder.get(k).getPosition() + 1));
+                  settings.set(
+                      widgetOrder.get(k).getWidget().getName() + "L",
+                      new Long(widgetOrder.get(k).getPosition() + 1));
                   widgetOrder.get(k).setPosition(widgetOrder.get(k).getPosition() + 1);
                 }
               } else {
                 for (int k = pos; k < z.getPosition(); k++) {
-                    settings.set(widgetOrder.get(k).getWidget().getName() + "L", new Long(widgetOrder.get(k).getPosition() - 1));
+                  settings.set(
+                      widgetOrder.get(k).getWidget().getName() + "L",
+                      new Long(widgetOrder.get(k).getPosition() - 1));
                   widgetOrder.get(k).setPosition(widgetOrder.get(k).getPosition() - 1);
                 }
               }
@@ -152,7 +157,7 @@ public class Main extends Application {
               event.consume();
             });
         widgets.put(getCanonicalName(y), z);
-          settings.set(y.getName() + "L", new Long(j));
+        settings.set(y.getName() + "L", new Long(j));
         widgetOrder.add(j, z);
         j++;
       }
@@ -169,7 +174,7 @@ public class Main extends Application {
           lastUpdated.setText("Last Updated " + format.format(new Date(dm.getLastUpdated())));
         });
     wrap.getChildren().add(lastUpdated);
-    // add widgets to the panel
+    // Add widgets to the panel
     addWidgets(mainSec);
     wrap.getChildren().add(mainSec);
     mainScrollable.setContent(wrap);
@@ -178,21 +183,27 @@ public class Main extends Application {
     root.setBottom(bottomBar);
     root.setTop(topBar);
 
-    this.mainScene = new Scene(root, 380, 675);
-    this.mainScene.getStylesheets().add("style/style.css");
-    this.stage.setScene(this.mainScene);
-    this.stage.show();
+    mainScene = new Scene(root, 380, 675);
+    mainScene.getStylesheets().add("style/style.css");
+    stage.setScene(mainScene);
+    stage.show();
   }
 
-  private String getCanonicalName(Widget w) {
-    return w.getName().replaceAll(" ", "_").toLowerCase();
+  /**
+   * Gets the canonical name for the give widget
+   *
+   * @param widget the widget to get the canonical name for
+   * @return the canonical name of the widget
+   */
+  private String getCanonicalName(Widget widget) {
+    return widget.getName().replaceAll(" ", "_").toLowerCase();
   }
 
-  /** Show the menu panel. */
+  /** Show the menu panel */
   public void showMenu() {
     if (menuScene != null) {
-      this.stage.setScene(menuScene);
-      this.stage.show();
+      stage.setScene(menuScene);
+      stage.show();
       return;
     }
 
@@ -235,26 +246,34 @@ public class Main extends Application {
       if (settings.getOrDefault(canonicalName, false)) x.setSelected(true);
     }
 
-    this.stage.setTitle("Widget Menu");
-
+    stage.setTitle("Widget Menu");
     root.setCenter(mainSec);
     root.setTop(topBar);
-
-    this.menuScene = new Scene(root, 380, 675);
-    this.menuScene.getStylesheets().add("style/style.css");
-    this.stage.setScene(menuScene);
-    this.stage.show();
+    menuScene = new Scene(root, 380, 675);
+    menuScene.getStylesheets().add("style/style.css");
+    stage.setScene(menuScene);
+    stage.show();
   }
 
+  /**
+   * Program entry point
+   *
+   * @param args command line arguments
+   */
   public static void main(String[] args) {
     launch(args);
   }
 
-  private void addWidgets(GridPane mainSec) {
-    mainSec.getChildren().clear();
+  /**
+   * Adds all widgets in order to the given grid pane
+   *
+   * @param pane the pane to add the widgets to
+   */
+  private void addWidgets(GridPane pane) {
+    pane.getChildren().clear();
     int i = 1;
     for (WidgetContainer widgetContainer : widgetOrder) {
-      mainSec.add(widgetContainer, 0, i);
+      pane.add(widgetContainer, 0, i);
       i++;
     }
   }

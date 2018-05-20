@@ -2,11 +2,14 @@ package uk.ac.cam.cl.gui.widgets;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import uk.ac.cam.cl.data.AppSettings;
 import uk.ac.cam.cl.data.DataPoint;
 import uk.ac.cam.cl.data.Unit;
 
+/**
+ * Shows a plot of the visibility data for one day
+ *
+ * @author Ben Cole
+ */
 public class VisibilityGraph extends GraphWidget {
   public VisibilityGraph() {
     super();
@@ -36,11 +39,12 @@ public class VisibilityGraph extends GraphWidget {
 
   @Override
   public List<Unit> getAvailableUnits() {
-    return new ArrayList<Unit>(){
+    return new ArrayList<Unit>() {
       private static final long serialVersionUID = 1L;
+
       {
-        add(Unit.KILOMETERS); 
-        add(Unit.MILES); 
+        add(Unit.KILOMETERS);
+        add(Unit.MILES);
       }
     };
   }

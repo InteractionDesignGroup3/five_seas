@@ -3,23 +3,23 @@ package uk.ac.cam.cl.gui;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.HPos;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.ColumnConstraints;
-
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
-
 import uk.ac.cam.cl.Main;
 import uk.ac.cam.cl.data.DataManager;
 import uk.ac.cam.cl.data.Location;
 
+/**
+ * Represents the border pane displayed at the top of the app including the location selection input
+ *
+ * @author Max Campman
+ */
 public class TopBar extends BorderPane {
   private Main parent;
   private DataManager dm = DataManager.getInstance();
@@ -27,15 +27,14 @@ public class TopBar extends BorderPane {
 
   public TopBar(Main parent) {
     super();
-
     this.parent = parent;
-    this.setId("top-bar");
-
-    this.setLeft(initLocButton());
-    this.setCenter(initSearchBox());
-    this.setRight(initMenuButton());
+    setId("top-bar");
+    setLeft(initLocButton());
+    setCenter(initSearchBox());
+    setRight(initMenuButton());
   }
 
+  /** Initialises the location button */
   private Button initLocButton() {
     Button locBtn = new Button();
     locBtn.setGraphic(new ImageView(Main.LOCATION_ICON));
@@ -43,6 +42,7 @@ public class TopBar extends BorderPane {
     return locBtn;
   }
 
+  /** Initialises the search box */
   private TextField initSearchBox() {
     TextField searchBox = new TextField();
     searchBox.setPromptText("Location");
@@ -72,6 +72,7 @@ public class TopBar extends BorderPane {
     return searchBox;
   }
 
+  /** Initialises the menu button */
   private Button initMenuButton() {
     Button menuBtn = new Button();
     menuBtn.setGraphic(new ImageView(Main.ADD_ICON));

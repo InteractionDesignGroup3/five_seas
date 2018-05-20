@@ -89,9 +89,9 @@ public class WindWidget extends Widget {
 
     GridPane.setMargin(timeSelecter, new Insets(10, 10, 5, 10));
     // Add all components to the widget display
-    this.add(mainPane, 0, 1);
-    this.add(bottomPane, 0, 2);
-    this.add(timeSelecter, 0, 3);
+    add(mainPane, 0, 1);
+    add(bottomPane, 0, 2);
+    add(timeSelecter, 0, 3);
   }
 
   /** Updates the widget display. Should be called when either day of week or time of day change. */
@@ -101,34 +101,21 @@ public class WindWidget extends Widget {
     DataPoint dataPoint = dataSequence.get(i);
     timeValue.setText(intToDate(i));
     double value = Math.round(getValueInCorrectUnit(dataPoint) * 10.0) / 10.0;
-    String unitAsString = getSelectedUnit().toString();
+    String unitAsString = getUnit().toString();
     gustSpeed.setText("Gusts " + Double.toString(value) + unitAsString);
     vane.setRotate(dataPoint.getWindDirection() - 45);
     numberBox.setText(Double.toString(value) + unitAsString);
   }
 
   /**
-   * Returns the unit selected for the speed.
-   *
-   * @return the unit selected for the speed
-   */
-  private Unit getSelectedUnit() {
-    String unitString = AppSettings
-            .getInstance()
-            .getOrDefault(
-                    getSettingName(), getAvailableUnits().get(0).toString());
-    return Unit.fromString(unitString);
-  }
-
-  /**
-   * Returns the wind speed of a DataPoint object in the selected unit.
+   * Returns the wind speed of a DataPoint object in the selected unit
    *
    * @param dataPoint the DataPoint containing the data to be extracted
    *                  in the selected unit
    * @return the wind speed in the selected unit
    */
   private double getValueInCorrectUnit(DataPoint dataPoint) {
-    Unit unit = getSelectedUnit();
+    Unit unit = getUnit();
     switch (unit) {
       case MILES_PER_HOUR:
         return dataPoint.getWindSpeedMPH();
@@ -154,7 +141,7 @@ public class WindWidget extends Widget {
   }
 
   /**
-   * Turns some number of 15 minute blocks past midnight into a time of day format.
+   * Turns some number of 15 minute blocks past midnight into a time of day format
    *
    * @param i number of 15 minute blocks to add to midnight
    * @return the date as a string

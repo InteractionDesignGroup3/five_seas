@@ -159,15 +159,15 @@ public class WeatherWidget extends Widget {
     scrollPane.setContent(gridPane);
     scrollPane.setPrefViewportWidth(1000);
     scrollPane.setPrefViewportHeight(100);
-    this.add(scrollPane, 0, 0);
+    add(scrollPane, 0, 0);
   }
 
   /**
-   * This method takes in a weather code and returns the relevant weather symbol image
+   * Returns the relevant weather symbol image for the given weather code
    *
-   * @param weatherCode is the weather code to fetch a symbol for
-   * @param instant holds the time that the weather code is for
-   * @return dataSequenceList data sequences to potentially plot from
+   * @param weatherCode the weather code to fetch a symbol for
+   * @param instant the time that the weather code is for
+   * @return the symbol image
    */
   private Image getSymbol(long weatherCode, Instant instant) {
     int timeHour =
@@ -193,6 +193,7 @@ public class WeatherWidget extends Widget {
   @Override
   public void initialise() {
     // Do nothing because initialisation is handled in the displayData() method
+    return;
   }
 
   @Override

@@ -22,14 +22,29 @@ public class Location {
     this.latitude = latitude;
   }
 
+  /**
+   * Get location name
+   *
+   * @return the location name
+   */
   public String getName() {
     return name;
   }
 
+  /**
+   * Get latitude of location
+   *
+   * @return the latitude of the location
+   */
   public double getLatitude() {
     return latitude;
   }
 
+  /**
+   * Get longitude of location
+   *
+   * @return the longitude of the location
+   */
   public double getLongitude() {
     return longitude;
   }

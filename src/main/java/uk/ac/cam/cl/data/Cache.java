@@ -104,7 +104,7 @@ public class Cache {
   public void update(JSONObject data) {
     this.data = new JSONObject(data);
     this.data.put("cache_timestamp", new Long(clock.millis()));
-    this.created = false;
+    created = false;
     dump();
   }
 
