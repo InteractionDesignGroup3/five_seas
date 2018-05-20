@@ -141,6 +141,7 @@ public class Main extends Application {
 
     VBox wrap = new VBox();
     wrap.setAlignment(Pos.CENTER);
+    wrap.setMinWidth(370);
     lastUpdated = new Label();
     lastUpdated.setId("last-updated");
     DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
