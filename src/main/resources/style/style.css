@@ -285,4 +285,5 @@
 
 #last-updated {
   -fx-text-fill: #BDBDBD;
+  -fx-padding: 5px;
 }
