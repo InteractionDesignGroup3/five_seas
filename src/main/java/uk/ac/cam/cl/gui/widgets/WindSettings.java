@@ -12,8 +12,6 @@ public class WindSettings extends Settings {
     public WindSettings() {
         SETTING_NAME = WindWidget.WIND_WIDGET_UNIT_SETTINGS;
 
-        setTitle("Wind Settings");
-
         ToggleGroup group = new ToggleGroup();
         RadioButton kph = new RadioButton();
         kph.getStyleClass().add("radio-btn");

@@ -6,12 +6,13 @@ package uk.ac.cam.cl.data;
  * @author Ben Cole
  */
 public enum Unit {
-
+  MILIMETERS("mm"),
+  INCHES("in"),
   METERS("m"),
   FEET("ft"),
-  KILOMETERS("km"),
+  KILOMETERS("Km"),
   MILES("mi"),
-  KILOMETERS_PER_HOUR("kph"),
+  KILOMETERS_PER_HOUR("Km/h"),
   MILES_PER_HOUR("mph"),
   CELSIUS("°C"),
   FAHRENHEIT("°F"),
