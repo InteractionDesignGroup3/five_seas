@@ -94,7 +94,6 @@ public class Main extends Application {
       ArrayList<Widget> newWidgetList = new ArrayList<Widget>();
       for(int i = 0; i < widgetList.size(); i++) {
           for (int j = 0; j < widgetList.size(); j++) {
-              System.out.println("Retrieving " + widgetList.get(j).getName());
               if (settings.getOrDefault("" + widgetList.get(j).getName() + "L", new Long(-1)) == i) {
                   newWidgetList.add(widgetList.get(j));
               }
