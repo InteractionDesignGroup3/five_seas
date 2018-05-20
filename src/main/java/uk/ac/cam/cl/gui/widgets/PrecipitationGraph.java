@@ -9,37 +9,37 @@ import uk.ac.cam.cl.data.Unit;
  *
  * @author Ben Cole
  */
-public class WindSpeedGraph extends GraphWidget {
+public class PrecipitationGraph extends GraphWidget {
 
-  public static final String WIND_SPEED_GRAPH_UNIT_SETTINGS = "windSpeedGraphUnit";
+  public static final String PRECIPITATION_GRAPH_UNIT_SETTINGS = "precipitationGraphUnit";
 
-  public WindSpeedGraph() {
+  public PrecipitationGraph() {
     super();
-    getStyleClass().add("wind-speed-graph");
+    getStyleClass().add("precipitation-graph");
   }
 
   @Override
   public String getName() {
-    return "Wind Speed";
+    return "Precipitation";
   }
 
   @Override
   public Unit getUnit() {
     String unit = AppSettings
             .getInstance()
-            .getOrDefault(WIND_SPEED_GRAPH_UNIT_SETTINGS,
-                    Unit.KILOMETERS_PER_HOUR.toString());
+            .getOrDefault(PRECIPITATION_GRAPH_UNIT_SETTINGS,
+                    Unit.MILIMETERS.toString());
     return Unit.fromString(unit);
   }
 
   @Override
   protected double getRelevantData(DataPoint dataPoint) {
     switch (getUnit()) {
-      case MILES_PER_HOUR:
-        return dataPoint.getWindSpeedMPH();
-      case KILOMETERS_PER_HOUR:
+      case INCHES:
+        return dataPoint.getPrecipitationInches();
+      case MILIMETERS:
       default:
-        return dataPoint.getWindSpeedKmPH();
+        return dataPoint.getPrecipitationMM();
     }
   }
 }

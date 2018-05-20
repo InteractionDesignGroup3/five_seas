@@ -12,8 +12,6 @@ public class TideSettings extends Settings {
     public TideSettings() {
         SETTING_NAME = TideGraph.TIDE_GRAPH_UNIT_SETTINGS;
 
-        setTitle("Tide Settings");
-
         ToggleGroup group = new ToggleGroup();
         RadioButton opt1 = new RadioButton();
         opt1.getStyleClass().add("radio-btn");

@@ -12,8 +12,6 @@ public class TemperatureSettings extends Settings {
     public TemperatureSettings() {
         SETTING_NAME = TemperatureGraph.TEMPERATURE_GRAPH_UNIT_SETTINGS;
 
-        setTitle("Temperature Settings");
-
         ToggleGroup group = new ToggleGroup();
         RadioButton opt1 = new RadioButton();
         opt1.getStyleClass().add("radio-btn");
