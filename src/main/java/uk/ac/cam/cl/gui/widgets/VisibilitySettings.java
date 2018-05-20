@@ -12,8 +12,6 @@ public class VisibilitySettings extends Settings {
     public VisibilitySettings() {
         SETTING_NAME = VisibilityGraph.VISIBILITY_GRAPH_UNIT_SETTINGS;
 
-        setTitle("Visibility Settings");
-
         ToggleGroup group = new ToggleGroup();
         RadioButton opt1 = new RadioButton();
         opt1.getStyleClass().add("radio-btn");

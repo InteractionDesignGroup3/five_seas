@@ -86,7 +86,7 @@ public class Main extends Application {
                 new TemperatureGraph(),
                 new TideGraph(),
                 new VisibilityGraph(),
-                new WindSpeedGraph(),
+                new PrecipitationGraph(),
                 new WeatherWidget(),
                 new WindWidget()));
     settingsList =
@@ -96,7 +96,7 @@ public class Main extends Application {
                 new TemperatureSettings(),
                 new TideSettings(),
                 new VisibilitySettings(),
-                new WindSpeedSettings(),
+                new PrecipitationSettings(),
                 null,
                 new WindSettings()));
 
