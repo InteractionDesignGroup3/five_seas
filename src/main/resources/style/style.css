@@ -282,3 +282,7 @@
   -fx-background-color: #EEEEEE;
   -fx-pref-height: 5;
 }
+
+#last-updated {
+  -fx-text-fill: #BDBDBD;
+}

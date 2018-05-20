@@ -100,7 +100,8 @@ public class DataManager {
         if (Math.abs(longitude - location.getLongitude()) < COORD_ERROR
             || Math.abs(latitude - location.getLatitude()) < COORD_ERROR)
           location = new Location(name, longitude, latitude);
-
+        
+        lastUpdated = (Long) apiData.get("cache_timestamp");
         data = new ArrayList<>(api.getProcessedData(apiData));
         Collections.sort(data);
         triggerAll();
