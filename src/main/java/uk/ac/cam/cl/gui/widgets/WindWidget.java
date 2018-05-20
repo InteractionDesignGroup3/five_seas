@@ -25,7 +25,7 @@ import uk.ac.cam.cl.data.*;
  */
 public class WindWidget extends Widget {
   private DataSequence dataSequence;
-  private Label timeValue, gustSpeed, numberBox, north;
+  private Label timeValue, gusts, numberBox, north;
   private Shape compass, vane;
   private Slider timeSelecter;
 
@@ -35,7 +35,7 @@ public class WindWidget extends Widget {
     north.getStyleClass().add("cardinal");
     numberBox = new Label();
     timeValue = new Label();
-    gustSpeed = new Label();
+    gusts = new Label();
     timeSelecter = new Slider();
     Circle circle = new Circle(0, 0, 65);
     Rectangle rect = new Rectangle(0, -65, 65, 65);
@@ -51,9 +51,9 @@ public class WindWidget extends Widget {
     mainPane.setPrefWidth(675);
 
     StackPane bottomPane = new StackPane();
-    bottomPane.getChildren().addAll(gustSpeed, timeValue);
+    bottomPane.getChildren().addAll(gusts, timeValue);
     StackPane.setAlignment(timeValue, Pos.BOTTOM_RIGHT);
-    StackPane.setAlignment(gustSpeed, Pos.BOTTOM_LEFT);
+    StackPane.setAlignment(gusts, Pos.BOTTOM_LEFT);
     StackPane.setAlignment(north, Pos.TOP_CENTER);
 
     // Adjust the time selecter preferences
@@ -100,11 +100,12 @@ public class WindWidget extends Widget {
     int i = (int) timeSelecter.getValue();
     DataPoint dataPoint = dataSequence.get(i);
     timeValue.setText(intToDate(i));
-    double value = Math.round(getValueInCorrectUnit(dataPoint) * 10.0) / 10.0;
+    double windSpeed = Math.round(getWindSpeed(dataPoint) * 10.0) / 10.0;
+    double gustSpeed = Math.round(getWindSpeed(dataPoint) * 10.0) / 10.0;
     String unitAsString = getUnit().toString();
-    gustSpeed.setText("Gusts " + Double.toString(value) + unitAsString);
+    gusts.setText("Gusts " + Double.toString(gustSpeed) + unitAsString);
     vane.setRotate(dataPoint.getWindDirection() - 45);
-    numberBox.setText(Double.toString(value) + unitAsString);
+    numberBox.setText(Double.toString(windSpeed) + unitAsString);
   }
 
   /**
@@ -114,7 +115,7 @@ public class WindWidget extends Widget {
    *                  in the selected unit
    * @return the wind speed in the selected unit
    */
-  private double getValueInCorrectUnit(DataPoint dataPoint) {
+  private double getWindSpeed(DataPoint dataPoint) {
     Unit unit = getUnit();
     switch (unit) {
       case MILES_PER_HOUR:
@@ -126,6 +127,28 @@ public class WindWidget extends Widget {
       case KILOMETERS_PER_HOUR:
       default:
         return dataPoint.getWindSpeedKmPH();
+    }
+  }
+
+  /**
+   * Returns the gust speed of a DataPoint object in the selected unit
+   *
+   * @param dataPoint the DataPoint containing the data to be extracted
+   *                  in the selected unit
+   * @return the gust speed in the selected unit
+   */
+  private double getGustSpeed(DataPoint dataPoint) {
+    Unit unit = getUnit();
+    switch (unit) {
+      case MILES_PER_HOUR:
+        return dataPoint.getGustSpeedMPH();
+      case METRES_PER_SECOND:
+        return dataPoint.getGustSpeedMS();
+      case KNOTS:
+        return dataPoint.getGustSpeedKnots();
+      case KILOMETERS_PER_HOUR:
+      default:
+        return dataPoint.getGustSpeedKmPH();
     }
   }
 
