@@ -103,6 +103,10 @@ public class WidgetContainer extends BorderPane {
       ft2.setToValue(1.0);
       ft2.setCycleCount(1);
       ft2.play();
+
+      // Force the widget to reload in case its settings have changed
+      main.refresh();
+      nameLabel.setText(getWidgetName());
     }
 
     Node first = view.getChildren().remove(0);

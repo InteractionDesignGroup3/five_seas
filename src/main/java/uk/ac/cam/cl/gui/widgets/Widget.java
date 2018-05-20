@@ -1,7 +1,6 @@
 package uk.ac.cam.cl.gui.widgets;
 
 import javafx.geometry.HPos;
-import javafx.scene.control.Label;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
@@ -21,6 +20,7 @@ public abstract class Widget extends GridPane {
 
   private boolean initialised;
   private Text noData;
+  private DataSequence dataSequence;
 
   public Widget() {
     super();
@@ -73,6 +73,7 @@ public abstract class Widget extends GridPane {
       initialise();
       initialised = true;
     }
+    this.dataSequence = dataSequence;
     displayData(dataSequence);
   }
 
@@ -84,4 +85,13 @@ public abstract class Widget extends GridPane {
    *                     widget
    */
   protected abstract void displayData(DataSequence dataSequence);
+
+  /**
+   * Forces the widget to reprocess the data and redraw. Called when a widget's
+   * settings screen is closed, as settings such as selected unit may have
+   * changed.
+   */
+  public void refresh() {
+    handleNewData(dataSequence);
+  }
 }
