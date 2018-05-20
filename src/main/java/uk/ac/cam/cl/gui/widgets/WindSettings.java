@@ -44,6 +44,6 @@ public class WindSettings extends Settings {
 
     @Override
     public Unit getUnit() {
-        return Unit.fromString(settings.getOrDefault(SETTING_NAME, (String) Unit.KILOMETERS_PER_HOUR.toString()));
+        return Unit.fromString(settings.getOrDefault(SETTING_NAME, Unit.KILOMETERS_PER_HOUR.toString()));
     }
 }

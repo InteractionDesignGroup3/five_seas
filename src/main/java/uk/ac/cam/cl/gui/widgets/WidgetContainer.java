@@ -7,6 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
@@ -25,15 +26,19 @@ public class WidgetContainer extends BorderPane {
   private Settings sett;
   private BorderPane top;
   private Button swipe;
+  private Region spacer;
   private StackPane view;
   private Label nameLabel;
   private HBox bottom;
 
   public WidgetContainer(Widget widget, Integer pos) {
     super();
+    spacer = new Region();
+    spacer.getStyleClass().add("button-spacer");
     setCenter(widget);
     position = pos;
-    nameLabel = new Label(getWidgetName(widget));
+    main = widget;
+    nameLabel = new Label(getWidgetName());
     bottom = new HBox();
     bottom.getChildren().addAll(nameLabel);
     setBottom(bottom);
@@ -42,18 +47,17 @@ public class WidgetContainer extends BorderPane {
 
   public WidgetContainer(Widget widget, Settings sett, Integer pos) {
     this(widget, pos);
-    this.top = new BorderPane();
-    this.swipe = new Button();
-    this.swipe.setGraphic(new ImageView(Main.SETTINGS_ICON));
+    top = new BorderPane();
+    swipe = new Button();
+    swipe.setGraphic(new ImageView(Main.SETTINGS_ICON));
 
-    this.main = widget;
     this.sett = sett;
-    this.view = new StackPane();
-    this.view.getChildren().addAll(this.sett, this.main);
+    view = new StackPane();
+    view.getChildren().addAll(this.sett, this.main);
 
-    this.top.setRight(this.swipe);
+    top.setRight(swipe);
 
-    this.swipe.setOnAction(
+    swipe.setOnAction(
         (actionEvent) -> {
           swap();
         });
@@ -71,8 +75,8 @@ public class WidgetContainer extends BorderPane {
       ft.play();
 
       this.swipe.setGraphic(new ImageView(Main.BACK_ICON));
-      top.setRight(null);
-      top.setCenter(new Label("Settings"));
+      top.setRight(spacer);
+      top.setCenter(new Label(main.getName() + " Settings"));
       top.setLeft(swipe);
       setBottom(null);
 
@@ -113,11 +117,11 @@ public class WidgetContainer extends BorderPane {
    * @param widget the widget to format
    * @return the formatted name of the widget with a unit
    */
-  private String getWidgetName(Widget widget) {
-    Unit unit = widget.getUnit();
+  private String getWidgetName() {
+    Unit unit = main.getUnit();
     if (unit != Unit.NONE) 
-      return widget.getName() + " (" + widget.getUnit() + ")";
-    else return widget.getName();
+      return main.getName() + " (" + main.getUnit() + ")";
+    else return main.getName();
   }
 
   public Integer getPosition() {

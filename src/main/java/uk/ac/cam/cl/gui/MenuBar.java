@@ -2,30 +2,29 @@ package uk.ac.cam.cl.gui;
 
 import javafx.geometry.HPos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Region;
 
 import uk.ac.cam.cl.Main;
 
-public class MenuBar extends GridPane {
+public class MenuBar extends BorderPane {
   private Main parent;
 
   public MenuBar(Main parent) {
     super();
-
     this.parent = parent;
-
     this.setId("menu-bar");
-
-    ColumnConstraints col0cons = new ColumnConstraints();
-    col0cons.setPercentWidth(10);
-    ColumnConstraints col1cons = new ColumnConstraints();
-    col1cons.setPercentWidth(90);
-
-    this.getColumnConstraints().addAll(col0cons, col1cons, col0cons);
-
-    this.add(initBackButton(), 0, 0);
+    Label title = new Label("Add Widgets");
+    title.getStyleClass().add("title");
+    Region spacer = new Region();
+    spacer.getStyleClass().add("button-spacer");
+    this.setLeft(initBackButton());
+    this.setCenter(title);
+    this.setRight(spacer);
   }
 
   private Button initBackButton() {

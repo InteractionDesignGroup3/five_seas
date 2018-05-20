@@ -44,6 +44,6 @@ public class SwellHeightSettings extends Settings {
 
     @Override
     public Unit getUnit() {
-        return Unit.fromString(settings.getOrDefault(SETTING_NAME, (String) Unit.METERS.toString()));
+        return Unit.fromString(settings.getOrDefault(SETTING_NAME, Unit.METERS.toString()));
     }
 }

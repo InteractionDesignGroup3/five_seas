@@ -1,7 +1,12 @@
 package uk.ac.cam.cl.gui.widgets;
 
+import javafx.geometry.HPos;
 import javafx.scene.control.Label;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
+
 import uk.ac.cam.cl.data.DataManager;
 import uk.ac.cam.cl.data.DataSequence;
 import uk.ac.cam.cl.data.Unit;
@@ -15,14 +20,22 @@ import uk.ac.cam.cl.data.Unit;
 public abstract class Widget extends GridPane {
 
   private boolean initialised;
-  private Label noDataLabel;
+  private Text noData;
 
   public Widget() {
     super();
     this.getStyleClass().add("widget");
     initialised = false;
-    noDataLabel = new Label("No Data");
-    add(noDataLabel, 0, 0);
+
+    ColumnConstraints col = new ColumnConstraints();
+    col.setPercentWidth(100);
+    getColumnConstraints().addAll(col);
+
+    noData = new Text("No Data");
+    noData.setTextAlignment(TextAlignment.CENTER);
+    GridPane.setHalignment(noData, HPos.CENTER);
+    GridPane.setFillWidth(noData, true);
+    add(noData, 0, 0);
     DataManager.getInstance().addListener(this::handleNewData);
   }
 
@@ -56,7 +69,7 @@ public abstract class Widget extends GridPane {
    */
   public void handleNewData(DataSequence dataSequence) {
     if (!initialised) {
-      getChildren().remove(noDataLabel);
+      getChildren().remove(noData);
       initialise();
       initialised = true;
     }

@@ -1,10 +1,12 @@
 package uk.ac.cam.cl;
 
-import static javafx.scene.control.ScrollPane.ScrollBarPolicy;
+import uk.ac.cam.cl.gui.widgets.*;
 
 import java.util.*;
 import javafx.application.Application;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ContentDisplay;
@@ -17,11 +19,14 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.stage.Stage;
+import static javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import uk.ac.cam.cl.data.AppSettings;
 import uk.ac.cam.cl.data.DataManager;
 import uk.ac.cam.cl.gui.*;
-import uk.ac.cam.cl.gui.widgets.*;
 
 public class Main extends Application {
   private Stage stage;
@@ -173,7 +178,7 @@ public class Main extends Application {
 
     BorderPane root = new BorderPane();
     root.setId("root");
-    GridPane topBar = new MenuBar(this);
+    BorderPane topBar = new MenuBar(this);
     topBar.setId("menu-bar");
     GridPane mainSec = new GridPane();
     mainSec.setId("menu-main");
@@ -182,11 +187,15 @@ public class Main extends Application {
       Widget y = widgetList.get(i);
       String canonicalName = getCanonicalName(y);
 
+      HBox item = new HBox();
+      GridPane.setMargin(item, new Insets(0, 0, 0, 10));
+      Region spacer = new Region();
+      HBox.setHgrow(spacer, Priority.ALWAYS);
+      item.getStyleClass().add("menu-item");
       Label label = new Label(y.getName());
-      label.setContentDisplay(ContentDisplay.RIGHT);
+      HBox.setMargin(label, new Insets(15, 0, 0, 0));
 
       CheckBox x = new CheckBox();
-      label.setGraphic(x);
       x.getStyleClass().add("check-box");
       x.selectedProperty()
           .addListener(
@@ -199,7 +208,8 @@ public class Main extends Application {
                   settings.set(canonicalName, false);
                 }
               });
-      mainSec.add(label, 0, i);
+      item.getChildren().addAll(label, spacer, x);
+      mainSec.add(item, 0, i);
 
       if (settings.getOrDefault(canonicalName, false)) x.setSelected(true);
     }

@@ -1,5 +1,5 @@
 @font-face {
-  font-family: Roboto;
+  font-family: 'Roboto';
   src: url('../font/Roboto-Medium.ttf');
 }
 
@@ -49,17 +49,75 @@
   -fx-effect: innershadow(gaussian, rgba(0, 0, 0, 0.1), 5, 0, 0, 0);
 }
 
+.button-spacer {
+  -fx-min-width: 40px; 
+  -fx-min-height: 40px; 
+  -fx-background-insets: 2px;
+}
+
 #menu-main {
+  -fx-pref-width: 300px;
   -fx-background-color: #FFFFFF;
 }
 
-.check-box .box {
-  -fx-background-color: #FFFFFF;
-  -fx-background-radius: 1;
+.title {
+  -fx-text-fill: white;
+  -fx-text-size: 18px;
 }
+
+.menu-item {
+  -fx-min-width: 370px;
+}
+
+.check-box .box {
+  -fx-background-color: transparent;
+  -fx-background-radius: 3;
+  -fx-border-radius: 3;
+  -fx-border-width: 1;
+  -fx-border-color: #BDBDBD;
+  -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 5, 0, 0, 0);
+}
+
 .check-box {
+  -fx-background-color: transparent;
   -fx-font-size: 20px;
   -fx-padding: 5px 10px 5px 10px;
+}
+
+.check-box > .box > .mark {
+  -fx-background-color: transparent;
+  -fx-background-image: none;
+  -fx-background-position: center;
+  -fx-background-repeat: stretch;
+  -fx-shape: none;
+}
+
+.check-box:selected > .box > .mark{
+  -fx-background-color: transparent;
+  -fx-background-image: url("../icons/2x/check.png");
+}
+
+.radio-button {
+  -fx-padding: 10px 10px 0px 10px;
+}
+
+.radio-button .radio {
+  -fx-background-color: transparent;
+  -fx-border-width: 1;
+  -fx-border-color: #BDBDBD;
+  -fx-border-radius: 15px;
+  -fx-padding: 4px;
+}
+
+.radio-button .radio:selected {
+  -fx-background-color: transparent;
+  -fx-background-image: null;
+}
+
+.radio-button .dot {
+  -fx-background-radius: 15px;
+  -fx-padding: 8px;
+  -fx-padding: 6px;
 }
 
 #search-box {
