@@ -24,14 +24,12 @@ import uk.ac.cam.cl.data.*;
  * @author Mike Cachopo
  */
 public class WindWidget extends Widget {
-
   public static final String WIND_WIDGET_UNIT_SETTINGS = "windWidgetUnit";
 
   private DataSequence dataSequence;
   private Label timeValue, gustSpeed, numberBox, north;
   private Shape compass, vane;
   private Slider timeSelecter;
-
 
   @Override
   public void initialise() {
