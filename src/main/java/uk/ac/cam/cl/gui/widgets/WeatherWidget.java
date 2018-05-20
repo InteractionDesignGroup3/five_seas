@@ -140,7 +140,6 @@ public class WeatherWidget extends Widget {
   @Override
   public void displayData(DataSequence dataSequence) {
     ScrollPane scrollPane = new ScrollPane();
-    scrollPane.setId("weather_widget");
     GridPane gridPane = new GridPane();
     gridPane.setId("weather");
     for (int i = 0; i < dataSequence.size(); i++) {
@@ -194,14 +193,11 @@ public class WeatherWidget extends Widget {
 
   @Override
   public Unit getUnit() {
-    String unitName = AppSettings.getInstance().getOrDefault(
-            WEATHER_WIDGET_TEMPERATURE_UNIT_SETTINGS, Unit.CELSIUS.toString());
-    return Unit.fromString(unitName);
+    return Unit.NONE;
   }
 
   @Override
   public void initialise() {
     // Do nothing because initialisation is handled in the displayData() method
   }
-
 }

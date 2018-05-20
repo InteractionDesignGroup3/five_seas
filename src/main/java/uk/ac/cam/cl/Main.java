@@ -1,10 +1,6 @@
 package uk.ac.cam.cl;
 
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.DataFormat;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.TransferMode;
-import uk.ac.cam.cl.gui.widgets.*;
+import static javafx.scene.control.ScrollPane.ScrollBarPolicy;
 
 import java.util.*;
 import javafx.application.Application;
@@ -14,13 +10,18 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DataFormat;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import static javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import uk.ac.cam.cl.data.AppSettings;
 import uk.ac.cam.cl.data.DataManager;
 import uk.ac.cam.cl.gui.*;
+import uk.ac.cam.cl.gui.widgets.*;
 
 public class Main extends Application {
   private Stage stage;
@@ -35,6 +36,11 @@ public class Main extends Application {
   private ArrayList<WidgetContainer> widgetOrder;
   private AppSettings settings = AppSettings.getInstance();
 
+  public static final Image SETTINGS_ICON = new Image("icons/1x/settings.png"),
+      BACK_ICON = new Image("icons/1x/back.png"),
+      ADD_ICON = new Image("icons/1x/add.png"),
+      LOCATION_ICON = new Image("icons/1x/location.png");
+
   @Override
   public void start(Stage primaryStage) {
     this.stage = primaryStage;
@@ -45,20 +51,22 @@ public class Main extends Application {
   public void showMain() {
     BorderPane root = new BorderPane();
     root.setId("root");
-    GridPane topBar = new TopBar(this);
+    BorderPane topBar = new TopBar(this);
     ScrollPane mainScrollable = new ScrollPane();
-    topBar.setOnDragOver(event -> {
-      event.acceptTransferModes(TransferMode.MOVE);
-      mainScrollable.setVvalue(mainScrollable.getVvalue()-0.015);
-      event.consume();
-    });
+    topBar.setOnDragOver(
+        event -> {
+          event.acceptTransferModes(TransferMode.MOVE);
+          mainScrollable.setVvalue(mainScrollable.getVvalue() - 0.015);
+          event.consume();
+        });
     GridPane mainSec = new GridPane();
     GridPane bottomBar = new BottomBar(this);
-    bottomBar.setOnDragOver(event -> {
-      event.acceptTransferModes(TransferMode.MOVE);
-      mainScrollable.setVvalue(mainScrollable.getVvalue()+0.015);
-      event.consume();
-    });
+    bottomBar.setOnDragOver(
+        event -> {
+          event.acceptTransferModes(TransferMode.MOVE);
+          mainScrollable.setVvalue(mainScrollable.getVvalue() + 0.015);
+          event.consume();
+        });
     mainScrollable.setContent(mainSec);
     mainScrollable.setHbarPolicy(ScrollBarPolicy.NEVER);
     mainScrollable.setVbarPolicy(ScrollBarPolicy.NEVER);
@@ -76,62 +84,62 @@ public class Main extends Application {
                 new WindSpeedGraph(),
                 new WeatherWidget(),
                 new WindWidget()));
-
-    settingsList = new ArrayList<Settings>(Arrays.asList(
-            new SwellHeightSettings(),
-            new TemperatureSettings(),
-            new TideSettings(),
-            new VisibilitySettings(),
-            new WindSpeedSettings(),
-            new WeatherSettings(),
-            new WindSettings()));
+    settingsList =
+        new ArrayList<Settings>(
+            Arrays.asList(
+                new SwellHeightSettings(),
+                new TemperatureSettings(),
+                new TideSettings(),
+                new VisibilitySettings(),
+                new WindSpeedSettings(),
+                null,
+                new WindSettings()));
 
     widgetOrder = new ArrayList<>();
     int j = 0;
-    for(Integer i = 0; i < widgetList.size(); i++)
-    {
+    for (Integer i = 0; i < widgetList.size(); i++) {
       Widget y = widgetList.get(i);
       Settings s = settingsList.get(i);
 
       if (settings.getOrDefault(getCanonicalName(y), false)) {
         WidgetContainer z;
-        if (s != null) {
-          z = new WidgetContainer(y, s, j);
-        } else {
-          z = new WidgetContainer(y, j);
-        }
-        z.setOnDragDetected(event -> {
-          Dragboard db = z.startDragAndDrop(TransferMode.MOVE);
-          ClipboardContent c = new ClipboardContent();
-          c.putString(z.getPosition().toString());
-          db.setContent(c);
-          event.consume();
-        });
-        z.setOnDragOver(event -> {
-          event.acceptTransferModes(TransferMode.MOVE);
-          event.consume();
-        });
-        z.setOnDragDropped(event -> {
-          int pos = Integer.parseInt((event.getDragboard().getContent(DataFormat.PLAIN_TEXT)).toString());
-          WidgetContainer temp = widgetOrder.get(pos);
-          widgetOrder.remove(pos);
-          int position = z.getPosition();
-          temp.setPosition(z.getPosition());
-          if(z.getPosition() < pos) {
-            for (int k = z.getPosition(); k < pos; k++) {
-              widgetOrder.get(k).setPosition(widgetOrder.get(k).getPosition() + 1);
-            }
-          }
-          else
-          {
-            for (int k = pos; k < z.getPosition(); k++) {
-              widgetOrder.get(k).setPosition(widgetOrder.get(k).getPosition() - 1); 
-            }
-          }
-          widgetOrder.add(position, temp);
-          addWidgets(mainSec);
-          event.consume();
-        });
+        if (s != null) z = new WidgetContainer(y, s, j);
+        else z = new WidgetContainer(y, j);
+        z.setOnDragDetected(
+            event -> {
+              Dragboard db = z.startDragAndDrop(TransferMode.MOVE);
+              ClipboardContent c = new ClipboardContent();
+              c.putString(z.getPosition().toString());
+              db.setContent(c);
+              event.consume();
+            });
+        z.setOnDragOver(
+            event -> {
+              event.acceptTransferModes(TransferMode.MOVE);
+              event.consume();
+            });
+        z.setOnDragDropped(
+            event -> {
+              int pos =
+                  Integer.parseInt(
+                      (event.getDragboard().getContent(DataFormat.PLAIN_TEXT)).toString());
+              WidgetContainer temp = widgetOrder.get(pos);
+              widgetOrder.remove(pos);
+              int position = z.getPosition();
+              temp.setPosition(z.getPosition());
+              if (z.getPosition() < pos) {
+                for (int k = z.getPosition(); k < pos; k++) {
+                  widgetOrder.get(k).setPosition(widgetOrder.get(k).getPosition() + 1);
+                }
+              } else {
+                for (int k = pos; k < z.getPosition(); k++) {
+                  widgetOrder.get(k).setPosition(widgetOrder.get(k).getPosition() - 1);
+                }
+              }
+              widgetOrder.add(position, temp);
+              addWidgets(mainSec);
+              event.consume();
+            });
         widgets.put(getCanonicalName(y), z);
         widgetOrder.add(j, z);
         j++;
@@ -173,7 +181,7 @@ public class Main extends Application {
     for (Integer i = 0; i < widgetList.size(); i++) {
       Widget y = widgetList.get(i);
       String canonicalName = getCanonicalName(y);
-      
+
       Label label = new Label(y.getName());
       label.setContentDisplay(ContentDisplay.RIGHT);
 
@@ -217,8 +225,7 @@ public class Main extends Application {
     launch(args);
   }
 
-  private void addWidgets(GridPane mainSec)
-  {
+  private void addWidgets(GridPane mainSec) {
     mainSec.getChildren().clear();
     int i = 0;
     for (WidgetContainer widgetContainer : widgetOrder) {

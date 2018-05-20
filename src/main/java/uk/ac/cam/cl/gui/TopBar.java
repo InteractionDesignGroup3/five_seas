@@ -3,20 +3,24 @@ package uk.ac.cam.cl.gui;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
+
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
+
 import uk.ac.cam.cl.Main;
 import uk.ac.cam.cl.data.DataManager;
 import uk.ac.cam.cl.data.Location;
 
-public class TopBar extends GridPane {
+public class TopBar extends BorderPane {
   private Main parent;
 
   private DataManager dm = DataManager.getInstance();
@@ -29,23 +33,15 @@ public class TopBar extends GridPane {
     this.parent = parent;
     this.setId("top-bar");
 
-    ColumnConstraints col0cons = new ColumnConstraints();
-    col0cons.setPercentWidth(10);
-    ColumnConstraints col1cons = new ColumnConstraints();
-    col1cons.setPercentWidth(80);
-
-    this.getColumnConstraints().addAll(col0cons, col1cons, col0cons);
-
-    this.add(initLocButton(), 0, 0);
-    this.add(initSearchBox(), 1, 0);
-    this.add(initMenuButton(), 2, 0);
+    this.setLeft(initLocButton());
+    this.setCenter(initSearchBox());
+    this.setRight(initMenuButton());
   }
 
   private Button initLocButton() {
     Button locBtn = new Button();
-    locBtn.setText("#");
-    locBtn.setId("loc-btn");
-    GridPane.setHalignment(locBtn, HPos.CENTER);
+    locBtn.setGraphic(new ImageView(Main.LOCATION_ICON));
+    locBtn.getStyleClass().add("button");
     return locBtn;
   }
 
@@ -54,7 +50,6 @@ public class TopBar extends GridPane {
     searchBox.setPromptText("Location");
     searchBox.setText(dm.getLocation().getName());
     searchBox.setId("search-box");
-    GridPane.setHalignment(searchBox, HPos.CENTER);
 
     AutoCompletionBinding<String> stringAutoCompletionBinding =
         TextFields.bindAutoCompletion(
@@ -63,6 +58,8 @@ public class TopBar extends GridPane {
               places = dm.getLocations(searchBox.getText());
               return places.stream().map(x -> x.getName()).collect(Collectors.toList());
             });
+
+    stringAutoCompletionBinding.setPrefWidth(280);
 
     searchBox.setOnAction(
         (event) -> {
@@ -79,9 +76,8 @@ public class TopBar extends GridPane {
 
   private Button initMenuButton() {
     Button menuBtn = new Button();
-    menuBtn.setText("+");
-    menuBtn.setId("menu-btn");
-    GridPane.setHalignment(menuBtn, HPos.CENTER);
+    menuBtn.setGraphic(new ImageView(Main.ADD_ICON));
+    menuBtn.getStyleClass().add("button");
     menuBtn.setOnAction(
         new EventHandler<ActionEvent>() {
           @Override

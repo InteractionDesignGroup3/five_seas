@@ -2,8 +2,10 @@ package uk.ac.cam.cl.gui;
 
 import javafx.geometry.HPos;
 import javafx.scene.control.Button;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+
 import uk.ac.cam.cl.Main;
 
 public class MenuBar extends GridPane {
@@ -28,8 +30,8 @@ public class MenuBar extends GridPane {
 
   private Button initBackButton() {
     Button menuBtn = new Button();
-    menuBtn.setText("<");
-    menuBtn.setId("menu-back-btn");
+    menuBtn.setGraphic(new ImageView(Main.BACK_ICON));
+    menuBtn.getStyleClass().add("button");
     GridPane.setHalignment(menuBtn, HPos.CENTER);
     menuBtn.setOnAction(
         (x) -> {

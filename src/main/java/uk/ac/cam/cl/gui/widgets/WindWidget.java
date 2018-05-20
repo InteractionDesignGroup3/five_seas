@@ -4,9 +4,11 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Path;
@@ -62,6 +64,7 @@ public class WindWidget extends Widget {
     // Adjust the time selecter preferences
     timeSelecter.setMax(95);
     timeSelecter.setShowTickLabels(true);
+    timeSelecter.setShowTickMarks(true);
     timeSelecter.setMajorTickUnit(24);
     timeSelecter.setMinorTickCount(24);
     timeSelecter.setSnapToTicks(true);
@@ -89,6 +92,7 @@ public class WindWidget extends Widget {
               this.update();
             });
 
+    GridPane.setMargin(timeSelecter, new Insets(10, 10, 5, 10));
     // Add all components to the widget display
     this.add(mainPane, 0, 1);
     this.add(bottomPane, 0, 2);
