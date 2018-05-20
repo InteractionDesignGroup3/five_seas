@@ -82,7 +82,6 @@ public class TopBar extends BorderPane {
         new EventHandler<ActionEvent>() {
           @Override
           public void handle(ActionEvent event) {
-            System.out.println("+ menu button pressed");
             parent.showMenu();
           }
         });
