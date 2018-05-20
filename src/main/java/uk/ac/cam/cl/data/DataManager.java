@@ -55,6 +55,7 @@ public class DataManager {
       // TODO cache is fresh so generate current location (either
       // lock this to Cambridge in the config or fake it with IP -
       // currently locked to Cambridge)
+      e.printStackTrace();
       location = new Location("Cambridge", 0.1218, 52.2053);
     }
 
@@ -100,7 +101,8 @@ public class DataManager {
         if (Math.abs(longitude - location.getLongitude()) < COORD_ERROR
             || Math.abs(latitude - location.getLatitude()) < COORD_ERROR)
           location = new Location(name, longitude, latitude);
-
+        
+        lastUpdated = (Long) apiData.get("cache_timestamp");
         data = new ArrayList<>(api.getProcessedData(apiData));
         Collections.sort(data);
         triggerAll();

@@ -2,14 +2,14 @@ package uk.ac.cam.cl;
 
 import uk.ac.cam.cl.gui.widgets.*;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import javafx.application.Application;
-import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
@@ -22,6 +22,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import static javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import uk.ac.cam.cl.data.AppSettings;
@@ -38,7 +39,9 @@ public class Main extends Application {
   private static int NUM_OF_WIDGETS = 10;
   private ArrayList<Widget> widgetList;
   private ArrayList<WidgetContainer> widgetOrder;
+  private Label lastUpdated;
   private AppSettings settings = AppSettings.getInstance();
+  private DataManager dm = DataManager.getInstance();
 
   public static final Image SETTINGS_ICON = new Image("icons/1x/settings.png"),
       BACK_ICON = new Image("icons/1x/back.png"),
@@ -71,7 +74,6 @@ public class Main extends Application {
           mainScrollable.setVvalue(mainScrollable.getVvalue() + 0.015);
           event.consume();
         });
-    mainScrollable.setContent(mainSec);
     mainScrollable.setHbarPolicy(ScrollBarPolicy.NEVER);
     mainScrollable.setVbarPolicy(ScrollBarPolicy.NEVER);
 
@@ -89,24 +91,6 @@ public class Main extends Application {
                 new WeatherWidget(),
                 new WindWidget()));
 
-    ArrayList<Widget> newWidgetList = new ArrayList<Widget>();
-    for(int i = 0; i < widgetList.size(); i++) {
-        for (int j = 0; j < widgetList.size(); j++) {
-            if (settings.getOrDefault("" + widgetList.get(j).getName() + "L", new Long(-1)) == i) {
-                newWidgetList.add(widgetList.get(j));
-            }
-        }
-        if (newWidgetList.size() < i + 1) {
-            i = widgetList.size();
-        }
-    }
-    for(int i = 0; i < widgetList.size(); i++){
-        if(!newWidgetList.contains(widgetList.get(i)))
-        {
-            newWidgetList.add(widgetList.get(i));
-        }
-    }
-    widgetList = newWidgetList;
     widgetOrder = new ArrayList<>();
     int j = 0;
     for (Integer i = 0; i < widgetList.size(); i++) {
@@ -136,16 +120,13 @@ public class Main extends Application {
               widgetOrder.remove(pos);
               int position = z.getPosition();
               temp.setPosition(z.getPosition());
-              settings.set(temp.getWidget().getName() + "L", z.getPosition());
               if (z.getPosition() < pos) {
                 for (int k = z.getPosition(); k < pos; k++) {
-                  settings.set(widgetOrder.get(k).getWidget().getName() + "L", new Long(widgetOrder.get(k).getPosition() + 1));
-                    widgetOrder.get(k).setPosition(widgetOrder.get(k).getPosition() + 1);
+                  widgetOrder.get(k).setPosition(widgetOrder.get(k).getPosition() + 1);
                 }
               } else {
                 for (int k = pos; k < z.getPosition(); k++) {
-                  settings.set(widgetOrder.get(k).getWidget().getName() + "L", new Long(widgetOrder.get(k).getPosition() - 1));
-                    widgetOrder.get(k).setPosition(widgetOrder.get(k).getPosition() - 1);
+                  widgetOrder.get(k).setPosition(widgetOrder.get(k).getPosition() - 1);
                 }
               }
               widgetOrder.add(position, temp);
@@ -153,14 +134,26 @@ public class Main extends Application {
               event.consume();
             });
         widgets.put(getCanonicalName(y), z);
-        settings.set(y.getName() + "L", new Long(j));
         widgetOrder.add(j, z);
         j++;
       }
     }
 
+    VBox wrap = new VBox();
+    wrap.setAlignment(Pos.CENTER);
+    wrap.setMinWidth(370);
+    lastUpdated = new Label();
+    lastUpdated.setId("last-updated");
+    DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+    dm.addListener(
+        (dataSequence) -> {
+          lastUpdated.setText("Last Updated " + format.format(new Date(dm.getLastUpdated())));
+        });
+    wrap.getChildren().add(lastUpdated);
     // add widgets to the panel
     addWidgets(mainSec);
+    wrap.getChildren().add(mainSec);
+    mainScrollable.setContent(wrap);
 
     root.setCenter(mainScrollable);
     root.setBottom(bottomBar);
@@ -234,18 +227,12 @@ public class Main extends Application {
   }
 
   public static void main(String[] args) {
-    DataManager.getInstance()
-        .addListener(
-            sequence -> {
-              System.out.println(sequence);
-            });
-
     launch(args);
   }
 
   private void addWidgets(GridPane mainSec) {
     mainSec.getChildren().clear();
-    int i = 0;
+    int i = 1;
     for (WidgetContainer widgetContainer : widgetOrder) {
       mainSec.add(widgetContainer, 0, i);
       i++;

@@ -22,9 +22,7 @@ import uk.ac.cam.cl.data.Location;
 
 public class TopBar extends BorderPane {
   private Main parent;
-
   private DataManager dm = DataManager.getInstance();
-
   private List<Location> places = new ArrayList<>();
 
   public TopBar(Main parent) {
@@ -82,7 +80,6 @@ public class TopBar extends BorderPane {
         new EventHandler<ActionEvent>() {
           @Override
           public void handle(ActionEvent event) {
-            System.out.println("+ menu button pressed");
             parent.showMenu();
           }
         });
