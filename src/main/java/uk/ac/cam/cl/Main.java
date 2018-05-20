@@ -50,7 +50,8 @@ public class Main extends Application {
 
   @Override
   public void start(Stage primaryStage) {
-    this.stage = primaryStage;
+    stage = primaryStage;
+    stage.setResizable(false);
     showMain();
   }
 
