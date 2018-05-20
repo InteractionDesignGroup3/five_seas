@@ -85,7 +85,7 @@ public class Meteomatics implements API<DataSequence> {
     JSONArray visibility = getSequence(dumpData, 9);
     JSONArray code = getSequence(dumpData, 10);
 
-    DateFormat format = new SimpleDateFormat("YYYY-MM-dd'T'hh:mm:ss'Z'");
+    DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss'Z'");
     int records = temperature.size() / interval;
 
     try {
