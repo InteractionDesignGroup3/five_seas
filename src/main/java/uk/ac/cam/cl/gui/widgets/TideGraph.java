@@ -1,5 +1,8 @@
 package uk.ac.cam.cl.gui.widgets;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import uk.ac.cam.cl.data.AppSettings;
 import uk.ac.cam.cl.data.DataPoint;
 import uk.ac.cam.cl.data.Unit;
@@ -10,9 +13,6 @@ import uk.ac.cam.cl.data.Unit;
  * @author Ben Cole
  */
 public class TideGraph extends GraphWidget {
-
-  public static final String TIDE_GRAPH_UNIT_SETTINGS = "tideGraphUnit";
-
   public TideGraph() {
     super();
     getStyleClass().add("tide-graph");
@@ -21,13 +21,6 @@ public class TideGraph extends GraphWidget {
   @Override
   public String getName() {
     return "Tides";
-  }
-
-  @Override
-  public Unit getUnit() {
-    String unit = AppSettings.getInstance()
-            .getOrDefault(TIDE_GRAPH_UNIT_SETTINGS, Unit.METERS.toString());
-    return Unit.fromString(unit);
   }
 
   @Override
@@ -41,9 +34,19 @@ public class TideGraph extends GraphWidget {
     }
   }
 
-  private boolean isMeters() {
-    return AppSettings.getInstance()
-            .getOrDefault(TIDE_GRAPH_UNIT_SETTINGS, "meter")
-            .equals("meter");
+  @Override
+  public String getSettingName() {
+    return "tideGraphUnit";
+  }
+
+  @Override
+  public List<Unit> getAvailableUnits() {
+    return new ArrayList<Unit>(){
+      private static final long serialVersionUID = 1L; 
+      {
+        add(Unit.METERS); 
+        add(Unit.FEET); 
+      }
+    };
   }
 }

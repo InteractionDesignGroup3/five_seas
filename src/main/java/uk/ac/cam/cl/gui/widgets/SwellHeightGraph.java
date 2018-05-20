@@ -1,5 +1,8 @@
 package uk.ac.cam.cl.gui.widgets;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import uk.ac.cam.cl.data.AppSettings;
 import uk.ac.cam.cl.data.DataPoint;
 import uk.ac.cam.cl.data.Unit;
@@ -10,9 +13,6 @@ import uk.ac.cam.cl.data.Unit;
  * @author Ben Cole
  */
 public class SwellHeightGraph extends GraphWidget {
-
-  public static final String SWELL_HEIGHT_GRAPH_UNIT_SETTINGS = "swellHeightGraphUnit";
-
   public SwellHeightGraph() {
     super();
     getStyleClass().add("swell-height-graph");
@@ -21,14 +21,6 @@ public class SwellHeightGraph extends GraphWidget {
   @Override
   public String getName() {
     return "Swell Height";
-  }
-
-  @Override
-  public Unit getUnit() {
-    String data = AppSettings
-            .getInstance()
-            .getOrDefault(SWELL_HEIGHT_GRAPH_UNIT_SETTINGS, Unit.METERS.toString());
-    return Unit.fromString(data);
   }
 
   @Override
@@ -43,5 +35,21 @@ public class SwellHeightGraph extends GraphWidget {
         data = dataPoint.getSwellHeightM();
     }
     return Math.max(data, 0.0);
+  }
+  
+  @Override
+  public String getSettingName() {
+    return "swellHeightGraphUnit";
+  }
+
+  @Override
+  public List<Unit> getAvailableUnits() {
+    return new ArrayList<Unit>(){
+      private static final long serialVersionUID = 1L; 
+      {
+        add(Unit.METERS); 
+        add(Unit.FEET); 
+      }
+    };
   }
 }

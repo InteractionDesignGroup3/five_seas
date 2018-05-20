@@ -14,6 +14,8 @@ public enum Unit {
   MILES("mi"),
   KILOMETERS_PER_HOUR("Km/h"),
   MILES_PER_HOUR("mph"),
+  METRES_PER_SECOND("m/s"),
+  KNOTS("knots"),
   CELSIUS("°C"),
   FAHRENHEIT("°F"),
   NONE("");
