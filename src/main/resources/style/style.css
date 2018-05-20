@@ -1,5 +1,5 @@
 @font-face {
-  font-family: Roboto;
+  font-family: 'Roboto';
   src: url('../font/Roboto-Medium.ttf');
 }
 
@@ -49,8 +49,20 @@
   -fx-effect: innershadow(gaussian, rgba(0, 0, 0, 0.1), 5, 0, 0, 0);
 }
 
+.button-spacer {
+  -fx-min-width: 40px; 
+  -fx-min-height: 40px; 
+  -fx-background-insets: 2px;
+}
+
 #menu-main {
+  -fx-pref-width: 300px;
   -fx-background-color: #FFFFFF;
+}
+
+.title {
+  -fx-text-fill: white;
+  -fx-text-size: 18px;
 }
 
 .menu-item {

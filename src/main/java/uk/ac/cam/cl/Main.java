@@ -178,7 +178,7 @@ public class Main extends Application {
 
     BorderPane root = new BorderPane();
     root.setId("root");
-    GridPane topBar = new MenuBar(this);
+    BorderPane topBar = new MenuBar(this);
     topBar.setId("menu-bar");
     GridPane mainSec = new GridPane();
     mainSec.setId("menu-main");
