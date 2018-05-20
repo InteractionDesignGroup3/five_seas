@@ -20,6 +20,7 @@ import uk.ac.cam.cl.data.Unit;
  * @author Ben Cole
  */
 public class WidgetContainer extends BorderPane {
+  private Widget widget;
   private Integer position;
   private boolean onMain = true;
   private Widget main;
@@ -33,6 +34,7 @@ public class WidgetContainer extends BorderPane {
 
   public WidgetContainer(Widget widget, Integer pos) {
     super();
+    this.widget = widget;
     spacer = new Region();
     spacer.getStyleClass().add("button-spacer");
     setCenter(widget);
@@ -130,5 +132,10 @@ public class WidgetContainer extends BorderPane {
 
   public void setPosition(Integer pos) {
     position = pos;
+  }
+
+  public Widget getWidget()
+  {
+    return widget;
   }
 }
