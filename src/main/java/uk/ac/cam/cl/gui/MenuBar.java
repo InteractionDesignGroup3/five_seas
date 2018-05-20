@@ -34,7 +34,6 @@ public class MenuBar extends BorderPane {
     GridPane.setHalignment(menuBtn, HPos.CENTER);
     menuBtn.setOnAction(
         (x) -> {
-          System.out.println("< menu button pressed");
           parent.showMain();
         });
 
