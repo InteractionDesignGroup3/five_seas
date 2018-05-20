@@ -37,7 +37,8 @@ public class WidgetContainer extends BorderPane {
     spacer.getStyleClass().add("button-spacer");
     setCenter(widget);
     position = pos;
-    nameLabel = new Label(getWidgetName(widget));
+    main = widget;
+    nameLabel = new Label(getWidgetName());
     bottom = new HBox();
     bottom.getChildren().addAll(nameLabel);
     setBottom(bottom);
@@ -50,7 +51,6 @@ public class WidgetContainer extends BorderPane {
     swipe = new Button();
     swipe.setGraphic(new ImageView(Main.SETTINGS_ICON));
 
-    this.main = widget;
     this.sett = sett;
     view = new StackPane();
     view.getChildren().addAll(this.sett, this.main);
@@ -76,7 +76,7 @@ public class WidgetContainer extends BorderPane {
 
       this.swipe.setGraphic(new ImageView(Main.BACK_ICON));
       top.setRight(spacer);
-      top.setCenter(new Label("Settings"));
+      top.setCenter(new Label(main.getName() + " Settings"));
       top.setLeft(swipe);
       setBottom(null);
 
@@ -117,11 +117,11 @@ public class WidgetContainer extends BorderPane {
    * @param widget the widget to format
    * @return the formatted name of the widget with a unit
    */
-  private String getWidgetName(Widget widget) {
-    Unit unit = widget.getUnit();
+  private String getWidgetName() {
+    Unit unit = main.getUnit();
     if (unit != Unit.NONE) 
-      return widget.getName() + " (" + widget.getUnit() + ")";
-    else return widget.getName();
+      return main.getName() + " (" + main.getUnit() + ")";
+    else return main.getName();
   }
 
   public Integer getPosition() {

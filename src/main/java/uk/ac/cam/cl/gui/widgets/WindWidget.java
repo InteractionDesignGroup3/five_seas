@@ -138,7 +138,7 @@ public class WindWidget extends Widget {
 
   @Override
   public String getName() {
-    return "Wind Speed and Direction";
+    return "Weather Vane";
   }
 
   @Override
