@@ -22,9 +22,7 @@ import uk.ac.cam.cl.data.Location;
 
 public class TopBar extends BorderPane {
   private Main parent;
-
   private DataManager dm = DataManager.getInstance();
-
   private List<Location> places = new ArrayList<>();
 
   public TopBar(Main parent) {

@@ -106,7 +106,7 @@ public class APIConnector<T> {
         || location.getLatitude() < -180) return cache.getData();
     JSONObject temp = new JSONObject();
     temp.put("longitude", location.getLongitude());
-    temp.put("latitude", location.getLongitude());
+    temp.put("latitude", location.getLatitude());
     temp.put("place_name", location.getName());
 
     try {
@@ -130,7 +130,7 @@ public class APIConnector<T> {
     try {
       return api.getProcessedData(data);
     } catch (NullPointerException e) {
-      throw new APIRequestException();
+      return api.getProcessedData(cache.getData());
     }
   }
 
