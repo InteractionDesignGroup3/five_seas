@@ -3,7 +3,6 @@ package uk.ac.cam.cl.gui.widgets;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import java.util.List;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -27,26 +26,26 @@ public class WindWidget extends Widget {
   public static final String WIND_WIDGET_UNIT_SETTINGS = "windWidgetUnit";
 
   private DataSequence dataSequence;
-  private final Label timeValue = new Label(),
-          gustSpeed = new Label();
-  private final Shape compass, vane;
-  private final Label numberBox = new Label();
-  private final Slider timeSelecter = new Slider();
-  private final Label north = new Label("N");
+  private Label timeValue, gustSpeed, numberBox, north;
+  private Shape compass, vane;
+  private Slider timeSelecter;
 
-  public WindWidget() {
-    super();
 
+  @Override
+  public void initialise() {
+
+    north = new Label("N");
     north.getStyleClass().add("cardinal");
-
+    numberBox = new Label();
+    timeValue = new Label();
+    gustSpeed = new Label();
+    timeSelecter = new Slider();
     Circle circle = new Circle(0, 0, 65);
     Rectangle rect = new Rectangle(0, -65, 65, 65);
     vane = Path.union(circle, rect);
     vane.setId("vane");
     compass = new Circle(0, 0, Math.sqrt(2) * 65);
     compass.setId("compass");
-
-    DataManager.getInstance().addListener(this::assign);
 
     // Assign vane and text box to the middle of the widget
     StackPane mainPane = new StackPane();
@@ -112,11 +111,11 @@ public class WindWidget extends Widget {
   /**
    * Updates the dataSequence of the widget and the display
    *
-   * @param dataSequenceList Data from the DataManager class
+   * @param dataSequence Data from the DataManager class
    */
-  private void assign(List<DataSequence> dataSequenceList) {
-    // Select appropriate day
-    dataSequence = dataSequenceList.get(DataManager.getInstance().getDay());
+  @Override
+  protected void displayData(DataSequence dataSequence) {
+    this.dataSequence = dataSequence;
     this.update();
   }
 
