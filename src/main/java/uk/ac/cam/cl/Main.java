@@ -88,7 +88,25 @@ public class Main extends Application {
                 new PrecipitationGraph(),
                 new WeatherWidget(),
                 new WindWidget()));
-    
+
+    ArrayList<Widget> newWidgetList = new ArrayList<Widget>();
+    for(int i = 0; i < widgetList.size(); i++) {
+        for (int j = 0; j < widgetList.size(); j++) {
+            if (settings.getOrDefault("" + widgetList.get(j).getName() + "L", new Long(-1)) == i) {
+                newWidgetList.add(widgetList.get(j));
+            }
+        }
+        if (newWidgetList.size() < i + 1) {
+            i = widgetList.size();
+        }
+    }
+    for(int i = 0; i < widgetList.size(); i++){
+        if(!newWidgetList.contains(widgetList.get(i)))
+        {
+            newWidgetList.add(widgetList.get(i));
+        }
+    }
+    widgetList = newWidgetList;
     widgetOrder = new ArrayList<>();
     int j = 0;
     for (Integer i = 0; i < widgetList.size(); i++) {
@@ -118,13 +136,16 @@ public class Main extends Application {
               widgetOrder.remove(pos);
               int position = z.getPosition();
               temp.setPosition(z.getPosition());
+              settings.set(temp.getWidget().getName() + "L", z.getPosition());
               if (z.getPosition() < pos) {
                 for (int k = z.getPosition(); k < pos; k++) {
-                  widgetOrder.get(k).setPosition(widgetOrder.get(k).getPosition() + 1);
+                  settings.set(widgetOrder.get(k).getWidget().getName() + "L", new Long(widgetOrder.get(k).getPosition() + 1));
+                    widgetOrder.get(k).setPosition(widgetOrder.get(k).getPosition() + 1);
                 }
               } else {
                 for (int k = pos; k < z.getPosition(); k++) {
-                  widgetOrder.get(k).setPosition(widgetOrder.get(k).getPosition() - 1);
+                  settings.set(widgetOrder.get(k).getWidget().getName() + "L", new Long(widgetOrder.get(k).getPosition() - 1));
+                    widgetOrder.get(k).setPosition(widgetOrder.get(k).getPosition() - 1);
                 }
               }
               widgetOrder.add(position, temp);
@@ -132,6 +153,7 @@ public class Main extends Application {
               event.consume();
             });
         widgets.put(getCanonicalName(y), z);
+        settings.set(y.getName() + "L", new Long(j));
         widgetOrder.add(j, z);
         j++;
       }
