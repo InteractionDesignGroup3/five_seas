@@ -32,9 +32,9 @@ public class WidgetContainer extends BorderPane {
   private Label nameLabel;
   private HBox bottom;
 
-  public WidgetContainer(Widget widge, Integer pos) {
+  public WidgetContainer(Widget widget, Integer pos) {
     super();
-    widget = widge;
+    this.widget = widget;
     spacer = new Region();
     spacer.getStyleClass().add("button-spacer");
     setCenter(widget);
