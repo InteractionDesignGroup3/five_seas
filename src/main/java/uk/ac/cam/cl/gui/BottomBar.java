@@ -40,24 +40,24 @@ public class BottomBar extends GridPane {
           @Override
           public String toString(Double f) {
             Calendar calendar = Calendar.getInstance();
-            int day = calendar.get(Calendar.DAY_OF_WEEK);
+            int day = calendar.get(Calendar.DAY_OF_WEEK) + 6;
             switch ((int) (Math.round(f) + day - Calendar.SUNDAY) % 7) {
               case 0:
-                return "Su";
+                return "Sun";
               case 1:
-                return "Mo";
+                return "Mon";
               case 2:
-                return "Tu";
+                return "Tue";
               case 3:
-                return "We";
+                return "Wed";
               case 4:
-                return "Th";
+                return "Thu";
               case 5:
-                return "Fr";
+                return "Fri";
               case 6:
-                return "Sa";
+                return "Sat";
               default:
-                return "-";
+                return "";
             }
           }
 
