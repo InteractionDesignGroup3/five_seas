@@ -2,7 +2,6 @@ package uk.ac.cam.cl.gui;
 
 import java.util.Calendar;
 
-import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.HPos;
