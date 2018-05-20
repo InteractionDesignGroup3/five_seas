@@ -132,21 +132,16 @@ public class WeatherWidget extends Widget {
         }
       };
 
-  public WeatherWidget() {
-    super();
-    DataManager.getInstance().addListener(this::assign);
-  }
-
   /**
    * Generates the widget and displays the relevant symbol and time
    *
-   * @param dataSequenceList data sequences to get weather codes from
+   * @param dataSequence data sequences to get weather codes from
    */
-  private void assign(List<DataSequence> dataSequenceList) {
+  @Override
+  public void displayData(DataSequence dataSequence) {
     ScrollPane scrollPane = new ScrollPane();
     GridPane gridPane = new GridPane();
     gridPane.setId("weather");
-    DataSequence dataSequence = dataSequenceList.get(DataManager.getInstance().getDay());
     for (int i = 0; i < dataSequence.size(); i++) {
       if (i % 4 != 0) continue;
       DataPoint dataPoint = dataSequence.get(i);
@@ -199,5 +194,10 @@ public class WeatherWidget extends Widget {
   @Override
   public Unit getUnit() {
     return Unit.NONE;
+  }
+
+  @Override
+  public void initialise() {
+    // Do nothing because initialisation is handled in the displayData() method
   }
 }
