@@ -3,15 +3,12 @@ package uk.ac.cam.cl.gui.widgets;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import javafx.scene.chart.*;
-import javafx.scene.control.Label;
-import uk.ac.cam.cl.data.DataManager;
 import uk.ac.cam.cl.data.DataPoint;
 import uk.ac.cam.cl.data.DataSequence;
 
 /**
- * A base Graph widget for displaying plots of data against time.
+ * A base Graph widget for displaying plots of data against time
  *
  * @author Ben Cole
  */
@@ -29,8 +26,8 @@ public abstract class GraphWidget extends Widget {
   }
 
   /**
-   * Plots the passed data. It uses getRelevantData to extract the useful data
-   * from this DataPoint; this code therefore covers all types of graph.
+   * Plots the passed data. It uses getRelevantData to extract the useful data from this DataPoint;
+   * this code therefore covers all types of graph.
    *
    * @param dataSequence data sequences to potentially plot from
    */
@@ -43,9 +40,7 @@ public abstract class GraphWidget extends Widget {
       Instant instant = dataPoint.getTimeAsDate().toInstant();
       String timeFormatted =
           DateTimeFormatter.ofPattern("HH:mm").withZone(ZoneId.systemDefault()).format(instant);
-      series
-          .getData()
-          .add(new XYChart.Data<>(timeFormatted, getRelevantData(dataPoint)));
+      series.getData().add(new XYChart.Data<>(timeFormatted, getRelevantData(dataPoint)));
     }
 
     chart.getData().clear();

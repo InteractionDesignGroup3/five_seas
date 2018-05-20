@@ -34,7 +34,6 @@ public class Main extends Application {
   private Scene mainScene = null;
   private Scene menuScene = null;
   private Map<String, WidgetContainer> widgets = new HashMap<>();
-  // widgets to be added to screen mapping name => widget
 
   private static int NUM_OF_WIDGETS = 10;
   private ArrayList<Widget> widgetList;

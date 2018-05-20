@@ -2,13 +2,11 @@ package uk.ac.cam.cl.gui.widgets;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import uk.ac.cam.cl.data.AppSettings;
 import uk.ac.cam.cl.data.DataPoint;
 import uk.ac.cam.cl.data.Unit;
 
 /**
- * Shows a plot of tide data for one day.
+ * Shows a plot of tide data for one day
  *
  * @author Ben Cole
  */
@@ -41,11 +39,12 @@ public class TideGraph extends GraphWidget {
 
   @Override
   public List<Unit> getAvailableUnits() {
-    return new ArrayList<Unit>(){
-      private static final long serialVersionUID = 1L; 
+    return new ArrayList<Unit>() {
+      private static final long serialVersionUID = 1L;
+
       {
-        add(Unit.METERS); 
-        add(Unit.FEET); 
+        add(Unit.METERS);
+        add(Unit.FEET);
       }
     };
   }

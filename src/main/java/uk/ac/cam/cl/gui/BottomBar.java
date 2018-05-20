@@ -1,6 +1,7 @@
 package uk.ac.cam.cl.gui;
 
 import java.util.Calendar;
+
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -9,18 +10,28 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.GridPane;
 import javafx.util.StringConverter;
+
+import uk.ac.cam.cl.Main;
 import uk.ac.cam.cl.data.DataManager;
 
+/**
+ * Represents the grid pane displayed at the bottom of the app including the time selection slider
+ *
+ * @author Max Campman
+ */
 public class BottomBar extends GridPane {
-  private Application parent;
+  private Main parent;
   private DataManager dm = DataManager.getInstance();
 
-  public BottomBar(Application parent) {
+  /**
+   * Creates a new bottom bar to be used with the given main class
+   *
+   * @param parent the main class
+   */
+  public BottomBar(Main parent) {
     super();
-
     this.parent = parent;
-
-    this.setId("bottom-bar");
+    setId("bottom-bar");
 
     Slider daySelect = new Slider();
     daySelect.setId("day-select");
@@ -79,8 +90,7 @@ public class BottomBar extends GridPane {
             });
 
     GridPane.setHalignment(daySelect, HPos.CENTER);
-    this.setAlignment(Pos.CENTER);
-
-    this.add(daySelect, 0, 0);
+    setAlignment(Pos.CENTER);
+    add(daySelect, 0, 0);
   }
 }

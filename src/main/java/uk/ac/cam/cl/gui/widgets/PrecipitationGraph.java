@@ -8,7 +8,7 @@ import uk.ac.cam.cl.data.DataPoint;
 import uk.ac.cam.cl.data.Unit;
 
 /**
- * Displays wind speed for one day in a graph.
+ * Displays wind speed for one day in a graph
  *
  * @author Ben Cole
  */

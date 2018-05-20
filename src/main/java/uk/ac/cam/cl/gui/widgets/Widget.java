@@ -12,7 +12,7 @@ import uk.ac.cam.cl.data.DataSequence;
 import uk.ac.cam.cl.data.Unit;
 
 /**
- * Encapsulates all widgets.
+ * Encapsulates all widgets
  *
  * @author Ben Cole
  */
@@ -39,16 +39,16 @@ public abstract class Widget extends GridPane {
   }
 
   /**
-   * Returns the name of the widget to be displayed in its border.
+   * Returns the name of the widget to be displayed in its border
    *
    * @return the name of the widget
    */
   public abstract String getName();
 
   /**
-   * Returns the Unit in use by this widget.
+   * Returns the unit in use by this widget
    *
-   * @return the Unit in use
+   * @return the unit in use
    */
   public Unit getUnit() {
     if (getAvailableUnits().size() > 0)
@@ -58,7 +58,7 @@ public abstract class Widget extends GridPane {
     else return Unit.NONE;
   }
 
-  /** Sets up the interface, ready to start displaying data. */
+  /** Sets up the interface, ready to start displaying data */
   public abstract void initialise();
 
   /**
@@ -80,7 +80,7 @@ public abstract class Widget extends GridPane {
 
   /**
    * Removes all currently displayed data and instead displays data from the passed DataSequence
-   * object.
+   * object
    *
    * @param dataSequence the sequence of data to be used or displayed by the widget
    */
@@ -94,7 +94,17 @@ public abstract class Widget extends GridPane {
     handleNewData(dataSequence);
   }
 
+  /**
+   * Gets the name of the setting property the widget uses to store its unit
+   *
+   * @return the unit setting property for the widget
+   */
   public abstract String getSettingName();
 
+  /**
+   * Gets the list of available units for the widgets
+   *
+   * @return the list of available units for the widget
+   */
   public abstract List<Unit> getAvailableUnits();
 }

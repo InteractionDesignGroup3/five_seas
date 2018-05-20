@@ -1,7 +1,7 @@
 package uk.ac.cam.cl.data;
 
 /**
- * Encapsulates all units used for data measurements.
+ * Encapsulates all units used for data measurements
  *
  * @author Ben Cole
  */
@@ -21,6 +21,7 @@ public enum Unit {
   NONE("");
 
   private String display;
+
   Unit(String display) {
     this.display = display;
   }
@@ -42,6 +43,6 @@ public enum Unit {
         return unit;
       }
     }
-    return NONE;  // Should never be executed
+    return NONE; // Should never be executed
   }
 }
