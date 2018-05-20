@@ -6,7 +6,6 @@ import uk.ac.cam.cl.data.DataManager;
 import uk.ac.cam.cl.data.DataSequence;
 import uk.ac.cam.cl.data.Unit;
 
-import java.util.List;
 
 /**
  * Encapsulates all widgets.
@@ -24,7 +23,7 @@ public abstract class Widget extends GridPane {
     initialised = false;
     noDataLabel = new Label("No Data");
     add(noDataLabel, 0, 0);
-    DataManager.getInstance().addListener(this::temporaryHandleNewData);
+    DataManager.getInstance().addListener(this::handleNewData);
   }
 
   /**
@@ -45,18 +44,6 @@ public abstract class Widget extends GridPane {
    * Sets up the interface, ready to start displaying data.
    */
   public abstract void initialise();
-
-  /**
-   * Temporarily handles the old DataManager listener implementation that
-   * sends the whole week's data rather than just the correct day's data.
-   *
-   * TODO: GET RID OF THIS METHOD!!
-   *
-   * @param dataSequenceList the list of all data for this week in this location
-   */
-  public void temporaryHandleNewData(List<DataSequence> dataSequenceList) {
-    handleNewData(dataSequenceList.get(DataManager.getInstance().getDay()));
-  }
 
   /**
    * Handles processing and displaying any new data that is given to this
