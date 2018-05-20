@@ -2,8 +2,9 @@ package uk.ac.cam.cl.gui.widgets;
 
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
-
+import java.util.List;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -15,7 +16,6 @@ import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.util.StringConverter;
-
 import uk.ac.cam.cl.data.*;
 
 /**
@@ -24,8 +24,6 @@ import uk.ac.cam.cl.data.*;
  * @author Mike Cachopo
  */
 public class WindWidget extends Widget {
-  public static final String WIND_WIDGET_UNIT_SETTINGS = "windWidgetUnit";
-
   private DataSequence dataSequence;
   private Label timeValue, gustSpeed, numberBox, north;
   private Shape compass, vane;
@@ -33,7 +31,6 @@ public class WindWidget extends Widget {
 
   @Override
   public void initialise() {
-
     north = new Label("N");
     north.getStyleClass().add("cardinal");
     numberBox = new Label();
@@ -97,9 +94,7 @@ public class WindWidget extends Widget {
     this.add(timeSelecter, 0, 3);
   }
 
-  /**
-   * Updates the widget display. Should be called when either day of week or time of day change.
-   * */
+  /** Updates the widget display. Should be called when either day of week or time of day change. */
   private void update() {
     // Number of 15 minute blocks past midnight, and associated DataPoint
     int i = (int) timeSelecter.getValue();
@@ -142,11 +137,20 @@ public class WindWidget extends Widget {
   }
 
   @Override
-  public Unit getUnit() {
-    String unit = AppSettings
-            .getInstance()
-            .getOrDefault(WIND_WIDGET_UNIT_SETTINGS,
-                    Unit.KILOMETERS_PER_HOUR.toString());
-    return Unit.fromString(unit);
+  public String getSettingName() {
+    return "windWidgetUnit";
+  }
+
+  @Override
+  public List<Unit> getAvailableUnits() {
+    return new ArrayList<Unit>(){
+      private static final long serialVersionUID = 1L; 
+      {
+        add(Unit.KILOMETERS_PER_HOUR); 
+        add(Unit.MILES_PER_HOUR); 
+        add(Unit.METRES_PER_SECOND); 
+        add(Unit.KNOTS); 
+      }
+    };
   }
 }

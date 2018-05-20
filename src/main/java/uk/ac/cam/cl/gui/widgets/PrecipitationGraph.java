@@ -1,5 +1,8 @@
 package uk.ac.cam.cl.gui.widgets;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import uk.ac.cam.cl.data.AppSettings;
 import uk.ac.cam.cl.data.DataPoint;
 import uk.ac.cam.cl.data.Unit;
@@ -10,9 +13,6 @@ import uk.ac.cam.cl.data.Unit;
  * @author Ben Cole
  */
 public class PrecipitationGraph extends GraphWidget {
-
-  public static final String PRECIPITATION_GRAPH_UNIT_SETTINGS = "precipitationGraphUnit";
-
   public PrecipitationGraph() {
     super();
     getStyleClass().add("precipitation-graph");
@@ -24,15 +24,6 @@ public class PrecipitationGraph extends GraphWidget {
   }
 
   @Override
-  public Unit getUnit() {
-    String unit = AppSettings
-            .getInstance()
-            .getOrDefault(PRECIPITATION_GRAPH_UNIT_SETTINGS,
-                    Unit.MILIMETERS.toString());
-    return Unit.fromString(unit);
-  }
-
-  @Override
   protected double getRelevantData(DataPoint dataPoint) {
     switch (getUnit()) {
       case INCHES:
@@ -41,5 +32,21 @@ public class PrecipitationGraph extends GraphWidget {
       default:
         return dataPoint.getPrecipitationMM();
     }
+  }
+  
+  @Override
+  public String getSettingName() {
+    return "precipitationGraphUnit";
+  }
+
+  @Override
+  public List<Unit> getAvailableUnits() {
+    return new ArrayList<Unit>(){
+      private static final long serialVersionUID = 1L; 
+      {
+        add(Unit.MILIMETERS); 
+        add(Unit.INCHES); 
+      }
+    };
   }
 }

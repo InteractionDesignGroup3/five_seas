@@ -23,7 +23,7 @@ public class WidgetContainer extends BorderPane {
   private Integer position;
   private boolean onMain = true;
   private Widget main;
-  private Settings sett;
+  private Settings setting;
   private BorderPane top;
   private Button swipe;
   private Region spacer;
@@ -43,27 +43,24 @@ public class WidgetContainer extends BorderPane {
     bottom.getChildren().addAll(nameLabel);
     setBottom(bottom);
     getStyleClass().add("widget_container");
-  }
 
-  public WidgetContainer(Widget widget, Settings sett, Integer pos) {
-    this(widget, pos);
-    top = new BorderPane();
-    swipe = new Button();
-    swipe.setGraphic(new ImageView(Main.SETTINGS_ICON));
+    if (main.getAvailableUnits().size() > 0) {
+      top = new BorderPane();
+      swipe = new Button();
+      swipe.setGraphic(new ImageView(Main.SETTINGS_ICON));
+      setting = new Settings(main); 
+      view = new StackPane();
+      view.getChildren().addAll(setting, main);
 
-    this.sett = sett;
-    view = new StackPane();
-    view.getChildren().addAll(this.sett, this.main);
+      top.setRight(swipe);
+      swipe.setOnAction(
+          (actionEvent) -> {
+            swap();
+          });
 
-    top.setRight(swipe);
-
-    swipe.setOnAction(
-        (actionEvent) -> {
-          swap();
-        });
-
-    setCenter(view);
-    setTop(top);
+      setCenter(view);
+      setTop(top);
+    }
   }
 
   private void swap() {
@@ -80,13 +77,13 @@ public class WidgetContainer extends BorderPane {
       top.setLeft(swipe);
       setBottom(null);
 
-      FadeTransition ft2 = new FadeTransition((Duration.millis(500)), sett);
+      FadeTransition ft2 = new FadeTransition((Duration.millis(500)), setting);
       ft2.setFromValue(0.0);
       ft2.setToValue(1.0);
       ft2.setCycleCount(1);
       ft2.play();
     } else {
-      FadeTransition ft = new FadeTransition(Duration.millis(500), sett);
+      FadeTransition ft = new FadeTransition(Duration.millis(500), setting);
       ft.setFromValue(1.0);
       ft.setToValue(0.0);
       ft.setCycleCount(1);
