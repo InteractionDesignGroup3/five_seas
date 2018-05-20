@@ -1,5 +1,8 @@
 package uk.ac.cam.cl.gui.widgets;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import uk.ac.cam.cl.data.AppSettings;
 import uk.ac.cam.cl.data.DataPoint;
 import uk.ac.cam.cl.data.Unit;
@@ -10,9 +13,6 @@ import uk.ac.cam.cl.data.Unit;
  * @author Ben Cole
  */
 public class TemperatureGraph extends GraphWidget {
-
-  public static final String TEMPERATURE_GRAPH_UNIT_SETTINGS = "temperatureGraphUnit";
-
   public TemperatureGraph() {
     super();
     getStyleClass().add("temperature-graph");
@@ -35,11 +35,18 @@ public class TemperatureGraph extends GraphWidget {
   }
 
   @Override
-  public Unit getUnit() {
-    String unitName = AppSettings.getInstance()
-            .getOrDefault(TEMPERATURE_GRAPH_UNIT_SETTINGS,
-                    Unit.CELSIUS.toString());
-    return Unit.fromString(unitName);
+  public String getSettingName() {
+    return "temperatureGraphUnit";
   }
 
+  @Override
+  public List<Unit> getAvailableUnits() {
+    return new ArrayList<Unit>(){
+      private static final long serialVersionUID = 1L; 
+      {
+        add(Unit.CELSIUS); 
+        add(Unit.FAHRENHEIT); 
+      }
+    };
+  }
 }

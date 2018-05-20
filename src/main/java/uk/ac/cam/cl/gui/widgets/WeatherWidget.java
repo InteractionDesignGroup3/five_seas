@@ -3,13 +3,15 @@ package uk.ac.cam.cl.gui.widgets;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+
 import javafx.geometry.HPos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+
+import java.util.*;
 import uk.ac.cam.cl.data.*;
 
 /**
@@ -21,9 +23,6 @@ import uk.ac.cam.cl.data.*;
  * @author Andrew Coalter
  */
 public class WeatherWidget extends Widget {
-
-  public static final String WEATHER_WIDGET_TEMPERATURE_UNIT_SETTINGS = "weatherWidgetUnit";
-
   private static final Map<Long, String> weatherCodeToImagePath =
       new HashMap<Long, String>() {
         private static final long serialVersionUID = 1L;
@@ -192,12 +191,17 @@ public class WeatherWidget extends Widget {
   }
 
   @Override
-  public Unit getUnit() {
-    return Unit.NONE;
+  public void initialise() {
+    // Do nothing because initialisation is handled in the displayData() method
   }
 
   @Override
-  public void initialise() {
-    // Do nothing because initialisation is handled in the displayData() method
+  public String getSettingName() {
+    return "";
+  }
+
+  @Override
+  public List<Unit> getAvailableUnits() {
+    return new ArrayList<>();
   }
 }
