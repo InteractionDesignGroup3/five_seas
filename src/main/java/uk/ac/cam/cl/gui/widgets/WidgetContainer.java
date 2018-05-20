@@ -142,8 +142,12 @@ public class WidgetContainer extends BorderPane {
     this.position = position;
   }
 
-  public Widget getWidget()
-  {
+  /**
+   * Get the widget contained by this container
+   *
+   * @return the widget contained by this container
+   */
+  public Widget getWidget() {
     return widget;
   }
 }
