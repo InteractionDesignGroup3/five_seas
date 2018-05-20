@@ -31,7 +31,7 @@ public class DataManager {
   private Location location;
 
   private List<DataSequence> data = new ArrayList<>();
-  private List<Consumer<List<DataSequence>>> listeners = new ArrayList<>();
+  private List<Consumer<DataSequence>> listeners = new ArrayList<>();
 
   private static final double COORD_ERROR = 9.0e-5;
 
@@ -168,9 +168,9 @@ public class DataManager {
    *
    * @param listener consumer executed on data change
    */
-  public void addListener(Consumer<List<DataSequence>> listener) {
+  public void addListener(Consumer<DataSequence> listener) {
     listeners.add(listener);
-    if (data.size() > getDay()) listener.accept(data);
+    if (data.size() > getDay()) listener.accept(data.get(getDay()));
   }
 
   /** Triggers all attached listeners */
@@ -178,7 +178,7 @@ public class DataManager {
     if (data.size() > getDay()) {
       Platform.runLater(
           () -> {
-            listeners.forEach(listener -> listener.accept(data));
+            listeners.forEach(listener -> listener.accept(data.get(getDay())));
           });
     }
   }
