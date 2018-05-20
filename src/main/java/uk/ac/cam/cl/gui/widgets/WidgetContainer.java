@@ -42,7 +42,7 @@ public class WidgetContainer extends BorderPane {
     bottom = new HBox();
     bottom.getChildren().addAll(nameLabel);
     setBottom(bottom);
-    this.getStyleClass().add("widget_container");
+    getStyleClass().add("widget_container");
   }
 
   public WidgetContainer(Widget widget, Settings sett, Integer pos) {
@@ -67,54 +67,57 @@ public class WidgetContainer extends BorderPane {
   }
 
   private void swap() {
-    if (this.onMain) {
-      FadeTransition ft = new FadeTransition(Duration.millis(500), this.main);
+    if (onMain) {
+      FadeTransition ft = new FadeTransition(Duration.millis(500), main);
       ft.setFromValue(1.0);
       ft.setToValue(0.0);
       ft.setCycleCount(1);
       ft.play();
 
-      this.swipe.setGraphic(new ImageView(Main.BACK_ICON));
+      swipe.setGraphic(new ImageView(Main.BACK_ICON));
       top.setRight(spacer);
       top.setCenter(new Label(main.getName() + " Settings"));
       top.setLeft(swipe);
       setBottom(null);
 
-      FadeTransition ft2 = new FadeTransition((Duration.millis(500)), this.sett);
+      FadeTransition ft2 = new FadeTransition((Duration.millis(500)), sett);
       ft2.setFromValue(0.0);
       ft2.setToValue(1.0);
       ft2.setCycleCount(1);
       ft2.play();
     } else {
-      FadeTransition ft = new FadeTransition(Duration.millis(500), this.sett);
+      FadeTransition ft = new FadeTransition(Duration.millis(500), sett);
       ft.setFromValue(1.0);
       ft.setToValue(0.0);
       ft.setCycleCount(1);
       ft.play();
 
-      this.swipe.setGraphic(new ImageView(Main.SETTINGS_ICON));
+      swipe.setGraphic(new ImageView(Main.SETTINGS_ICON));
       top.setLeft(null);
       top.setCenter(null);
       top.setRight(swipe);
       setBottom(nameLabel);
 
-      FadeTransition ft2 = new FadeTransition((Duration.millis(500)), this.main);
+      FadeTransition ft2 = new FadeTransition((Duration.millis(500)), main);
       ft2.setFromValue(0.0);
       ft2.setToValue(1.0);
       ft2.setCycleCount(1);
       ft2.play();
+
+      // Force the widget to reload in case its settings have changed
+      main.refresh();
+      nameLabel.setText(getWidgetName());
     }
 
     Node first = view.getChildren().remove(0);
     view.getChildren().add(first);
 
-    this.onMain = !this.onMain;
+    onMain = !onMain;
   }
 
   /**
    * Returns the formatted widget name followed by its unit in brackets.
    *
-   * @param widget the widget to format
    * @return the formatted name of the widget with a unit
    */
   private String getWidgetName() {
