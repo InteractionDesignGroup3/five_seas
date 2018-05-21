@@ -178,7 +178,7 @@ public class WeatherWidget extends Widget {
     if (timeHour < 6 || timeHour > 20) day = 1;
     Image image =
         new Image(
-            "file:src/main/resources/symbols/"
+            "symbols/"
                 + day
                 + weatherCodeToImagePath.get(weatherCode)
                 + ".png");
