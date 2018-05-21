@@ -27,7 +27,7 @@ public class APIConnector<T> {
    * @param path path to the configuration file
    * @throws APIFailure in the event of a non-recoverable failure mode
    */
-  public APIConnector(API<T> api, Path path) {
+  public APIConnector(API<T> api, String path) {
     this.api = api;
     try {
       Config config = new Config(path);

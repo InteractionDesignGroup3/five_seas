@@ -2,15 +2,14 @@ package uk.ac.cam.cl.data;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 /**
- * Class for reading from simple JSON configuration files.
+ * Class for reading from simple JSON configuration files
  *
  * @author Nathan Corbyn, Max Campman
  */
@@ -18,15 +17,16 @@ public class Config {
   private JSONObject configuration;
 
   /**
-   * Create a new configuration object from a given filepath.
+   * Create a new configuration object from a given input stream
    *
-   * @param path the filepath of the configuration
+   * @param path the filepath of the configuration (internal to the jar)
    * @throws ConfigurationException if the file cannot be read or parsed
    */
-  public Config(Path path) throws ConfigurationException {
+  public Config(String path) throws ConfigurationException {
     try {
       Charset charset = Charset.forName("UTF-8");
-      BufferedReader reader = Files.newBufferedReader(path, charset);
+      BufferedReader reader =
+          new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(path)));
       StringBuilder json = new StringBuilder();
       String line;
       while ((line = reader.readLine()) != null) json.append(line);
@@ -34,15 +34,15 @@ public class Config {
       configuration = (JSONObject) parser.parse(json.toString());
     } catch (IOException e) {
       throw new ConfigurationException(
-          "Configuration file " + path.getFileName() + " could not be read");
+          "Configuration file " + path + " could not be read");
     } catch (ParseException e) {
       throw new ConfigurationException(
-          "Configuration file " + path.getFileName() + " was not valid JSON");
+          "Configuration file " + path + " was not valid JSON");
     }
   }
 
   /**
-   * Get an object from the loaded configuration.
+   * Get an object from the loaded configuration
    *
    * @param key the key for the object object
    * @return the corresponding value

@@ -25,7 +25,7 @@ public class APIConnectorTest {
     mockData.put("nonce", nonce);
     when(mockCache.getData()).thenReturn(mockData);
     APIConnector<DataSequence> target =
-        new APIConnector<>(new Meteomatics(), new Config(Paths.get("config.json")), mockCache);
+        new APIConnector<>(new Meteomatics(), new Config("/config.json"), mockCache);
 
     JSONObject response = target.getData(new Location("", 50, 50));
 
@@ -38,7 +38,7 @@ public class APIConnectorTest {
   public void apiConnector_updatesCache_apiRequestSucceeds() throws ConfigurationException {
     // This is probably flaky as HTTP request might fail due to network
     Cache mockCache = mock(Cache.class);
-    Config config = new Config(Paths.get("config.json"));
+    Config config = new Config("/config.json");
     APIConnector<DataSequence> target = new APIConnector<>(new Meteomatics(), config, mockCache);
 
     JSONObject response = target.getData(new Location("", 50, 50));
@@ -49,7 +49,7 @@ public class APIConnectorTest {
   @Test
   public void apiConnector_returnsCache_invalidCoordinates() throws ConfigurationException {
     Cache mockCache = mock(Cache.class);
-    Config config = new Config(Paths.get("config.json"));
+    Config config = new Config("/config.json");
     APIConnector<DataSequence> target = new APIConnector<>(new Meteomatics(), config, mockCache);
 
     target.getData(new Location("", -180, 0)); // Valid
@@ -67,8 +67,8 @@ public class APIConnectorTest {
   public void apiConnector_throwsException_noConfig() {
     assertThrows(
         APIFailure.class,
-        () -> new APIConnector<DataSequence>(new Meteomatics(), Paths.get("nonconfig.json")),
-        "Could not load configuration nonconfig.json");
+        () -> new APIConnector<DataSequence>(new Meteomatics(), "/nonconfig.json"),
+        "Could not load configuration /nonconfig.json");
   }
 
   @Test
