@@ -101,7 +101,7 @@ public class WindWidget extends Widget {
     DataPoint dataPoint = dataSequence.get(i);
     timeValue.setText(intToDate(i));
     double windSpeed = Math.round(getWindSpeed(dataPoint) * 10.0) / 10.0;
-    double gustSpeed = Math.round(getWindSpeed(dataPoint) * 10.0) / 10.0;
+    double gustSpeed = Math.round(getGustSpeed(dataPoint) * 10.0) / 10.0;
     String unitAsString = getUnit().toString();
     gusts.setText("Gusts " + Double.toString(gustSpeed) + unitAsString);
     vane.setRotate(dataPoint.getWindDirection() - 45);
