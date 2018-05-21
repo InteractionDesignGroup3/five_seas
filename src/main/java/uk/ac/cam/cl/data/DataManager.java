@@ -5,8 +5,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
+
 import javafx.application.Platform;
+
 import org.json.simple.JSONObject;
+
 import uk.ac.cam.cl.data.apis.APIRequestException;
 import uk.ac.cam.cl.data.apis.HereMaps;
 import uk.ac.cam.cl.data.apis.Meteomatics;
@@ -19,7 +22,7 @@ import uk.ac.cam.cl.data.apis.Meteomatics;
  */
 public class DataManager {
   public static final long UPDATE_INTERVAL = 900000;
-  public static final String WEATHER_CONFIG = "config.json", LOCATION_CONFIG = "here.json";
+  public static final String WEATHER_CONFIG = "/config.json", LOCATION_CONFIG = "/here.json";
 
   private static DataManager instance;
   private Thread daemon;
@@ -40,8 +43,8 @@ public class DataManager {
    * catch this)
    */
   private DataManager() {
-    api = new APIConnector<DataSequence>(new Meteomatics(), Paths.get(WEATHER_CONFIG));
-    locationService = new APIConnector<Location>(new HereMaps(), Paths.get(LOCATION_CONFIG));
+    api = new APIConnector<DataSequence>(new Meteomatics(), WEATHER_CONFIG);
+    locationService = new APIConnector<Location>(new HereMaps(), LOCATION_CONFIG);
 
     try {
       JSONObject apiData = api.getData();
@@ -101,7 +104,7 @@ public class DataManager {
         if (Math.abs(longitude - location.getLongitude()) < COORD_ERROR
             || Math.abs(latitude - location.getLatitude()) < COORD_ERROR)
           location = new Location(name, longitude, latitude);
-        
+
         lastUpdated = (Long) apiData.get("cache_timestamp");
         data = new ArrayList<>(api.getProcessedData(apiData));
         Collections.sort(data);
