@@ -11,7 +11,7 @@ public class Conversions {
       CELCIUS_SCALE = 1.8,
       KNOTS_SCALE = 0.539957,
       MILE_SCALE = 0.621371,
-      MS_SCALE = 3.6,
+      MS_SCALE = 0.27777777,
       INCH_SCALE = 0.0393701,
       FEET_SCALE = 3.28084;
 
